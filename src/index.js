@@ -9,6 +9,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Middleware de logging
+app.use((req, res, next) => {
+    console.log(` ${req.method} ${req.path}`);
+    next();
+});
+
 // Usar rutas
 app.use('/api', routes);
 
@@ -31,5 +37,9 @@ app.get('/test-db', async (req, res) => {
 // Iniciar servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
+    console.log(`🚀 Servidor ejecutándose en http://localhost:${PORT}`);
+    console.log(`📡 Rutas disponibles:`);
+    console.log(`   GET http://localhost:${PORT}/`);
+    console.log(`   GET http://localhost:${PORT}/test-db`);
+    console.log(`   GET http://localhost:${PORT}/api/productos`);
 });
