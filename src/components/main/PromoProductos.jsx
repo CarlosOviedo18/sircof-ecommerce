@@ -30,7 +30,7 @@ function PromoProductos() {
       <div className="absolute inset-0 bg-black bg-opacity-10"></div>
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Título */}
-        <h2 className="text-white font-syne font-bold text-3xl md:text-4xl text-center mb-16">
+        <h2 className="text-white font-syne font-bold text-4xl md:text-5xl text-center mb-16">
           Productos
         </h2>
 
@@ -56,7 +56,7 @@ function PromoProductos() {
               {/* Info del producto */}
               <div className="flex flex-col gap-2">
                 {/* Categoría */}
-                <p className="text-gray-400 text-xs tracking-wider font-syne">
+                <p className="text-gray-400 text-sm tracking-wider font-syne">
                   LÍNEA {producto.line?.toUpperCase()}
                 </p>
 
@@ -66,7 +66,7 @@ function PromoProductos() {
                 </p>
 
                 {/* Nombre del producto */}
-                <h3 className="text-white font-syne font-bold text-base md:text-lg leading-tight group-hover:text-coffee transition-colors duration-300">
+                <h3 className="text-white font-syne font-bold text-lg md:text-xl leading-tight group-hover:text-coffee transition-colors duration-300">
                   {producto.name}
                 </h3>
 

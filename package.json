@@ -11,11 +11,19 @@
     "server": "node src/index.js"
   },
   "dependencies": {
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "framer-motion": "^12.26.2",
+    "lucide-react": "^0.562.0",
+    "motion": "^12.26.2",
     "mysql2": "^3.6.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.12.0",
+    "tailwind-merge": "^3.4.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

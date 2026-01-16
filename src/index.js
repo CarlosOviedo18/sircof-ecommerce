@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import pool from './database.js';
 import routes from './routes/routes.js';
+import authRoutes from './routes/auth.js';
 
 const app = express();
 
@@ -17,6 +18,18 @@ app.use((req, res, next) => {
 
 // Usar rutas
 app.use('/api', routes);
+app.use('/api/auth', authRoutes);
+
+// Middleware para rutas no encontradas (404)
+app.use((req, res) => {
+    console.log(`❌ Ruta no encontrada: ${req.method} ${req.path}`);
+    res.status(404).json({
+        success: false,
+        message: 'Ruta no encontrada',
+        path: req.path,
+        method: req.method
+    });
+});
 
 // Ruta de prueba
 app.get('/', (req, res) => {
@@ -42,4 +55,7 @@ app.listen(PORT, () => {
     console.log(`   GET http://localhost:${PORT}/`);
     console.log(`   GET http://localhost:${PORT}/test-db`);
     console.log(`   GET http://localhost:${PORT}/api/productos`);
+    console.log(`   POST http://localhost:${PORT}/api/auth/register`);
+    console.log(`   POST http://localhost:${PORT}/api/auth/login`);
+    console.log(`   POST http://localhost:${PORT}/api/auth/logout`);
 });
