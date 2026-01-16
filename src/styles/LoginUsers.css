@@ -46,8 +46,8 @@
 
 .App button {
   border-radius: 20px;
-  border: 1px solid #ff4b2b;
-  background-color: #ff4b2b;
+  border: 1px solid #6f4e37;
+  background-color: #6f4e37;
   color: #ffffff;
   font-size: 12px;
   font-weight: bold;
@@ -163,9 +163,9 @@
 }
 
 .overlay {
-  background: #ff416c;
-  background: -webkit-linear-gradient(to right, #ff4b2b, #ff416c);
-  background: linear-gradient(to right, #ff4b2b, #ff416c);
+  background: #6f4e37;
+  background: -webkit-linear-gradient(to right, #6f4e37, #8b6f47);
+  background: linear-gradient(to right, #6f4e37, #8b6f47);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 0 0;

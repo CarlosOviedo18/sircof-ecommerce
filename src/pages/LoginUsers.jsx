@@ -29,27 +29,27 @@ function LoginUsers() {
         <div className="overlay-container">
           <div className="overlay">
             <div className="overlay-panel overlay-left">
-              <h1>Welcome Back!</h1>
+              <h1>¡Bienvenido de Vuelta!</h1>
               <p>
-                To keep connected with us please login with your personal info
+                Inicia sesión con tus datos para disfrutar de la mejor experiencia en café SIRCOF
               </p>
               <button
                 className="ghost"
                 id="signIn"
                 onClick={() => handleOnClick("signIn")}
               >
-                Sign In
+                Iniciar Sesión
               </button>
             </div>
             <div className="overlay-panel overlay-right">
-              <h1>Hello, Friend!</h1>
-              <p>Enter your personal details and start your journey with us</p>
+              <h1>¿Eres Nuevo?</h1>
+              <p>Únete a nuestra comunidad cafetera y descubre los mejores granos SIRCOF</p>
               <button
                 className="ghost"
                 id="signUp"
                 onClick={() => handleOnClick("signUp")}
               >
-                Sign Up
+                Registrarse
               </button>
             </div>
           </div>

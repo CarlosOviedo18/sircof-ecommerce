@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import fotosPatrones from "../../img/foto patrones.jpeg";
 import canastoCafe from "../../img/canasto con cafe.jpeg";
 import sobreNosotros from "../../img/SobreNosotros.jpg";
@@ -55,9 +56,9 @@ function GranoTuMesa() {
           </p>
 
           <div className="flex md:justify-start justify-center">
-            <button className="bg-red-500 hover:bg-red-600 transition-colors text-white font-bold py-3 px-8 rounded text-lg">
+            <Link to="/tienda" onClick={() => window.scrollTo(0, 0)}  className="bg-red-500 hover:bg-red-600 transition-colors text-white font-bold py-3 px-8 rounded text-lg inline-block">
               Ordena al tuyo
-            </button>
+            </Link>
           </div>
         </div>
       </div>

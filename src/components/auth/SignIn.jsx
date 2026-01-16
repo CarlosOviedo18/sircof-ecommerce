@@ -23,22 +23,18 @@ function SignIn() {
     evt.preventDefault();
     const { email, password } = state;
     
-    console.log("📝 Datos del formulario:", { email, password });
-    
     try {
-      const response = await login(email, password);
-      console.log("✅ Usuario autenticado:", response);
+      await login(email, password);
       setState({ email: "", password: "" });
-      // Redirigir a la página principal después del login
       setTimeout(() => navigate("/"), 500);
     } catch (err) {
-      console.error("❌ Error:", err.message);
+      console.error('Error en login:', err.message);
     }
   };
 
   return (
     <form onSubmit={handleOnSubmit}>
-      <h1>Sign In</h1>
+      <h1>Iniciar Sesión</h1>
       <div className="social-container">
         <a href="#" className="social">
           <i className="fab fa-facebook-f" />
@@ -50,24 +46,24 @@ function SignIn() {
           <i className="fab fa-linkedin-in" />
         </a>
       </div>
-      <span>or use your account</span>
+      <span>o usa tu cuenta SIRCOF</span>
       <input
         type="email"
-        placeholder="Email"
+        placeholder="Correo"
         name="email"
         value={state.email}
         onChange={handleChange}
       />
       <input
         type="password"
-        placeholder="Password"
+        placeholder="Contraseña"
         name="password"
         value={state.password}
         onChange={handleChange}
       />
-      {error && <p style={{ color: 'red', fontSize: '12px', margin: '8px 0' }}>❌ {error}</p>}
-      <a href="#">Forgot your password?</a>
-      <button disabled={loading}>{loading ? 'Iniciando sesión...' : 'Sign In'}</button>
+      {error && <p style={{ color: 'red', fontSize: '12px', margin: '8px 0' }}>{error}</p>}
+      <a href="#">¿Olvidaste tu contraseña?</a>
+      <button disabled={loading}>{loading ? 'Iniciando sesión...' : 'Inicia Sesión'}</button>
     </form>
   );
 }

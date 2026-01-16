@@ -28,12 +28,11 @@ export const useAuth = () => {
       }
 
       const data = await response.json()
-      console.log('✅ Registro exitoso:', data)
       setAuthUser(data.user)
       return data
     } catch (err) {
       const errorMsg = err.message || 'Error en el registro'
-      console.error('❌ Error en registro:', errorMsg)
+      console.error('Error en registro:', errorMsg)
       setError(errorMsg)
       throw err
     } finally {
@@ -61,12 +60,12 @@ export const useAuth = () => {
       }
 
       const data = await response.json()
-      console.log('✅ Login exitoso:', data)
+      localStorage.setItem('token', data.token)
       setAuthUser(data.user)
       return data
     } catch (err) {
       const errorMsg = err.message || 'Error en el login'
-      console.error('❌ Error en login:', errorMsg)
+      console.error('Error en login:', errorMsg)
       setError(errorMsg)
       throw err
     } finally {
@@ -90,11 +89,11 @@ export const useAuth = () => {
         throw new Error('Error en logout')
       }
 
+      localStorage.removeItem('token')
       setAuthUser(null)
       setError(null)
-      console.log('✅ Logout exitoso')
     } catch (err) {
-      console.error('❌ Error en logout:', err.message)
+      console.error('Error en logout:', err.message)
       setError(err.message)
     } finally {
       setLoading(false)

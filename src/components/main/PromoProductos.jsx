@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
-import { useProductos } from '../../hooks/useProductos'
+import { Link } from 'react-router-dom'
+import { useProductosDestacados } from '../../hooks/useProductosDestacados'
 import cafeNacional from '../../img/cafeNacional.jpeg'
 import cafePremium from '../../img/cafePremium.jpeg'
 import sobreNosotrosImg from '../../img/SobreNosotros.jpg'
 
 function PromoProductos() {
-  const { productos, loading, error } = useProductos()
+  const { productos, loading, error } = useProductosDestacados()
 
   useEffect(() => {
   
@@ -81,9 +82,9 @@ function PromoProductos() {
 
         {/* Botón */}
         <div className="flex justify-center">
-          <button className="bg-red-400 hover:bg-red-500 text-white font-syne font-semibold px-10 py-3 rounded transition-colors duration-300">
+          <Link to="/tienda" onClick={() => window.scrollTo(0, 0)} className="bg-red-400 hover:bg-red-500 text-white font-syne font-semibold px-10 py-3 rounded transition-colors duration-300 inline-block">
             Ordena al tuyo
-          </button>
+          </Link>
         </div>
       </div>
     </section>

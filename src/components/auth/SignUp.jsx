@@ -23,22 +23,18 @@ function SignUp() {
     evt.preventDefault()
     const { name, email, password } = state
     
-    console.log("📝 Datos del formulario:", { name, email, password })
-    
     try {
-      const response = await register(name, email, password)
-      console.log("✅ Usuario registrado:", response)
+      await register(name, email, password)
       setState({ name: "", email: "", password: "" })
-      // Redirigir a la página principal después del registro
       setTimeout(() => navigate("/"), 500)
     } catch (err) {
-      console.error("❌ Error:", err.message)
+      console.error('Error en registro:', err.message)
     }
   }
 
   return (
     <form onSubmit={handleOnSubmit}>
-      <h1>Create Account</h1>
+      <h1>Crear Cuenta</h1>
       <div className="social-container">
         <a href="#" className="social">
           <i className="fab fa-facebook-f" />
@@ -50,30 +46,30 @@ function SignUp() {
           <i className="fab fa-linkedin-in" />
         </a>
       </div>
-      <span>or use your email for registration</span>
+      <span>o usa tu correo para registrarte</span>
       <input
         type="text"
-        placeholder="Name"
+        placeholder="Nombre"
         name="name"
         value={state.name}
         onChange={handleChange}
       />
       <input
         type="email"
-        placeholder="Email"
+        placeholder="Correo"
         name="email"
         value={state.email}
         onChange={handleChange}
       />
       <input
         type="password"
-        placeholder="Password"
+        placeholder="Contraseña"
         name="password"
         value={state.password}
         onChange={handleChange}
       />
-      {error && <p style={{ color: 'red', fontSize: '12px', margin: '8px 0' }}>❌ {error}</p>}
-      <button disabled={loading}>{loading ? 'Registrando...' : 'Sign Up'}</button>
+      {error && <p style={{ color: 'red', fontSize: '12px', margin: '8px 0' }}>{error}</p>}
+      <button disabled={loading}>{loading ? 'Registrando...' : 'Registrarse'}</button>
     </form>
   );
 }
