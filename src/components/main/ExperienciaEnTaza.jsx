@@ -17,21 +17,21 @@ return (
                 {/* Columna Izquierda - Imágenes */}
                 <div className="grid grid-cols-2 gap-4 md:gap-6 relative z-20">
                     <div className="overflow-hidden rounded-lg">
-                        <img src={tazaCafe} alt="Taza con café" className="w-full h-80 md:h-96 object-cover hover:scale-105 transition-transform duration-300" />
+                        <img src={tazaCafe} alt="Taza con café" className="w-full h-96 md:h-[30rem] object-cover hover:scale-105 transition-transform duration-300" />
                     </div>
                     
                     <div className="overflow-hidden rounded-lg">
-                        <img src={bandolasCafe} alt="Bandolas de café" className="w-full h-80 md:h-96 object-cover hover:scale-105 transition-transform duration-300" />
+                        <img src={bandolasCafe} alt="Bandolas de café" className="w-full h-96 md:h-[30rem] object-cover hover:scale-105 transition-transform duration-300" />
                     </div>
                 </div>
 
                 {/* Columna Derecha - Contenido */}
                 <div className="flex flex-col gap-4 relative z-20">
-                    <h2 className="text-white font-syne font-bold text-2xl md:text-3xl leading-tight">
+                    <h2 className="text-white font-syne font-bold text-3xl md:text-4xl leading-tight">
                         Experiencias únicas en cada taza
                     </h2>
 
-                    <p className="text-gray-300 text-xs md:text-sm leading-relaxed">
+                    <p className="text-gray-300 text-sm md:text-base leading-relaxed">
                         Descubre el verdadero sabor del café, con aroma intenso y notas únicas que harán disfrutar cada momento.
                     </p>
 
@@ -41,21 +41,21 @@ return (
                               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                               <path d="M5 12l5 5l10 -10" />
                             </svg>
-                            <p className="text-gray-200 text-xs md:text-sm">Cultivado con dedicación y pasión</p>
+                            <p className="text-gray-200 text-sm md:text-base">Cultivado con dedicación y pasión</p>
                         </div>
                         <div className="flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-coffee flex-shrink-0">
                               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                               <path d="M5 12l5 5l10 -10" />
                             </svg>
-                            <p className="text-gray-200 text-xs md:text-sm">Tostado para resaltar su sabor auténtico</p>
+                            <p className="text-gray-200 text-sm md:text-base">Tostado para resaltar su sabor auténtico</p>
                         </div>
                         <div className="flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-coffee flex-shrink-0">
                               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                               <path d="M5 12l5 5l10 -10" />
                             </svg>
-                            <p className="text-gray-200 text-xs md:text-sm">Hecho para quienes disfrutan un buen café</p>
+                            <p className="text-gray-200 text-sm md:text-base">Hecho para quienes disfrutan un buen café</p>
                         </div>
                     </div>
 
