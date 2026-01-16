@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
-import { useProductos } from '../../hooks/useProductos'
+import { Link } from 'react-router-dom'
+import { useProductosDestacados } from '../../hooks/useProductosDestacados'
 import cafeNacional from '../../img/cafeNacional.jpeg'
 import cafePremium from '../../img/cafePremium.jpeg'
 import sobreNosotrosImg from '../../img/SobreNosotros.jpg'
 
 function PromoProductos() {
-  const { productos, loading, error } = useProductos()
+  const { productos, loading, error } = useProductosDestacados()
 
   useEffect(() => {
   
@@ -30,7 +31,7 @@ function PromoProductos() {
       <div className="absolute inset-0 bg-black bg-opacity-10"></div>
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Título */}
-        <h2 className="text-white font-syne font-bold text-3xl md:text-4xl text-center mb-16">
+        <h2 className="text-white font-syne font-bold text-4xl md:text-5xl text-center mb-16">
           Productos
         </h2>
 
@@ -56,7 +57,7 @@ function PromoProductos() {
               {/* Info del producto */}
               <div className="flex flex-col gap-2">
                 {/* Categoría */}
-                <p className="text-gray-400 text-xs tracking-wider font-syne">
+                <p className="text-gray-400 text-sm tracking-wider font-syne">
                   LÍNEA {producto.line?.toUpperCase()}
                 </p>
 
@@ -66,7 +67,7 @@ function PromoProductos() {
                 </p>
 
                 {/* Nombre del producto */}
-                <h3 className="text-white font-syne font-bold text-base md:text-lg leading-tight group-hover:text-coffee transition-colors duration-300">
+                <h3 className="text-white font-syne font-bold text-lg md:text-xl leading-tight group-hover:text-coffee transition-colors duration-300">
                   {producto.name}
                 </h3>
 
@@ -81,9 +82,9 @@ function PromoProductos() {
 
         {/* Botón */}
         <div className="flex justify-center">
-          <button className="bg-red-400 hover:bg-red-500 text-white font-syne font-semibold px-10 py-3 rounded transition-colors duration-300">
+          <Link to="/tienda" onClick={() => window.scrollTo(0, 0)} className="bg-red-400 hover:bg-red-500 text-white font-syne font-semibold px-10 py-3 rounded transition-colors duration-300 inline-block">
             Ordena al tuyo
-          </button>
+          </Link>
         </div>
       </div>
     </section>

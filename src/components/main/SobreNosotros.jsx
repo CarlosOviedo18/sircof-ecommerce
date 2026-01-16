@@ -66,25 +66,25 @@ function SobreNosotros() {
           {/* Izquierda */}
           <div>
             <p className="text-coffee font-syne text-xs tracking-wider mb-4">NUESTRO CAFE</p>
-            <h2 className="text-white font-syne font-bold text-3xl md:text-4xl leading-tight">
+            <h2 className="text-white font-syne font-bold text-4xl md:text-5xl leading-tight">
               Saborea la mezcla de sabores clásicos
             </h2>
           </div>
           
           {/* Derecha */}
           <div>
-            <p className="text-gray-200 text-xs md:text-sm leading-relaxed">
+            <p className="text-gray-200 text-sm md:text-base leading-relaxed">
               Café Sircof es un lugar que combina tradición, sabor y hospitalidad familiar. Ofrece un café de alta calidad cultivado en sus propias tierras, donde cada grano es cosechado con esmero para brindar una experiencia auténtica en cada taza.
             </p>
           </div>
         </div>
 
         {/* Cards Grid - 4 Columnas */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-6">
           {features.map((feature, index) => (
-            <div key={index} className="flex flex-col items-start group">
+            <div key={index} className="flex flex-col items-start">
               {/* Icono */}
-              <div className="w-10 h-10 mb-6 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-12 h-12 mb-4 flex items-center justify-center">
                 {feature.icon}
               </div>
               
@@ -93,13 +93,8 @@ function SobreNosotros() {
                 {feature.title}
               </h3>
               
-              {/* Flecha */}
-              <div className="text-coffee text-xl group-hover:translate-x-2 transition-transform duration-300">
-                →
-              </div>
-              
               {/* Línea divisoria */}
-              <div className="w-full h-px bg-gray-600 mt-6 hidden md:block"></div>
+              <div className="h-px bg-coffee w-12 mb-2"></div>
             </div>
           ))}
         </div>
