@@ -27,7 +27,7 @@ return (
 
                 {/* Columna Derecha - Contenido */}
                 <div className="flex flex-col gap-4 relative z-20">
-                    <h2 className="text-white font-syne font-bold text-3xl md:text-4xl leading-tight">
+                    <h2 className="text-white font-serif font-bold text-3xl md:text-4xl leading-tight">
                         Experiencias únicas en cada taza
                     </h2>
 
@@ -60,7 +60,7 @@ return (
                     </div>
 
                     <div className="pt-2">
-                        <button className="bg-red-400 hover:bg-red-500 text-white font-syne font-semibold px-6 py-2 text-sm rounded transition-colors duration-300">
+                        <button className="bg-red-400 hover:bg-red-500 text-white font-serif font-semibold px-6 py-2 text-sm rounded transition-colors duration-300">
                             Conócenos
                         </button>
                     </div>
