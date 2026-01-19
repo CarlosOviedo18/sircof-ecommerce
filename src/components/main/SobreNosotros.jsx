@@ -65,8 +65,8 @@ function SobreNosotros() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 mb-16">
           {/* Izquierda */}
           <div>
-            <p className="text-coffee font-syne text-xs tracking-wider mb-4">NUESTRO CAFE</p>
-            <h2 className="text-white font-syne font-bold text-4xl md:text-5xl leading-tight">
+            <p className="text-coffee font-serif text-xs tracking-wider mb-4">NUESTRO CAFE</p>
+            <h2 className="text-white font-serif font-bold text-4xl md:text-5xl leading-tight">
               Saborea la mezcla de sabores clásicos
             </h2>
           </div>
@@ -89,7 +89,7 @@ function SobreNosotros() {
               </div>
               
               {/* Título */}
-              <h3 className="text-white font-syne font-bold text-base md:text-lg mb-4">
+              <h3 className="text-white font-serif font-bold text-base md:text-lg mb-4">
                 {feature.title}
               </h3>
               

@@ -53,17 +53,12 @@ export default {
   		},
   		fontFamily: {
   			sans: [
-  				'Segoe UI',
-  				'Roboto',
+  				'Poppins',
   				'sans-serif'
   			],
-  			syne: [
-  				'Syne',
-  				'sans-serif'
-  			],
-  			niveau: [
-  				'Niveau Grotesk',
-  				'sans-serif'
+  			serif: [
+  				'Playfair Display',
+  				'serif'
   			]
   		},
   		borderRadius: {

@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useProductos } from '../hooks/useProductos'
+import { useCart } from '../hooks/useCart'
 import cafeNacional from '../img/cafeNacional.jpeg'
 import cafePremium from '../img/cafePremium.jpeg'
 
 function StoreProduct() {
   const { productos, loading, error } = useProductos()
+  const { addToCart, refetchCart } = useCart()
   const [sortedProductos, setSortedProductos] = useState([])
   const [selectedCategory, setSelectedCategory] = useState('All categories')
   const [sortOrder, setSortOrder] = useState('latest')
+  const [agrandoProductos, setAgrandoProductos] = useState({})
+  const [mensajosExito, setMensajosExito] = useState({})
 
   useEffect(() => {
     let filtered = [...(productos || [])]
@@ -31,6 +35,25 @@ function StoreProduct() {
   }, [productos, selectedCategory, sortOrder])
 
   const categories = ['All categories', ...new Set(productos?.map(p => p.line) || [])]
+
+  const handleAddToCart = async (productId) => {
+    try {
+      setAgrandoProductos(prev => ({ ...prev, [productId]: true }))
+      await addToCart(productId, 1)
+      await refetchCart()
+      
+      setMensajosExito(prev => ({ ...prev, [productId]: true }))
+      
+      setTimeout(() => {
+        setMensajosExito(prev => ({ ...prev, [productId]: false }))
+      }, 2000)
+    } catch (error) {
+      console.error('Error al agregar al carrito:', error)
+    } finally {
+      setAgrandoProductos(prev => ({ ...prev, [productId]: false }))
+    }
+  }
+
 
   if (loading) {
     return (
@@ -185,9 +208,19 @@ function StoreProduct() {
                     </div>
 
                     {/* Botón agregar */}
-                    <button className="mt-4 w-full bg-coffee hover:bg-dark-coffee text-white font-semibold py-2 px-4 rounded transition-colors duration-300">
-                      Agregar al carrito
-                    </button>
+                    {mensajosExito[producto.id] ? (
+                      <div className="mt-4 w-full bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded text-center font-semibold animate-pulse">
+                        ✓ Agregado al carrito
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => handleAddToCart(producto.id)}
+                        disabled={agrandoProductos[producto.id]}
+                        className="mt-4 w-full bg-coffee hover:bg-dark-coffee disabled:bg-gray-400 text-white font-semibold py-2 px-4 rounded transition-colors duration-300"
+                      >
+                        {agrandoProductos[producto.id] ? 'Agregando...' : 'Agregar al carrito'}
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
