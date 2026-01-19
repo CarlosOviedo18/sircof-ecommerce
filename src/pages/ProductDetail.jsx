@@ -1,23 +1,48 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { useProductos } from '../hooks/useProductos'
 import cafeNacional from '../img/cafeNacional.jpeg'
 import cafePremium from '../img/cafePremium.jpeg'
+import { useProductDetail } from '../hooks/useProductDetail'
+import { useCart } from '../hooks/useCart'
 
 function ProductDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { productos, loading, error } = useProductos()
-  const [producto, setProducto] = useState(null)
+  const { producto, loading, error } = useProductDetail(id)
+  const { addToCart, refetchCart } = useCart()
+  const [cantidad, setCantidad] = useState(1)
+  const [agregando, setAgregando] = useState(false)
+  const [mensajeExito, setMensajeExito] = useState(false)
 
-  useEffect(() => {
-    if (productos.length > 0) {
-      const productoEncontrado = productos.find(p => p.id === parseInt(id))
-      if (productoEncontrado) {
-        setProducto(productoEncontrado)
-      }
+  // Función para agregar el producto al carrito
+  const handleAddToCart = async () => {
+    try {
+      setAgregando(true)
+      await addToCart(producto.id, cantidad)
+      
+      // Recargar el carrito para que se vea actualizado
+      await refetchCart()
+      
+      // Mostrar mensaje de éxito
+      setMensajeExito(true)
+      setCantidad(1)
+      
+      // Ocultar mensaje después de 2 segundos
+      setTimeout(() => {
+        setMensajeExito(false)
+      }, 2000)
+    } catch (error) {
+      console.error('Error al agregar al carrito:', error)
+    } finally {
+      setAgregando(false)
     }
-  }, [productos, id])
+  }
+
+  // Cambiar cantidad
+  const incrementarCantidad = () => setCantidad(prev => prev + 1)
+  const decrementarCantidad = () => {
+    if (cantidad > 1) setCantidad(prev => prev - 1)
+  }
 
   if (loading) {
     return (
@@ -92,9 +117,45 @@ function ProductDetail() {
             </div>
 
             <div className="flex flex-col gap-3">
-              <button className="w-full bg-coffee hover:bg-dark-coffee text-white font-bold py-3 px-6 rounded text-lg transition-colors duration-300">
-                Agregar al carrito
+              {/* Selector de cantidad */}
+              <div className="flex items-center gap-4 mb-4">
+                <span className="text-sm font-semibold text-gray-700">Cantidad:</span>
+                <div className="flex items-center gap-3 border rounded-lg px-3 py-2">
+                  <button
+                    onClick={decrementarCantidad}
+                    className="text-coffee hover:text-dark-coffee font-bold text-lg transition-colors"
+                    aria-label="Disminuir cantidad"
+                  >
+                    −
+                  </button>
+                  <span className="w-8 text-center font-semibold">{cantidad}</span>
+                  <button
+                    onClick={incrementarCantidad}
+                    className="text-coffee hover:text-dark-coffee font-bold text-lg transition-colors"
+                    aria-label="Aumentar cantidad"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              {/* Mensaje de éxito */}
+              {mensajeExito && (
+                <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded animate-pulse">
+                  ✓ Producto agregado al carrito
+                </div>
+              )}
+
+              {/* Botón agregar al carrito */}
+              <button
+                onClick={handleAddToCart}
+                disabled={agregando}
+                className="w-full bg-coffee hover:bg-dark-coffee disabled:bg-gray-400 text-white font-bold py-3 px-6 rounded text-lg transition-colors duration-300"
+              >
+                {agregando ? 'Agregando...' : 'Agregar al carrito'}
               </button>
+
+              {/* Botón favoritos */}
               <button className="w-full border-2 border-coffee text-coffee hover:bg-coffee hover:text-white font-bold py-3 px-6 rounded text-lg transition-colors duration-300">
                 ❤ Agregar a favoritos
               </button>
@@ -102,15 +163,15 @@ function ProductDetail() {
 
             <div className="bg-gray-50 p-6 rounded-lg mt-6 space-y-3 text-sm text-gray-700">
               <div className="flex gap-3">
-                <span>📦</span>
+                <span></span>
                 <p><strong>Envío gratis</strong> en compras mayores a ₡10,000</p>
               </div>
               <div className="flex gap-3">
-                <span>🔄</span>
+                <span></span>
                 <p><strong>Devoluciones gratis</strong> en los primeros 30 días</p>
               </div>
               <div className="flex gap-3">
-                <span>✓</span>
+                <span></span>
                 <p><strong>Garantía de calidad</strong> SIRCOF</p>
               </div>
             </div>

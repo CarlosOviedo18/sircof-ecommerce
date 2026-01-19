@@ -17,7 +17,7 @@ function PromoProductos() {
       <section className="w-full py-20 px-4 md:px-8 bg-cover bg-center relative" style={{ backgroundImage: `url(${sobreNosotrosImg})` }}>
         <div className="absolute inset-0 bg-black bg-opacity-10"></div>
         <div className="max-w-7xl mx-auto relative z-10">
-          <h2 className="text-white font-syne font-bold text-3xl md:text-4xl text-center mb-16">
+          <h2 className="text-white font-serif font-bold text-3xl md:text-4xl text-center mb-16">
             Productos
           </h2>
           <p className="text-red-500 text-center">Error: {error}</p>
@@ -31,7 +31,7 @@ function PromoProductos() {
       <div className="absolute inset-0 bg-black bg-opacity-10"></div>
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Título */}
-        <h2 className="text-white font-syne font-bold text-4xl md:text-5xl text-center mb-16">
+        <h2 className="text-white font-serif font-bold text-4xl md:text-5xl text-center mb-16">
           Productos
         </h2>
 
@@ -48,31 +48,31 @@ function PromoProductos() {
                 />
                 
                 {/* Etiqueta de fecha */}
-                <div className="absolute top-4 right-4 bg-yellow-400 text-black px-3 py-2 rounded font-syne font-bold text-sm">
-                  <div>12</div>
-                  <div className="text-xs">JUN</div>
+                <div className="absolute top-4 right-4 bg-yellow-400 text-black px-3 py-2 rounded font-serif font-bold text-sm">
+                  <div>Más </div>
+                  <div className="text-xs">comprado</div>
                 </div>
               </div>
 
               {/* Info del producto */}
               <div className="flex flex-col gap-2">
                 {/* Categoría */}
-                <p className="text-gray-400 text-sm tracking-wider font-syne">
+                <p className="text-gray-400 text-sm tracking-wider font-serif">
                   LÍNEA {producto.line?.toUpperCase()}
                 </p>
 
                 {/* Comentarios */}
-                <p className="text-gray-400 text-xs font-syne">
+                <p className="text-gray-400 text-xs font-serif">
                   1 Comment
                 </p>
 
                 {/* Nombre del producto */}
-                <h3 className="text-white font-syne font-bold text-lg md:text-xl leading-tight group-hover:text-coffee transition-colors duration-300">
+                <h3 className="text-white font-serif font-bold text-lg md:text-xl leading-tight group-hover:text-coffee transition-colors duration-300">
                   {producto.name}
                 </h3>
 
                 {/* Precio */}
-                <p className="text-coffee text-sm font-syne font-semibold">
+                <p className="text-coffee text-sm font-serif font-semibold">
                   ₡{producto.price.toLocaleString('es-CR')}
                 </p>
               </div>
@@ -82,7 +82,7 @@ function PromoProductos() {
 
         {/* Botón */}
         <div className="flex justify-center">
-          <Link to="/tienda" onClick={() => window.scrollTo(0, 0)} className="bg-red-400 hover:bg-red-500 text-white font-syne font-semibold px-10 py-3 rounded transition-colors duration-300 inline-block">
+          <Link to="/tienda" onClick={() => window.scrollTo(0, 0)} className="bg-red-400 hover:bg-red-500 text-white font-serif font-semibold px-10 py-3 rounded transition-colors duration-300 inline-block">
             Ordena al tuyo
           </Link>
         </div>
