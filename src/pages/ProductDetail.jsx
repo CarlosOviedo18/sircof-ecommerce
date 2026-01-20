@@ -4,10 +4,12 @@ import cafeNacional from '../img/cafeNacional.jpeg'
 import cafePremium from '../img/cafePremium.jpeg'
 import { useProductDetail } from '../hooks/useProductDetail'
 import { useCart } from '../hooks/useCart'
+import { useAuthContext } from '../context/AuthContext'
 
 function ProductDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { user } = useAuthContext()
   const { producto, loading, error } = useProductDetail(id)
   const { addToCart, refetchCart } = useCart()
   const [cantidad, setCantidad] = useState(1)
@@ -15,7 +17,13 @@ function ProductDetail() {
   const [mensajeExito, setMensajeExito] = useState(false)
 
   // Función para agregar el producto al carrito
-  const handleAddToCart = async () => {
+  co// ✅ PASO 1: Verificar si el usuario está logueado
+    if (!user) {
+      navigate('/login', { state: { returnTo: `/producto/${id}` } })
+      return
+    }
+
+    const handleAddToCart = async () => {
     try {
       setAgregando(true)
       await addToCart(producto.id, cantidad)

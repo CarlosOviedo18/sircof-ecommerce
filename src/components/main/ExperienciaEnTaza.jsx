@@ -60,7 +60,7 @@ return (
                     </div>
 
                     <div className="pt-2">
-                        <button className="bg-red-400 hover:bg-red-500 text-white font-serif font-semibold px-6 py-2 text-sm rounded transition-colors duration-300">
+                        <button className="bg-red-400 hover:bg-red-500 text-white font-poppins font-semibold px-6 py-2 text-sm rounded transition-colors duration-300">
                             Conócenos
                         </button>
                     </div>
