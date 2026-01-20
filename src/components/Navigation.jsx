@@ -1,15 +1,27 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import logo from '../img/logo.png'
 import portada from '../img/portada.jpg'
 import avatar from '../img/avatar.jpg'
 import CartDrawer from './Cart/CartDrawer'
+import { useAuthContext } from '../context/AuthContext'
+import { useAuth } from '../hooks/useAuth'
 
 function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
+  const { user } = useAuthContext()
+  const { logout } = useAuth()
+  const navigate = useNavigate()
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen)
+  }
+
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+    setMobileMenuOpen(false)
   }
 
   return (
@@ -28,47 +40,60 @@ function Navigation() {
             </div>
 
             <div className="flex items-center gap-4 md:gap-12 ml-auto">
-             { /* Navegación Desktop */}
-                      <nav className="hidden md:block">
-                      <ul className="flex gap-6 md:gap-8 font-sans">
-                        <li><a href="#inicio" className="text-white font-medium text-base md:text-lg hover:text-coffee transition-colors">Inicio</a></li>
-                        <li><a href="#paginas" className="text-white font-medium text-base md:text-lg hover:text-coffee transition-colors">Sobre Nosotros</a></li>
-                        <li><a href="#contacto" className="text-white font-medium text-base md:text-lg hover:text-coffee transition-colors">Contactenos</a></li>
-                        <li><a href="#galeria" className="text-white font-medium text-base md:text-lg hover:text-coffee transition-colors">Galería</a></li>
-                        <li><a href="/tienda" className="text-white font-medium text-base md:text-lg hover:text-coffee transition-colors">Tienda</a></li>
-                      </ul>
-                      </nav>
+              {/* Navegación Desktop */}
+              <nav className="hidden md:block">
+                <ul className="flex gap-6 md:gap-8 font-sans">
+                  <li><a href="#inicio" className="text-white font-medium text-base md:text-lg hover:text-coffee transition-colors">Inicio</a></li>
+                  <li><a href="#paginas" className="text-white font-medium text-base md:text-lg hover:text-coffee transition-colors">Sobre Nosotros</a></li>
+                  <li><a href="#contacto" className="text-white font-medium text-base md:text-lg hover:text-coffee transition-colors">Contactenos</a></li>
+                  <li><a href="#galeria" className="text-white font-medium text-base md:text-lg hover:text-coffee transition-colors">Galería</a></li>
+                  <li><a href="/tienda" className="text-white font-medium text-base md:text-lg hover:text-coffee transition-colors">Tienda</a></li>
+                </ul>
+              </nav>
 
-                      {/* Iconos */}
-                          <div className="flex gap-3 md:gap-4 items-center">
-                          <button 
-                            onClick={() => setCartOpen(true)}
-                            className="text-white hover:scale-110 transition-transform" 
-                            aria-label="Carrito"
+              {/* Iconos */}
+              <div className="flex gap-3 md:gap-4 items-center">
+                <button 
+                  onClick={() => setCartOpen(true)}
+                  className="text-white hover:scale-110 transition-transform" 
+                  aria-label="Carrito"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-cart"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 19a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M15 19a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M17 17h-11v-14h-2" /><path d="M6 5l14 1l-1 7h-13" /></svg>
+                </button>
+
+                <button className="text-white hover:scale-110 transition-transform" aria-label="Buscar">
+                  <svg xmlns="http://www.w3.org/2000/svg" width={28} height={28} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                </button>
+
+                {/* Usuario */}
+                        {user ? (
+                          <div className="hidden md:flex items-center gap-4">
+                          <img src={avatar} alt="Usuario" className="w-10 h-10 rounded-full object-cover border-2 border-coffee" />
+                          <button
+                            onClick={handleLogout}
+                            className="px-4 py-2 bg-coffee text-white font-medium text-base md:text-lg rounded-lg hover:bg-coffee/90 transition-colors"
                           >
-                          <svg xmlns="http://www.w3.org/2000/svg" width={28} height={28} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304" /><path d="M9 11v-5a3 3 0 0 1 6 0v5" /></svg>
+                            Logout
                           </button>
-                          <button className="text-white hover:scale-110 transition-transform" aria-label="Buscar">
-                          <svg xmlns="http://www.w3.org/2000/svg" width={28} height={28} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
-                          </button>
-                          
-                          {/* Avatar Usuario */}
-                      <div className="hidden md:flex items-center">
-                        <img src={avatar} alt="Usuario" className="w-10 h-10 rounded-full object-cover" />
-                      </div>
-                      
-                      <button className="md:hidden text-white hover:scale-110 transition-transform text-2xl" aria-label="Menú" onClick={toggleMobileMenu}>☰</button>
-                      </div>
-                    </div>
-                    </div>
+                          </div>
+                        ) : (
+                          <a href="/login" className="hidden md:block px-2 py-1 bg-coffee text-white font-medium text-base md:text-lg rounded-lg hover:bg-coffee/90 transition-colors">
+                          ¡Inicia sesión!
+                          </a>
+                        )}
 
-                    {/* Menú Mobile */}
+                        <button className="md:hidden text-white hover:scale-110 transition-transform text-2xl" aria-label="Menú" onClick={toggleMobileMenu}>☰</button>
+                        </div>
+                      </div>
+                      </div>
+
+                      {/* Menú Mobile */}
           {mobileMenuOpen && (
             <div className="fixed inset-0 md:hidden z-40" onClick={() => setMobileMenuOpen(false)}>
               <nav className="absolute top-0 right-0 h-screen w-3/4 max-w-xs bg-gradient-to-b from-black/95 to-black/90 backdrop-blur-md shadow-2xl animate-in slide-in-from-right">
                 <div className="flex justify-end p-6">
                   <button 
-                    onClick={() => setMobileMenuOpen(false)} 
+                    onClick={() => setMobileMenuOpen(false)}
                     className="text-white text-3xl hover:text-coffee transition-colors w-10 h-10 flex items-center justify-center"
                     aria-label="Cerrar"
                   >
@@ -78,9 +103,14 @@ function Navigation() {
                 <ul className="flex flex-col gap-1 font-sans px-6">
                   <li><a href="#inicio" className="text-white font-medium text-lg hover:text-coffee transition-colors block py-3 px-4 rounded-lg hover:bg-white/10" onClick={() => setMobileMenuOpen(false)}>Inicio</a></li>
                   <li><a href="#paginas" className="text-white font-medium text-lg hover:text-coffee transition-colors block py-3 px-4 rounded-lg hover:bg-white/10" onClick={() => setMobileMenuOpen(false)}>Sobre Nosotros</a></li>
-                  <li><a href="#blog" className="text-white font-medium text-lg hover:text-coffee transition-colors block py-3 px-4 rounded-lg hover:bg-white/10" onClick={() => setMobileMenuOpen(false)}>Blog</a></li>
+                  <li><a href="#contacto" className="text-white font-medium text-lg hover:text-coffee transition-colors block py-3 px-4 rounded-lg hover:bg-white/10" onClick={() => setMobileMenuOpen(false)}>Contactenos</a></li>
                   <li><a href="#galeria" className="text-white font-medium text-lg hover:text-coffee transition-colors block py-3 px-4 rounded-lg hover:bg-white/10" onClick={() => setMobileMenuOpen(false)}>Galería</a></li>
-                  <li><a href="#tienda" className="text-white font-medium text-lg hover:text-coffee transition-colors block py-3 px-4 rounded-lg hover:bg-white/10" onClick={() => setMobileMenuOpen(false)}>Tienda</a></li>
+                  <li><a href="/tienda" className="text-white font-medium text-lg hover:text-coffee transition-colors block py-3 px-4 rounded-lg hover:bg-white/10" onClick={() => setMobileMenuOpen(false)}>Tienda</a></li>
+                  {user ? (
+                    <li><button onClick={handleLogout} className="w-full text-left text-white font-medium text-lg hover:text-coffee transition-colors block py-3 px-4 rounded-lg hover:bg-white/10">Logout</button></li>
+                  ) : (
+                    <li><a href="/login" className="text-white font-medium text-lg hover:text-coffee transition-colors block py-3 px-4 rounded-lg hover:bg-white/10" onClick={() => setMobileMenuOpen(false)}>Login</a></li>
+                  )}
                 </ul>
               </nav>
             </div>

@@ -1,3 +1,4 @@
+import 'dotenv/config.js'
 import express from 'express';
 import cors from 'cors';
 import pool from './database.js';
@@ -5,6 +6,7 @@ import routes from './routes/routes.js';
 import authRoutes from './routes/auth.js';
 import usersRoutes from './routes/users.js';
 import cartRoutes from './routes/cart.js';
+import paymentRoutes from './routes/payment.js';
 
 const app = express();
 
@@ -14,7 +16,9 @@ app.use(express.json());
 app.use('/api', routes);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
-app.use('/api/cart', cartRoutes) 
+app.use('/api/cart', cartRoutes);
+app.use('/api/payment', paymentRoutes);
+app.use('/api/logout', usersRoutes) 
 
 app.get('/', (req, res) => {
     res.json({ message: 'Sircof Backend - Servidor funcionando' });
