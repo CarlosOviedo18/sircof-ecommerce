@@ -82,7 +82,7 @@ function PromoProductos() {
 
         {/* Botón */}
         <div className="flex justify-center">
-          <Link to="/tienda" onClick={() => window.scrollTo(0, 0)} className="bg-red-400 hover:bg-red-500 text-white font-serif font-semibold px-10 py-3 rounded transition-colors duration-300 inline-block">
+          <Link to="/tienda" onClick={() => window.scrollTo(0, 0)} className="bg-red-400 hover:bg-red-500 text-white font-poppins font-semibold px-10 py-3 rounded transition-colors duration-300 inline-block">
             Ordena al tuyo
           </Link>
         </div>

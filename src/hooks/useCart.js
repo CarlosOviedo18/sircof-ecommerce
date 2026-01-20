@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useAuthContext } from '../context/AuthContext'
 
 const API_URL = 'http://localhost:3000/api/cart'
@@ -10,14 +10,9 @@ export const useCart = () => {
   const [error, setError] = useState(null)
 
   // Obtener el carrito del usuario logueado
-  useEffect(() => {
-    if (user) {
-      fetchCart()
-    }
-  }, [user])
-
-  // Función para obtener items del carrito
-  const fetchCart = async () => {
+  const fetchCart = useCallback(async () => {
+    if (!user) return
+    
     try {
       setLoading(true)
       setError(null)
@@ -43,7 +38,14 @@ export const useCart = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [user])
+
+  // Usar useEffect para cargar carrito cuando inicia sesión
+  useEffect(() => {
+    if (user) {
+      fetchCart()
+    }
+  }, [user, fetchCart])
 
   // Función para agregar producto al carrito
   const addToCart = async (productId, cantidad = 1) => {

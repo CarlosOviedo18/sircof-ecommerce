@@ -9,6 +9,7 @@ import GranoTuMesa from "./components/main/GranoTuMesa.jsx";
 import LoginUsers from "./pages/LoginUsers.jsx";
 import StoreProduct from "./pages/StoreProduct.jsx";
 import ProductDetail from "./pages/ProductDetail.jsx";
+import CheckoutSuccess from "./pages/CheckoutSuccess.jsx";
 
 
 function App() {
@@ -51,6 +52,18 @@ function App() {
           <>
             <SecondNavigation />
             <ProductDetail />
+            <Footer />
+          </>
+        }
+      />
+
+      {/* Página de Éxito del Pago */}
+      <Route
+        path="/checkout/success"
+        element={
+          <>
+            <SecondNavigation />
+            <CheckoutSuccess />
             <Footer />
           </>
         }

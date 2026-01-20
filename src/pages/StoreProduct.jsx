@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useProductos } from '../hooks/useProductos'
 import { useCart } from '../hooks/useCart'
+import { useAuthContext } from '../context/AuthContext'
 import cafeNacional from '../img/cafeNacional.jpeg'
 import cafePremium from '../img/cafePremium.jpeg'
 
 function StoreProduct() {
   const { productos, loading, error } = useProductos()
   const { addToCart, refetchCart } = useCart()
+  const { user } = useAuthContext()
+  const navigate = useNavigate()
   const [sortedProductos, setSortedProductos] = useState([])
   const [selectedCategory, setSelectedCategory] = useState('All categories')
   const [sortOrder, setSortOrder] = useState('latest')
@@ -35,7 +38,13 @@ function StoreProduct() {
   }, [productos, selectedCategory, sortOrder])
 
   const categories = ['All categories', ...new Set(productos?.map(p => p.line) || [])]
+// ✅ PASO 1: Verificar si el usuario está logueado
+    if (!user) {
+      navigate('/login', { state: { returnTo: '/tienda' } })
+      return
+    }
 
+    
   const handleAddToCart = async (productId) => {
     try {
       setAgrandoProductos(prev => ({ ...prev, [productId]: true }))
