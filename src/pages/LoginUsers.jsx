@@ -20,7 +20,7 @@ function LoginUsers() {
     <div className="App">
       <div className={containerClass} id="container">
         <div className="form-container sign-up-container">
-          <SignUp />
+          <SignUp onSignUpSuccess={() => setType("signIn")} />
         </div>
         <div className="form-container sign-in-container">
           <SignIn />

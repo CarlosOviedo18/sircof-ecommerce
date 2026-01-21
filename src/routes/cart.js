@@ -95,6 +95,30 @@ router.post('/add', authMiddleware, async (req, res) => {
   }
 })
 
+// DELETE /api/cart/clear - Vaciar todo el carrito
+router.delete('/clear', authMiddleware, async (req, res) => {
+  try {
+    const userId = req.userId
+
+    // Obtener el carrito del usuario
+    const [carts] = await pool.query('SELECT id FROM carts WHERE user_id = ?', [userId])
+    
+    if (carts.length === 0) {
+      return res.json({ success: true, message: 'Carrito vacío' })
+    }
+
+    const cartId = carts[0].id
+
+    // Eliminar todos los items del carrito
+    await pool.query('DELETE FROM cart_items WHERE cart_id = ?', [cartId])
+
+    res.json({ success: true, message: 'Carrito vaciado correctamente' })
+  } catch (error) {
+    console.error('Error al vaciar carrito:', error)
+    res.status(500).json({ success: false, message: 'Error al vaciar carrito' })
+  }
+})
+
 // DELETE /api/cart/:cartItemId - Remover producto
 router.delete('/:cartItemId', authMiddleware, async (req, res) => {
   try {
@@ -149,6 +173,30 @@ router.patch('/:cartItemId', authMiddleware, async (req, res) => {
   } catch (error) {
     console.error('Error al actualizar:', error)
     res.status(500).json({ success: false, message: 'Error al actualizar' })
+  }
+})
+
+// DELETE /api/cart/clear - Vaciar todo el carrito
+router.delete('/clear', authMiddleware, async (req, res) => {
+  try {
+    const userId = req.userId
+
+    // Obtener el carrito del usuario
+    const [carts] = await pool.query('SELECT id FROM carts WHERE user_id = ?', [userId])
+    
+    if (carts.length === 0) {
+      return res.json({ success: true, message: 'Carrito vacío' })
+    }
+
+    const cartId = carts[0].id
+
+    // Eliminar todos los items del carrito
+    await pool.query('DELETE FROM cart_items WHERE cart_id = ?', [cartId])
+
+    res.json({ success: true, message: 'Carrito vaciado correctamente' })
+  } catch (error) {
+    console.error('Error al vaciar carrito:', error)
+    res.status(500).json({ success: false, message: 'Error al vaciar carrito' })
   }
 })
 

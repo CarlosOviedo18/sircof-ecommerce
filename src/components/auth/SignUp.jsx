@@ -1,14 +1,12 @@
 import React from "react"
-import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../hooks/useAuth"
 
-function SignUp() {
+function SignUp({ onSignUpSuccess }) {
   const [state, setState] = React.useState({
     name: "",
     email: "",
     password: "",
   })
-  const navigate = useNavigate()
   const { register, loading, error } = useAuth()
 
   const handleChange = (evt) => {
@@ -26,7 +24,9 @@ function SignUp() {
     try {
       await register(name, email, password)
       setState({ name: "", email: "", password: "" })
-      setTimeout(() => navigate("/"), 500)
+      if (onSignUpSuccess) {
+        onSignUpSuccess()
+      }
     } catch (err) {
       console.error('Error en registro:', err.message)
     }

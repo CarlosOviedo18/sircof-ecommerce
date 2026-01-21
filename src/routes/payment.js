@@ -5,7 +5,6 @@ import fetch from 'node-fetch'
 
 const router = Router()
 
-// Middleware de autenticación
 const authMiddleware = (req, res, next) => {
   try {
     const token = req.headers.authorization?.split(' ')[1]
@@ -22,7 +21,6 @@ const authMiddleware = (req, res, next) => {
   }
 }
 
-// Función para login en Tilopay
 const loginTilopay = async () => {
   try {
     const loginPayload = {
@@ -41,16 +39,13 @@ const loginTilopay = async () => {
     }
 
     const data = await response.json()
-    const token = data.token || data.access_token || data.auth_token || data
-    
-    return token
+    return data.token || data.access_token || data.auth_token || data
   } catch (error) {
     console.error('Error en login Tilopay:', error.message)
     throw error
   }
 }
 
-// POST /api/payment/process - Procesar el pago
 router.post('/process', authMiddleware, async (req, res) => {
   try {
     const userId = req.userId
@@ -78,9 +73,10 @@ router.post('/process', authMiddleware, async (req, res) => {
     const user = users[0]
     const orderReference = `ORDER_${userId}_${Date.now()}`
 
-    console.log('Creando orden:', orderReference)
-
     const tilopayToken = await loginTilopay()
+
+    const webhookUrl = process.env.WEBHOOK_URL || 'http://localhost:3000/api/payment/webhook'
+    const callbackUrl = process.env.CALLBACK_URL || 'http://localhost:5173/checkout/success'
 
     const linkPaymentPayload = {
       key: process.env.TILOPAY_API_KEY,
@@ -90,8 +86,8 @@ router.post('/process', authMiddleware, async (req, res) => {
       type: 1,
       description: `Compra de ${cartItems.length} productos en SIRCOF Café`,
       client: user.name,
-      callback_url: 'http://localhost:5173/checkout/success',
-      webhook_url: 'http://localhost:3000/api/payment/webhook'
+      callback_url: callbackUrl,
+      webhook_url: webhookUrl
     }
 
     const tilopayResponse = await fetch('https://app.tilopay.com/api/v1/createLinkPayment', {
@@ -117,8 +113,6 @@ router.post('/process', authMiddleware, async (req, res) => {
       [userId, amount, 'pending', orderReference, phone]
     )
 
-    console.log('Orden guardada con ID:', orderResult.insertId)
-
     for (const item of cartItems) {
       await pool.query(
         `INSERT INTO order_items (order_id, product_id, quantity, price) 
@@ -143,73 +137,50 @@ router.post('/process', authMiddleware, async (req, res) => {
   }
 })
 
-// POST /api/payment/webhook - Tilopay nos avisa cuando se completa el pago
 router.post('/webhook', async (req, res) => {
   try {
+    const data = { ...req.body, ...req.query }
+
     const {
       code,
       orderNumber,
       tilopayOrderId,
-      address,
-      city,
-      postal_code,
-      country,
-      creditCardBrand,
-      last4CreditCardNumber,
-      shipping_address,
-      shipping_city,
-      shipping_postal,
-      billing_address,
-      billing_city
-    } = req.body
+      reference
+    } = data
+
+    if (!code || (!orderNumber && !reference)) {
+      return res.status(400).json({ success: false, message: 'Datos incompletos en webhook' })
+    }
 
     let orderStatus = 'pending'
     if (code === '1' || code === 1) {
       orderStatus = 'paid'
-      console.log('Pago aprobado - Orden:', orderNumber)
     } else if (code === '0' || code === 0 || code === '2' || code === 2) {
       orderStatus = 'cancelled'
-      console.log('Pago rechazado - Orden:', orderNumber)
     }
+
+    const searchReference = orderNumber || reference
 
     const [orders] = await pool.query(
       'SELECT id FROM orders WHERE tilopay_reference = ?',
-      [orderNumber]
+      [searchReference]
     )
 
     if (orders.length === 0) {
-      console.warn('Orden no encontrada:', orderNumber)
-      return res.json({ success: false, message: 'Orden no encontrada' })
+      return res.status(404).json({ success: false, message: 'Orden no encontrada' })
     }
 
     const orderId = orders[0].id
 
     await pool.query(
-      `UPDATE orders 
-       SET status = ?, 
-           tilopay_transaction_id = ?,
-           address = ?,
-           city = ?,
-           postal_code = ?,
-           country = ?
-       WHERE tilopay_reference = ?`,
-      [
-        orderStatus,
-        tilopayOrderId,
-        address || shipping_address || billing_address || null,
-        city || shipping_city || null,
-        postal_code || shipping_postal || null,
-        country || null,
-        orderNumber
-      ]
+      `UPDATE orders SET status = ?, tilopay_transaction_id = ? WHERE id = ?`,
+      [orderStatus, tilopayOrderId, orderId]
     )
 
-    console.log('Orden actualizada - ID:', orderId, 'Status:', orderStatus)
-
-    res.json({ success: true })
+    res.json({ success: true, message: 'Orden actualizada correctamente' })
   } catch (error) {
     console.error('Error en webhook:', error)
-    res.status(500).json({ success: false })
+    res.status(500).json({ success: false, message: error.message })
   }
 })
 
