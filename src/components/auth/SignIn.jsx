@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import "../../styles/LoginUsers.css";
 
@@ -9,6 +9,7 @@ function SignIn() {
     password: "",
   });
   const navigate = useNavigate();
+  const location = useLocation();
   const { login, loading, error } = useAuth();
 
   const handleChange = (evt) => {
@@ -26,7 +27,12 @@ function SignIn() {
     try {
       await login(email, password);
       setState({ email: "", password: "" });
+      
+    setState({ email: "", password: "" });
       setTimeout(() => navigate("/"), 500);
+      if(location.state?.returnTo ){
+      setTimeout(() => navigate("/tienda"), 500);
+    }
     } catch (err) {
       console.error('Error en login:', err.message);
     }

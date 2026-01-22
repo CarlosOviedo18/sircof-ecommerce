@@ -1,7 +1,9 @@
 import React from "react"
+import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../hooks/useAuth"
 
 function SignUp({ onSignUpSuccess }) {
+  const navigate = useNavigate()
   const [state, setState] = React.useState({
     name: "",
     email: "",

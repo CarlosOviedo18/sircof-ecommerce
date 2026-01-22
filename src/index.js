@@ -7,6 +7,8 @@ import authRoutes from './routes/auth.js';
 import usersRoutes from './routes/users.js';
 import cartRoutes from './routes/cart.js';
 import paymentRoutes from './routes/payment.js';
+import ordersRoutes from './routes/orders.js';
+import userSettingsRoutes from './routes/UserSettings.js';
 
 const app = express();
 
@@ -19,7 +21,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/payment', paymentRoutes);
-app.use('/api/logout', usersRoutes) 
+app.use('/api/logout', usersRoutes);
+app.use('/api/orders', ordersRoutes);
+app.use('/api/user-settings', userSettingsRoutes); 
 
 app.get('/', (req, res) => {
     res.json({ message: 'Sircof Backend - Servidor funcionando' });

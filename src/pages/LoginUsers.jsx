@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import SignIn from "../components/auth/SignIn.jsx";
 import SignUp from "../components/auth/SignUp.jsx";
 // import "../styles/LoginUsers.css";
 
 function LoginUsers() {
+  const navigate = useNavigate();
   const [type, setType] = useState("signIn");
 
   const handleOnClick = (text) => {
@@ -18,6 +20,13 @@ function LoginUsers() {
 
   return (
     <div className="App">
+      <button
+        onClick={() => navigate("/")}
+        className="absolute top-4 left-4 p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all duration-200 z-50"
+        title="Volver al menú principal"
+      >
+        ← Atrás
+      </button>
       <div className={containerClass} id="container">
         <div className="form-container sign-up-container">
           <SignUp onSignUpSuccess={() => setType("signIn")} />
