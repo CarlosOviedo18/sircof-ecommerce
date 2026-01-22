@@ -10,6 +10,7 @@ import LoginUsers from "./pages/LoginUsers.jsx";
 import StoreProduct from "./pages/StoreProduct.jsx";
 import ProductDetail from "./pages/ProductDetail.jsx";
 import CheckoutSuccess from "./pages/CheckoutSuccess.jsx";
+import UserSettings from "./pages/UserSettings.jsx";
 
 
 function App() {
@@ -57,6 +58,18 @@ function App() {
         }
       />
 
+        {/* Página de Configuración de Usuario */}
+      <Route
+        path="/user-settings"
+        element={
+          <>
+            <SecondNavigation />
+            <UserSettings />
+            <Footer />
+          </>
+        }
+      />
+
       {/* Página de Éxito del Pago */}
       <Route
         path="/checkout/success"
@@ -69,6 +82,8 @@ function App() {
         }
       />
     </Routes>
+
+    
   );
 }
 

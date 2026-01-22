@@ -26,10 +26,41 @@ const CheckoutSuccess = () => {
 
     // Si el pago fue aprobado, limpiar el carrito
     if (code === '1') {
-      // Limpiar localStorage del carrito
+      clearCart()
       localStorage.removeItem('anonCart')
+      localStorage.setItem('cartCleared', Date.now().toString())
     }
   }, [searchParams])
+
+  // Función para limpiar el carrito desde el backend
+  const clearCart = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      
+      if (!token) {
+        console.warn('No hay token, carrito no se puede limpiar en BD')
+        return
+      }
+
+      const response = await fetch('http://localhost:3000/api/cart/clear', {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+
+      if (!response.ok) {
+        console.error('Error limpiando carrito:', response.statusText)
+        return
+      }
+
+      const data = await response.json()
+      console.log('Carrito limpiado:', data)
+    } catch (error) {
+      console.error('Error limpiando carrito:', error)
+    }
+  }
 
   if (!orderData) {
     return (

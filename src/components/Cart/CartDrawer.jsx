@@ -23,6 +23,32 @@ function CartDrawer({ isOpen, onClose }) {
     }
   }, [isOpen, user])
 
+  // Limpiar carrito cuando se detecta que fue pagado
+  useEffect(() => {
+    // Verificar una sola vez al montar si se completó un pago
+    const cleared = localStorage.getItem('cartCleared')
+    if (cleared) {
+      console.log('Carrito detectó pago completado, limpiando...')
+      localStorage.removeItem('cartCleared')
+      // Llamar endpoint para limpiar carrito en BD
+      const token = localStorage.getItem('token')
+      if (token && user?.id) {
+        fetch('http://localhost:3001/api/cart/clear', {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(() => {
+          console.log('Carrito limpiado en BD')
+          refetchCart()
+        })
+        .catch(err => console.error('Error limpiando carrito:', err))
+      }
+    }
+  }, [])
+
   const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
   const estaVacio = cartItems.length === 0
 
