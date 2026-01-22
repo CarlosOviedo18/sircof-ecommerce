@@ -26,7 +26,7 @@ app.use('/api/orders', ordersRoutes);
 app.use('/api/user-settings', userSettingsRoutes); 
 
 app.get('/', (req, res) => {
-    res.json({ message: 'Sircof Backend - Servidor funcionando' });
+    res.json({ message: 'Sircof Backend-Servidor funcionando' });
 });
 
 app.get('/test-db', async (req, res) => {
