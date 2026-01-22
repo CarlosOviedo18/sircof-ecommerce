@@ -38,14 +38,15 @@ function StoreProduct() {
   }, [productos, selectedCategory, sortOrder])
 
   const categories = ['All categories', ...new Set(productos?.map(p => p.line) || [])]
-// ✅ PASO 1: Verificar si el usuario está logueado
+
+  
+  const handleAddToCart = async (productId) => {
+    // Si el usuario no está logueado, redirigir a login
     if (!user) {
       navigate('/login', { state: { returnTo: '/tienda' } })
       return
     }
 
-    
-  const handleAddToCart = async (productId) => {
     try {
       setAgrandoProductos(prev => ({ ...prev, [productId]: true }))
       await addToCart(productId, 1)

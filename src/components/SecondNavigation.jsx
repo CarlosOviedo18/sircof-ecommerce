@@ -6,12 +6,14 @@ import avatar from '../img/avatar.jpg'
 import CartDrawer from './Cart/CartDrawer'
 import { useAuthContext } from '../context/AuthContext'
 import { useAuth } from '../hooks/useAuth'
+import { useCart } from '../hooks/useCart'
 
 function SecondNavigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
   const { user } = useAuthContext()
   const { logout } = useAuth()
+  const { cartItems } = useCart()
   const navigate = useNavigate()
 
   const toggleMobileMenu = () => {
@@ -55,10 +57,16 @@ function SecondNavigation() {
               <div className="flex gap-3 md:gap-4 items-center">
                 <button 
                   onClick={() => setCartOpen(true)}
-                  className="text-white hover:scale-110 transition-transform" 
+                  className="text-white hover:scale-110 transition-transform relative" 
                   aria-label="Carrito"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" width={28} height={28} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304" /><path d="M9 11v-5a3 3 0 0 1 6 0v5" /></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2 -1.61l1.34 -8.5h-13.02"/></svg>
+                  {/* Badge con cantidad */}
+                  {cartItems.length > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                      {cartItems.length}
+                    </span>
+                  )}
                 </button>
                 <button className="text-white hover:scale-110 transition-transform" aria-label="Buscar">
                   <svg xmlns="http://www.w3.org/2000/svg" width={28} height={28} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
@@ -67,13 +75,16 @@ function SecondNavigation() {
                 {/* Avatar Usuario / Logout */}
                 {user ? (
                   <div className="hidden md:flex items-center gap-3">
-                    <img src={avatar} alt="Usuario" className="w-10 h-10 rounded-full object-cover" />
-                    <button
-                      onClick={handleLogout}
-                      className="text-white hover:text-coffee font-medium text-sm transition-colors"
-                    >
-                      Logout
-                    </button>
+                     <button
+                            onClick={() => navigate("/user-settings")}
+                            className="text-white hover:text-coffee transition-colors hover:scale-110 relative"
+                            title="Configuración de usuario"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-user-circle"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" /></svg>
+                            {/* Indicador verde de online */}
+                            <span className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+                          </button>
+                  
                   </div>
                 ) : (
                   <a href="/login" className="hidden md:block text-white hover:text-coffee font-medium text-sm transition-colors">
