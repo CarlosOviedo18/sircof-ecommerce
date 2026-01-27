@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useProductos } from '../hooks/useProductos'
 import { useCart } from '../hooks/useCart'
 import { useAuthContext } from '../context/AuthContext'
-import cafeNacional from '../img/cafeNacional.jpeg'
-import cafePremium from '../img/cafePremium.jpeg'
+import cafeNacional from '../assets/webp/cafeNacional.webp'
+import cafePremium from '../assets/webp/cafePremium.webp'
 
 function StoreProduct() {
   const { productos, loading, error } = useProductos()
@@ -185,6 +185,8 @@ function StoreProduct() {
                     <img
                       src={producto.line === 'Premium' ? cafePremium : cafeNacional}
                       alt={producto.name}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     {/* Corazón favorito */}

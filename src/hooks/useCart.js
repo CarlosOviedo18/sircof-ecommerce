@@ -14,7 +14,7 @@ export const useCart = () => {
         context.refetchCart(token)
       }
     }
-  }, [user, context])
+  }, [user])
 
   if (!context) {
     throw new Error('useCart debe ser usado dentro de CartProvider')

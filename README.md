@@ -1,8 +1,8 @@
-# ☕ SIRCOF E-Commerce - Plataforma de Ventas de Café
+#  SIRCOF E-Commerce - Plataforma de Ventas de Café
 
 Una plataforma de e-commerce moderna desarrollada con **React** y **Express.js** para la venta de café premium. Sistema completo con autenticación de usuarios, carrito de compras, pasarela de pagos y gestión de pedidos.
 
-## 🎯 Características Principales
+## Características Principales
 
 ✅ **Sistema de Autenticación**
 - Registro e inicio de sesión seguro con JWT
@@ -36,7 +36,7 @@ Una plataforma de e-commerce moderna desarrollada con **React** y **Express.js**
 - Animaciones suaves con Framer Motion
 - Tema visual profesional basado en café
 
-## 🚀 Requisitos Previos
+##  Requisitos Previos
 
 Antes de comenzar, asegúrate de tener instalado:
 
@@ -101,7 +101,7 @@ npm install
 cd ..
 ```
 
-## 🏃 Cómo Ejecutar el Proyecto
+## Cómo Ejecutar el Proyecto
 
 ### Opción 1: Terminal Única (Recomendado)
 
@@ -125,7 +125,7 @@ npm run dev
 npm run server
 ```
 
-## 🗂️ Estructura del Proyecto
+##  Estructura del Proyecto
 
 ```
 sircof-ecommerce/
@@ -165,7 +165,7 @@ sircof-ecommerce/
 └── README.md                # Este archivo
 ```
 
-## 💻 Tecnologías Utilizadas
+##  Tecnologías Utilizadas
 
 ### Frontend
 - **React 18** - Biblioteca de interfaz de usuario
@@ -182,7 +182,7 @@ sircof-ecommerce/
 - **bcryptjs** - Hash de contraseñas
 - **Tilopay API** - Pasarela de pagos
 
-## 📝 Flujos Principales
+##  Flujos Principales
 
 ### Flujo de Autenticación
 ```
@@ -200,8 +200,7 @@ Checkout → Ingreso de Teléfono → Pago Tilopay → Confirmación
 Perfil → Ver/Editar Datos → Actualizar Email/Contraseña → 
 Ver Historial de Pedidos
 ```
-
-## 🔐 Seguridad
+##  Seguridad
 
 - ✅ Contraseñas hasheadas con bcrypt
 - ✅ Autenticación basada en JWT
@@ -210,14 +209,14 @@ Ver Historial de Pedidos
 - ✅ Variables de entorno sensibles en `.env`
 - ✅ Validación de entrada en formularios
 
-## 📱 Responsive Design
+##  Responsive Design
 
 La aplicación es completamente responsive y funciona en:
-- 📱 Dispositivos móviles (320px+)
-- 📱 Tablets (768px+)
-- 💻 Laptops y escritorios (1024px+)
+-  Dispositivos móviles (320px+)
+-  Tablets (768px+)
+-  Laptops y escritorios (1024px+)
 
-## 🐛 Solución de Problemas
+##  Solución de Problemas
 
 ### Error: "Cannot find module 'bcrypt'"
 ```bash
@@ -235,15 +234,15 @@ npm install bcrypt
 
 
 
-## 📄 Licencia
+##  Licencia
 
 Este proyecto está bajo licencia MIT. Ver el archivo `LICENSE` para más detalles.
 
-## 👨‍💻 Desarrollador
+##  Desarrollador
 
 **Carlos Sircof** - [LinkedIn](www.linkedin.com/in/carlos-oviedo-135a1426b) | [GitHub](https://github.com/CarlosOviedo18)
 
-## 📞 Contacto
+##  Contacto
 
 Para preguntas o sugerencias, contáctame en:
 - 📧 Email: carlos.oviedo18@hotmail.com
