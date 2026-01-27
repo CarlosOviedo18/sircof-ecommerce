@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import SignIn from "../components/auth/SignIn.jsx";
 import SignUp from "../components/auth/SignUp.jsx";
+import { TransitionLogin, buttonVariants } from "../animations/TransitionLogin.jsx";
 // import "../styles/LoginUsers.css";
 
 function LoginUsers() {
@@ -19,14 +21,16 @@ function LoginUsers() {
     "container " + (type === "signUp" ? "right-panel-active" : "");
 
   return (
-    <div className="App">
-      <button
-        onClick={() => navigate("/")}
-        className="absolute top-4 left-4 p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all duration-200 z-50"
-        title="Volver al menú principal"
-      >
-        ← Atrás
-      </button>
+    <TransitionLogin>
+      <div className="App">
+        <motion.button
+          onClick={() => navigate("/")}
+          className="absolute top-4 left-4 p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all duration-200 z-50"
+          title="Volver al menú principal"
+          variants={buttonVariants}
+        >
+          ← Atrás
+        </motion.button>
       <div className={containerClass} id="container">
         <div className="form-container sign-up-container">
           <SignUp onSignUpSuccess={() => setType("signIn")} />
@@ -64,7 +68,8 @@ function LoginUsers() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </TransitionLogin>
   );
 }
 

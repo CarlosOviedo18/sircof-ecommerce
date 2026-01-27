@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import cafeNacional from '../img/cafeNacional.jpeg'
-import cafePremium from '../img/cafePremium.jpeg'
+import cafeNacional from '../assets/webp/cafeNacional.webp'
+import cafePremium from '../assets/webp/cafePremium.webp'
 import { useProductDetail } from '../hooks/useProductDetail'
 import { useCart } from '../hooks/useCart'
 import { useAuthContext } from '../context/AuthContext'
@@ -17,13 +17,13 @@ function ProductDetail() {
   const [mensajeExito, setMensajeExito] = useState(false)
 
   // Función para agregar el producto al carrito
-  co// ✅ PASO 1: Verificar si el usuario está logueado
-    if (!user) {
+  const handleAddToCart = async () => {
+    // ✅ PASO 1: Verificar si el usuario está logueado
+    if (!eusr) {
       navigate('/login', { state: { returnTo: `/producto/${id}` } })
       return
     }
 
-    const handleAddToCart = async () => {
     try {
       setAgregando(true)
       await addToCart(producto.id, cantidad)
@@ -89,6 +89,8 @@ function ProductDetail() {
             <img
               src={producto.line === 'Premium' ? cafePremium : cafeNacional}
               alt={producto.name}
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover"
             />
           </div>

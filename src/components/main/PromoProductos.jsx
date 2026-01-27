@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useProductosDestacados } from '../../hooks/useProductosDestacados'
-import cafeNacional from '../../img/cafeNacional.jpeg'
-import cafePremium from '../../img/cafePremium.jpeg'
-import sobreNosotrosImg from '../../img/SobreNosotros.jpg'
+import cafeNacional from '../../assets/webp/cafeNacional.webp'
+import cafePremium from '../../assets/webp/cafePremium.webp'
+import sobreNosotrosImg from '../../assets/webp/SobreNosotros.webp'
 
 function PromoProductos() {
   const { productos, loading, error } = useProductosDestacados()
@@ -44,6 +44,8 @@ function PromoProductos() {
                 <img 
                   src={producto.line === 'Premium' ? cafePremium : cafeNacional}
                   alt={producto.name}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 
