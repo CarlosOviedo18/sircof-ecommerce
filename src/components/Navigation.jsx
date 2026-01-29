@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import logo from '../img/logo.png'
-import portada from '../img/portada.jpg'
-import avatar from '../img/avatar.jpg'
+import logo from '../assets/webp/logo.webp'
+import portada from '../assets/webp/portada.webp'
+import avatar from '../assets/webp/avatar.webp'
 import CartDrawer from './Cart/CartDrawer'
+import SearchBox from './navigation/SearchBox'
 import { useAuthContext } from '../context/AuthContext'
 import { useAuth } from '../hooks/useAuth'
 
@@ -36,7 +37,7 @@ function Navigation() {
             
             {/* Logo */}
             <div className="flex-shrink-0">
-              <a href="/"><img src={logo} alt="Logo Cafe Sircof" className="h-12 md:h-16 object-contain" /></a>
+              <a href="/"><img src={logo} alt="Logo Cafe Sircof" loading="lazy" decoding="async" className="h-12 md:h-16 object-contain" /></a>
             </div>
 
             <div className="flex items-center gap-4 md:gap-12 ml-auto">
@@ -45,7 +46,7 @@ function Navigation() {
                 <ul className="flex gap-6 md:gap-8 font-sans">
                   <li><a href="#inicio" className="text-white font-medium text-base md:text-lg hover:text-coffee transition-colors">Inicio</a></li>
                   <li><a href="#paginas" className="text-white font-medium text-base md:text-lg hover:text-coffee transition-colors">Sobre Nosotros</a></li>
-                  <li><a href="#contacto" className="text-white font-medium text-base md:text-lg hover:text-coffee transition-colors">Contactenos</a></li>
+                  <li><a href="/contactenos" className="text-white font-medium text-base md:text-lg hover:text-coffee transition-colors">Contactenos</a></li>
                   <li><a href="#galeria" className="text-white font-medium text-base md:text-lg hover:text-coffee transition-colors">Galería</a></li>
                   <li><a href="/tienda" className="text-white font-medium text-base md:text-lg hover:text-coffee transition-colors">Tienda</a></li>
                 </ul>
@@ -53,9 +54,7 @@ function Navigation() {
 
               {/* Iconos */}
               <div className="flex gap-3 md:gap-4 items-center">
-                <button className="text-white hover:scale-110 transition-transform" aria-label="Buscar">
-                  <svg xmlns="http://www.w3.org/2000/svg" width={28} height={28} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
-                </button>
+                <SearchBox />
 
                 {/* Usuario */}
                         {user ? (
@@ -64,13 +63,13 @@ function Navigation() {
                             className="text-white hover:text-coffee transition-colors hover:scale-110 relative"
                             title="Configuración de usuario"
                           >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-user-circle"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-user-circle"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" /></svg>
                             {/* Indicador verde de online */}
                             <span className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
                           </button>
                         ) : (
                           <a href="/login" className="hidden md:flex items-center gap-2 px-6 py-2 bg-coffee text-white font-semibold rounded-full hover:bg-coffee/90 transition-all hover:shadow-lg transform hover:scale-105">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" /><path d="M7 12h14l-3 -3m0 6l3 -3" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" /><path d="M7 12h14l-3 -3m0 6l3 -3" /></svg>
                             Inicia sesión
                           </a>
                         )}
@@ -96,7 +95,7 @@ function Navigation() {
                 <ul className="flex flex-col gap-1 font-sans px-6">
                   <li><a href="#inicio" className="text-white font-medium text-lg hover:text-coffee transition-colors block py-3 px-4 rounded-lg hover:bg-white/10" onClick={() => setMobileMenuOpen(false)}>Inicio</a></li>
                   <li><a href="#paginas" className="text-white font-medium text-lg hover:text-coffee transition-colors block py-3 px-4 rounded-lg hover:bg-white/10" onClick={() => setMobileMenuOpen(false)}>Sobre Nosotros</a></li>
-                  <li><a href="#contacto" className="text-white font-medium text-lg hover:text-coffee transition-colors block py-3 px-4 rounded-lg hover:bg-white/10" onClick={() => setMobileMenuOpen(false)}>Contactenos</a></li>
+                  <li><a href="/contactenos" className="text-white font-medium text-lg hover:text-coffee transition-colors block py-3 px-4 rounded-lg hover:bg-white/10" onClick={() => setMobileMenuOpen(false)}>Contactenos</a></li>
                   <li><a href="#galeria" className="text-white font-medium text-lg hover:text-coffee transition-colors block py-3 px-4 rounded-lg hover:bg-white/10" onClick={() => setMobileMenuOpen(false)}>Galería</a></li>
                   <li><a href="/tienda" className="text-white font-medium text-lg hover:text-coffee transition-colors block py-3 px-4 rounded-lg hover:bg-white/10" onClick={() => setMobileMenuOpen(false)}>Tienda</a></li>
                   {user ? (

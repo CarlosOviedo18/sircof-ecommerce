@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import fotosPatrones from "../../img/foto patrones.jpeg";
-import canastoCafe from "../../img/canasto con cafe.jpeg";
-import sobreNosotros from "../../img/SobreNosotros.jpg";
-import tour1 from "../../img/tours1.jpeg";
+import fotosPatrones from "../../assets/webp/foto patrones.webp";
+import canastoCafe from "../../assets/webp/canasto con cafe.webp";
+import sobreNosotros from "../../assets/webp/SobreNosotros.webp";
+import tour1 from "../../assets/webp/tours1.webp";
 import Stack from "../Stack";
 
 function GranoTuMesa() {
@@ -30,6 +30,8 @@ function GranoTuMesa() {
                   key={i}
                   src={src}
                   alt={`card-${i + 1}`}
+                  loading="lazy"
+                  decoding="async"
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
               ))}

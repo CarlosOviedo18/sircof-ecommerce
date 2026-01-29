@@ -1,5 +1,5 @@
 import React from 'react'
-import sobreNosotrosImg from '../../img/SobreNosotros.jpg'
+import sobreNosotrosImg from '../../assets/webp/SobreNosotros.webp'
 
 function SobreNosotros() {
   const features = [

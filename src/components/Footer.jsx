@@ -1,5 +1,5 @@
-import footerImg from '../img/footer.jpg'
-import logoImg from '../img/logo.png'
+import footerImg from '../assets/webp/footer.webp'
+import logoImg from '../assets/webp/logo.webp'
 
 function Footer() {
   return (
@@ -14,7 +14,7 @@ function Footer() {
           {/* Logo - Centrado */}
           <div className="flex flex-col items-center">
             <p className="text-coffee font-poppins font-semibold text-base">@cafeSircof</p>
-            <img src={logoImg} alt="logo" className="m-2 w-12 h-13 object-contain" />
+            <img src={logoImg} alt="logo" loading="lazy" decoding="async" className="m-2 w-12 h-13 object-contain" />
             <p className="text-gray-300 text-sm mt-1">Síguenos en Instagram</p>
           </div>
 
@@ -24,7 +24,7 @@ function Footer() {
               <ul className="flex flex-row gap-2 text-center font-poppins">
                 <li><a href="#inicio" className="text-gray-100 text-base hover:text-coffee transition-colors">Inicio</a></li>
                 <li><a href="#sobre" className="text-gray-100 text-base hover:text-coffee transition-colors">Sobre Nosotros</a></li>
-                <li><a href="#contacto" className="text-gray-100 text-base hover:text-coffee transition-colors">Contacto</a></li>
+                <li><a href="/contactenos" className="text-gray-100 text-base hover:text-coffee transition-colors">Contacto</a></li>
                 <li><a href="#servicio" className="text-gray-100 text-base hover:text-coffee transition-colors">Galeria</a></li>
                 <li><a href="/tienda" className="text-gray-100 text-base hover:text-coffee transition-colors">Tienda</a></li>
               </ul>
