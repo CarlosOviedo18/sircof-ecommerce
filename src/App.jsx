@@ -14,10 +14,13 @@ import CheckoutSuccess from "./pages/CheckoutSuccess.jsx";
 import UserSettings from "./pages/UserSettings.jsx";
 import Contactenos from "./pages/Contactenos.jsx";
 import { PageAnimated } from "./animations/PageAnimated.jsx";
+import { useSessionTimeout } from "./hooks/useSessionTimeout.js";
 
 
 function App() {
   const location = useLocation()
+  // Logout automático después de 30 minutos de inactividad
+  useSessionTimeout(30)
 
   return (
     <AnimatePresence mode="wait">
