@@ -7,9 +7,9 @@ const router = Router()
 // RUTAS PROTEGIDAS DE USUARIO
 // Todas requieren token JWT válido en header Authorization
 
-/*
+
 // Ruta protegida - obtener perfil del usuario
-router.get('/perfil', protectRoute, async (req, res) => {
+router.get('/profile', protectRoute, async (req, res) => {
   try {
     const userId = req.user.id
     
@@ -30,7 +30,7 @@ router.get('/perfil', protectRoute, async (req, res) => {
       user: users[0]
     })
   } catch (error) {
-    console.error('Error en /perfil:', error.message)
+    console.error('Error en /profile:', error.message)
     res.status(500).json({
       success: false,
       message: 'Error al obtener perfil',
@@ -40,7 +40,7 @@ router.get('/perfil', protectRoute, async (req, res) => {
 })
 
 // Ruta protegida - obtener historial de compras del usuario
-router.get('/compras', protectRoute, async (req, res) => {
+router.get('/purchases', protectRoute, async (req, res) => {
   try {
     const userId = req.user.id
     
@@ -94,6 +94,6 @@ router.put('/perfil', protectRoute, async (req, res) => {
     })
   }
 })
-*/
+
 
 export default router
