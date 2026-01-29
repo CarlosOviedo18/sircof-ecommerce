@@ -1,6 +1,8 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
 import { useAuth } from "../../hooks/useAuth";
+import { staggerContainer, staggerItem } from "../../animations/animations";
 import "../../styles/LoginUsers.css";
 
 function SignIn() {

@@ -1,7 +1,7 @@
 import React from "react";
 import { useProductDetail } from "../../hooks/useProductDetail";
-import cafeNacional from "../../img/cafeNacional.jpeg";
-import cafePremium from "../../img/cafePremium.jpeg";
+import cafeNacional from "../../assets/webp/cafeNacional.webp";
+import cafePremium from "../../assets/webp/cafePremium.webp";
 
 function CartItem({
   cartItemId,
@@ -30,6 +30,8 @@ function CartItem({
       <img
         src={imagenProducto}
         alt={producto.name}
+        loading="lazy"
+        decoding="async"
         className="w-20 h-20 object-cover rounded"
       />
 

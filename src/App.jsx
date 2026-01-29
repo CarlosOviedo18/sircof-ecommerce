@@ -1,4 +1,5 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 import Navigation from "./components/Navigation.jsx";
 import SecondNavigation from "./components/SecondNavigation.jsx";
 import Footer from "./components/Footer.jsx";
@@ -11,26 +12,33 @@ import StoreProduct from "./pages/StoreProduct.jsx";
 import ProductDetail from "./pages/ProductDetail.jsx";
 import CheckoutSuccess from "./pages/CheckoutSuccess.jsx";
 import UserSettings from "./pages/UserSettings.jsx";
+import Contactenos from "./pages/Contactenos.jsx";
+import { PageAnimated } from "./animations/PageAnimated.jsx";
 
 
 function App() {
+  const location = useLocation()
+
   return (
-    <Routes>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
       {/* Rutas de autenticación sin Navigation ni Footer */}
-      <Route path="/login" element={<LoginUsers />} />
+      <Route path="/login" element={<PageAnimated><LoginUsers /></PageAnimated>} />
 
       {/* Rutas protegidas con Navigation y Footer */}
       <Route
         path="/"
         element={
-          <>
-            <Navigation />
-            <SobreNosotros />
-            <ExperienciaEnTaza />
-            <GranoTuMesa />
-            <PromoProductos />
-            <Footer />
-          </>
+          <PageAnimated>
+            <>
+              <Navigation />
+              <SobreNosotros />
+              <ExperienciaEnTaza />
+              <GranoTuMesa />
+              <PromoProductos />
+              <Footer />
+            </>
+          </PageAnimated>
         }
       />
 
@@ -38,11 +46,13 @@ function App() {
       <Route
         path="/tienda"
         element={
-          <>
-            <SecondNavigation />
-            <StoreProduct />
-            <Footer />
-          </>
+          <PageAnimated>
+            <>
+              <SecondNavigation />
+              <StoreProduct />
+              <Footer />
+            </>
+          </PageAnimated>
         }
       />
 
@@ -50,11 +60,13 @@ function App() {
       <Route
         path="/producto/:id"
         element={
-          <>
-            <SecondNavigation />
-            <ProductDetail />
-            <Footer />
-          </>
+          <PageAnimated>
+            <>
+              <SecondNavigation />
+              <ProductDetail />
+              <Footer />
+            </>
+          </PageAnimated>
         }
       />
 
@@ -62,11 +74,27 @@ function App() {
       <Route
         path="/user-settings"
         element={
-          <>
-            <SecondNavigation />
-            <UserSettings />
-            <Footer />
-          </>
+          <PageAnimated>
+            <>
+              <SecondNavigation />
+              <UserSettings />
+              <Footer />
+            </>
+          </PageAnimated>
+        }
+      />
+
+        {/* Página de Contactenos */}
+      <Route
+        path="/contactenos"
+        element={
+          <PageAnimated>
+            <>
+              <SecondNavigation />
+              <Contactenos />
+              <Footer />
+            </>
+          </PageAnimated>
         }
       />
 
@@ -74,16 +102,17 @@ function App() {
       <Route
         path="/checkout/success"
         element={
-          <>
-            <SecondNavigation />
-            <CheckoutSuccess />
-            <Footer />
-          </>
+          <PageAnimated>
+            <>
+              <SecondNavigation />
+              <CheckoutSuccess />
+              <Footer />
+            </>
+          </PageAnimated>
         }
       />
-    </Routes>
-
-    
+      </Routes>
+    </AnimatePresence>
   );
 }
 

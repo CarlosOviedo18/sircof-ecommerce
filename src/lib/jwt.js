@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'tu-secreto-super-seguro-cambiar-en-produccion'
+const JWT_SECRET = process.env.JWT_SECRET; 
 
 export const generateToken = (userId, email) => {
   try {

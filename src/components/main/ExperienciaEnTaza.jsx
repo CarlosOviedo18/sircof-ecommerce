@@ -1,8 +1,8 @@
 import React from 'react'
-import tazaCafe from '../../img/taza con cafe.jpeg'
-import bandolasCafe from '../../img/bandolasCafe.jpg'
-import sobreNosotrosImg from '../../img/SobreNosotros.jpg'
-import iconoExperiencia from '../../img/iconoExperienciataza.png'
+import tazaCafe from '../../assets/webp/taza con cafe.webp'
+import bandolasCafe from '../../assets/webp/bandolasCafe.webp'
+import sobreNosotrosImg from '../../assets/webp/SobreNosotros.webp'
+import iconoExperiencia from '../../assets/webp/iconoExperienciataza.webp'
 
 function ExperienciaEnTaza() {
 return (
@@ -17,11 +17,11 @@ return (
                 {/* Columna Izquierda - Imágenes */}
                 <div className="grid grid-cols-2 gap-4 md:gap-6 relative z-20">
                     <div className="overflow-hidden rounded-lg">
-                        <img src={tazaCafe} alt="Taza con café" className="w-full h-96 md:h-[30rem] object-cover hover:scale-105 transition-transform duration-300" />
+                        <img src={tazaCafe} alt="Taza con café" loading="lazy" decoding="async" className="w-full h-96 md:h-[30rem] object-cover hover:scale-105 transition-transform duration-300" />
                     </div>
                     
                     <div className="overflow-hidden rounded-lg">
-                        <img src={bandolasCafe} alt="Bandolas de café" className="w-full h-96 md:h-[30rem] object-cover hover:scale-105 transition-transform duration-300" />
+                        <img src={bandolasCafe} alt="Bandolas de café" loading="lazy" decoding="async" className="w-full h-96 md:h-[30rem] object-cover hover:scale-105 transition-transform duration-300" />
                     </div>
                 </div>
 
@@ -69,7 +69,7 @@ return (
         </div>
 
         <div className="hidden md:block absolute bottom-4 right-4 opacity-100 z-10">
-            <img src={iconoExperiencia} alt="Decoración" className="w-56 h-56 object-contain" />
+            <img src={iconoExperiencia} alt="Decoración" loading="lazy" decoding="async" className="w-56 h-56 object-contain" />
         </div>
     </section>
 )
