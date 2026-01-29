@@ -5,6 +5,7 @@ const CheckoutSuccess = () => {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const [orderData, setOrderData] = useState(null)
+  const [emailSent, setEmailSent] = useState(false)
 
   useEffect(() => {
     const code = searchParams.get('code')
@@ -101,7 +102,7 @@ const CheckoutSuccess = () => {
                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                   <div>
                     <p className="text-sm text-gray-600 font-semibold uppercase tracking-wide">Número de Orden</p>
-                    <p className="text-2xl font-bold text-dark-coffee mt-1">{orderData.orderNumber}</p>
+                    <p className="text-2xl font-bold text-dark-coffee mt-1">{orderData.orderReference}</p>
                   </div>
                   <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />

@@ -2,6 +2,7 @@ import { Router } from "express";
 import pool from "../database.js";
 import { verifyToken } from "../lib/jwt.js";
 import fetch from "node-fetch";
+import { sendOrderEmails } from "../services/emailService.js";
 
 const router = Router();
 
@@ -81,8 +82,7 @@ router.post("/process", authMiddleware, async (req, res) => {
     const callbackUrl =
       process.env.CALLBACK_URL || "http://localhost:5173/checkout/success";
 
-    // Usar processPayment en lugar de createLinkPayment
-    // Esto permite enviar todos los datos y que Tilopay solo muestre formulario de tarjeta
+   
     const processPaymentPayload = {
       key: process.env.TILOPAY_API_KEY,
       amount: amount.toFixed(2),
@@ -162,6 +162,32 @@ router.post("/process", authMiddleware, async (req, res) => {
          VALUES (?, ?, ?, ?)`,
         [orderResult.insertId, item.product_id, item.quantity, item.price],
       );
+    }
+
+    // Enviar emails después de guardar la orden
+    const [userEmail] = await pool.query(
+      "SELECT name, email FROM users WHERE id = ?",
+      [userId],
+    );
+
+    if (userEmail.length > 0) {
+      const user = userEmail[0];
+      const orderData = {
+        orderId: orderReference,
+        products: cartItems,
+        total: amount,
+        clientName: user.name,
+        clientEmail: user.email,
+        clientPhone: phone,
+        address: address,
+      };
+
+      try {
+        await sendOrderEmails(orderData);
+        console.log("✓ Emails enviados correctamente desde payment.js");
+      } catch (error) {
+        console.error("⚠ Error al enviar emails:", error.message);
+      }
     }
 
     res.json({
