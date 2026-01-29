@@ -5,16 +5,24 @@ import { useNavigate } from 'react-router-dom'
 import { useCart } from '../../hooks/useCart'
 import { usePayment } from '../../hooks/usePayment'
 import { useAuthContext } from '../../context/AuthContext'
-import CartItem from './CartItem'
+import CartHeader from './CartHeader'
+import CartItems from './CartItems'
+import CartFooter from './CartFooter'
 
 function CartDrawer({ isOpen, onClose }) {
-  // Usar el Hook personalizado para obtener la lógica del carrito
   const { cartItems, loading, removeFromCart, updateQuantity, refetchCart } = useCart()
   const { processPayment, loading: paymentLoading, error: paymentError } = usePayment()
   const { user } = useAuthContext()
   const navigate = useNavigate()
-  const [phone, setPhone] = useState('')
-  const [phoneError, setPhoneError] = useState('')
+  
+  const [shippingData, setShippingData] = useState({
+    phone: '',
+    address: '',
+    city: '',
+    postalCode: '',
+    country: 'Costa Rica'
+  })
+  const [formError, setFormError] = useState('')
 
   // Recargar carrito cuando se abre el drawer
   useEffect(() => {
@@ -25,12 +33,10 @@ function CartDrawer({ isOpen, onClose }) {
 
   // Limpiar carrito cuando se detecta que fue pagado
   useEffect(() => {
-    // Verificar una sola vez al montar si se completó un pago
     const cleared = localStorage.getItem('cartCleared')
     if (cleared) {
       console.log('Carrito detectó pago completado, limpiando...')
       localStorage.removeItem('cartCleared')
-      // Llamar endpoint para limpiar carrito en BD
       const token = localStorage.getItem('token')
       if (token && user?.id) {
         fetch('http://localhost:3001/api/cart/clear', {
@@ -52,45 +58,47 @@ function CartDrawer({ isOpen, onClose }) {
   const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
   const estaVacio = cartItems.length === 0
 
-  // Validar formato del teléfono
-  const validatePhone = (phoneValue) => {
-    const phoneRegex = /^(\d{4}-\d{4}|\d{8})$/
-    return phoneRegex.test(phoneValue.replace(/\s/g, ''))
-  }
-
   // Manejar checkout
   const handleCheckout = async () => {
-    // Verificar si el usuario está logueado
     if (!user) {
       navigate('/login', { state: { returnTo: '/checkout' } })
       return
     }
 
-    // Validar teléfono SOLO si lo ingresó
-    if (phone.trim() && !validatePhone(phone)) {
-      setPhoneError('Formato inválido. Usa: 8765-4321 o 87654321')
+    if (!shippingData.address.trim()) {
+      setFormError('La dirección es requerida')
+      return
+    }
+    if (!shippingData.city.trim()) {
+      setFormError('La ciudad es requerida')
+      return
+    }
+    if (!shippingData.postalCode.trim()) {
+      setFormError('El código postal es requerido')
       return
     }
 
-    setPhoneError('')
+    setFormError('')
 
     try {
-      // Enviar datos del pago al backend
       const result = await processPayment({
         cartItems,
         amount: total,
-        phone: phone.replace(/\s/g, '')
+        phone: shippingData.phone.replace(/\s/g, ''),
+        address: shippingData.address,
+        city: shippingData.city,
+        postal_code: shippingData.postalCode,
+        country: shippingData.country
       })
 
-      // Redirigir a Tilopay
       if (result.paymentUrl) {
         window.location.href = result.paymentUrl
       } else {
-        alert('Error: No se recibió URL de pago')
+        setFormError('Error: No se recibió URL de pago')
       }
     } catch (error) {
       console.error('Error al procesar pago:', error.message)
-      setPhoneError(error.message || 'Error al procesar el pago')
+      setFormError(error.message || 'Error al procesar el pago')
     }
   }
 
@@ -115,95 +123,25 @@ function CartDrawer({ isOpen, onClose }) {
             transition={{ type: 'spring', damping: 20, stiffness: 300 }}
             className="fixed right-0 top-0 h-screen w-full md:w-96 bg-white shadow-2xl z-50 flex flex-col"
           >
-            {/* Header del Drawer */}
-            <div className="flex items-center justify-between p-6 border-b">
-              <h2 className="text-2xl font-bold text-dark-coffee">Carrito de Compra</h2>
-              <button
-                onClick={onClose}
-                className="text-gray-500 hover:text-gray-700 text-2xl transition-colors"
-                aria-label="Cerrar carrito"
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* Contenido del Carrito */}
-            <div className="flex-1 overflow-y-auto p-6">
-              {estaVacio ? (
-                <div className="text-center text-gray-500 py-12">
-                  <p className="text-lg">El carrito está vacío</p>
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  {cartItems.map(item => (
-                    <CartItem
-                      key={item.id}
-                      cartItemId={item.id}
-                      productId={item.product_id}
-                      cantidad={item.quantity}
-                      onRemove={removeFromCart}
-                      onQuantityChange={updateQuantity}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Footer con total, teléfono y botón checkout */}
-            <div className="border-t p-6 space-y-4">
-              {/* Total del carrito */}
-              <div className="flex justify-between items-center text-lg font-bold">
-                <span>Total:</span>
-                <span className="text-coffee">₡{total.toLocaleString('es-CR')}</span>
-              </div>
-
-              {/* Input de teléfono (solo mostrar si no está vacío) */}
-              {!estaVacio && (
-                <div>
-                  <input
-                    type="tel"
-                    placeholder="Teléfono (ej: 8765-4321)"
-                    value={phone}
-                    onChange={(e) => {
-                      setPhone(e.target.value)
-                      setPhoneError('')
-                    }}
-                    className={`w-full border rounded px-3 py-2 focus:outline-none transition-colors ${
-                      phoneError
-                        ? 'border-red-500 focus:border-red-500'
-                        : 'border-gray-300 focus:border-coffee'
-                    }`}
-                  />
-                  {phoneError && (
-                    <p className="text-red-500 text-sm mt-1">{phoneError}</p>
-                  )}
-                </div>
-              )}
-
-              {/* Mostrar error de pago si existe */}
-              {paymentError && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded text-sm">
-                  {paymentError}
-                </div>
-              )}
-
-              {/* Botón Proceder al Pago */}
-              <button
-                onClick={handleCheckout}
-                disabled={estaVacio || paymentLoading || !user}
-                className="w-full bg-coffee hover:bg-dark-coffee disabled:bg-gray-300 text-white font-bold py-3 rounded transition-colors"
-              >
-                {paymentLoading ? 'Procesando...' : 'Proceder al Pago'}
-              </button>
-
-              {/* Botón Seguir Comprando */}
-              <button
-                onClick={onClose}
-                className="w-full border-2 border-coffee text-coffee hover:bg-coffee hover:text-white font-bold py-3 rounded transition-colors"
-              >
-                Seguir Comprando
-              </button>
-            </div>
+            <CartHeader onClose={onClose} />
+            <CartItems 
+              items={cartItems} 
+              onRemove={removeFromCart} 
+              onQuantityChange={updateQuantity} 
+              isEmpty={estaVacio} 
+            />
+            <CartFooter 
+              total={total}
+              isEmpty={estaVacio}
+              isLoading={paymentLoading}
+              hasUser={!!user}
+              shippingData={shippingData}
+              setShippingData={setShippingData}
+              formError={formError}
+              paymentError={paymentError}
+              onCheckout={handleCheckout}
+              onClose={onClose}
+            />
           </motion.div>
         </>
       )}
