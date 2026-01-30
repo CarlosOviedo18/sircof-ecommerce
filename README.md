@@ -1,4 +1,7 @@
-#  SIRCOF E-Commerce - Plataforma de Ventas de Café
+
+<img width="1897" height="775" alt="home" src="https://github.com/user-attachments/assets/ce87d58f-2662-4294-a68b-b30113e12de9" />
+#  SIRCOF E-Commer
+ce - Plataforma de Ventas de Café
 
 Una plataforma de e-commerce moderna desarrollada con **React** y **Express.js** para la venta de café premium. Sistema completo con autenticación de usuarios, carrito de compras, pasarela de pagos y gestión de pedidos.
 
