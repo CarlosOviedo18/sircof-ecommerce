@@ -15,6 +15,7 @@ import UserSettings from "./pages/UserSettings.jsx";
 import Contactenos from "./pages/Contactenos.jsx";
 import { PageAnimated } from "./animations/PageAnimated.jsx";
 import { useSessionTimeout } from "./hooks/useSessionTimeout.js";
+import Galery from "./pages/Galery.jsx";
 
 
 function App() {
@@ -96,6 +97,20 @@ function App() {
               <SecondNavigation />
               <Contactenos />
               <Footer />
+            </>
+          </PageAnimated>
+        }
+      />
+
+          {/* Página de Galeria */}
+      <Route
+        path="/galeria"
+        element={
+          <PageAnimated>
+            <>
+            
+              <Galery />
+            
             </>
           </PageAnimated>
         }
