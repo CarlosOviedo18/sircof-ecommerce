@@ -49,7 +49,7 @@ function SecondNavigation() {
                   <li><a href="/" className="text-white font-medium text-base md:text-lg hover:text-coffee transition-colors">Inicio</a></li>
                   <li><a href="/#paginas" className="text-white font-medium text-base md:text-lg hover:text-coffee transition-colors">Sobre Nosotros</a></li>
                   <li><a href="/contactenos" className="text-white font-medium text-base md:text-lg hover:text-coffee transition-colors">Contactenos</a></li>
-                  <li><a href="/#galeria" className="text-white font-medium text-base md:text-lg hover:text-coffee transition-colors">Galería</a></li>
+                  <li><a href="/galeria" className="text-white font-medium text-base md:text-lg hover:text-coffee transition-colors">Galería</a></li>
                   <li><a href="/tienda" className="text-white font-medium text-base md:text-lg hover:text-coffee transition-colors">Tienda</a></li>
                 </ul>
               </nav>
