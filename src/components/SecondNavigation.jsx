@@ -34,7 +34,7 @@ function SecondNavigation() {
         <div className="absolute inset-0 bg-black/25"></div>
         
         {/* Header */}
-        <header className="absolute top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/40 to-transparent">
+        <header className={`absolute top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/40 to-transparent ${mobileMenuOpen ? 'md:block hidden' : ''}`}>
           <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
             
             {/* Logo */}
@@ -86,12 +86,14 @@ function SecondNavigation() {
                   
                   </div>
                 ) : (
-                  <a href="/login" className="hidden md:block text-white hover:text-coffee font-medium text-sm transition-colors">
-                    Login
-                  </a>
+               <a href="/login" className="hidden lg:flex items-center gap-2 px-6 py-2 bg-coffee text-white font-semibold rounded-full hover:bg-coffee/90 transition-all hover:shadow-lg transform hover:scale-105">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" /><path d="M7 12h14l-3 -3m0 6l3 -3" /></svg>
+                            Inicia sesión
+                          </a>
                 )}
                 
-                <button className="md:hidden text-white hover:scale-110 transition-transform text-2xl" aria-label="Menú" onClick={toggleMobileMenu}>☰</button>
+                <button className="lg:hidden text-white hover:scale-110 transition-transform text-2xl" aria-label="Menú" onClick={toggleMobileMenu}>☰</button>
+              
               </div>
             </div>
           </div>
@@ -102,15 +104,15 @@ function SecondNavigation() {
 
         {/* Menú Mobile */}
         {mobileMenuOpen && (
-          <div className="fixed inset-0 md:hidden z-40" onClick={() => setMobileMenuOpen(false)}>
-            <nav className="absolute top-0 right-0 h-screen w-3/4 max-w-xs bg-gradient-to-b from-black/95 to-black/90 backdrop-blur-md shadow-2xl animate-in slide-in-from-right">
+          <div className="fixed inset-0 lg:hidden z-50" onClick={() => setMobileMenuOpen(false)}>
+            <nav className="absolute top-0 right-0 h-screen w-3/4 max-w-xs bg-gradient-to-b from-black/95 to-black/90 backdrop-blur-md shadow-2xl animate-in slide-in-from-right z-50">
               <div className="flex justify-end p-6">
                 <button 
                   onClick={() => setMobileMenuOpen(false)}
                   className="text-white text-3xl hover:text-coffee transition-colors w-10 h-10 flex items-center justify-center"
                   aria-label="Cerrar"
                 >
-                  ✕
+                  x
                 </button>
               </div>
               <ul className="flex flex-col gap-1 font-sans px-6">
@@ -122,7 +124,7 @@ function SecondNavigation() {
                 {user ? (
                   <li><a href="/user-settings" className="text-white font-medium text-lg hover:text-coffee transition-colors block py-3 px-4 rounded-lg hover:bg-white/10" onClick={() => setMobileMenuOpen(false)}>Mi Cuenta</a></li>
                 ) : (
-                  <li><a href="/login" className="text-white font-medium text-lg hover:text-coffee transition-colors block py-3 px-4 rounded-lg hover:bg-white/10" onClick={() => setMobileMenuOpen(false)}>Login</a></li>
+                  <li><a href="/login" className="text-white font-medium text-lg hover:text-coffee transition-colors block py-3 px-4 rounded-lg hover:bg-white/10" onClick={() => setMobileMenuOpen(false)}>Iniciar Sesión</a></li>
                 )}
               </ul>
             </nav>
