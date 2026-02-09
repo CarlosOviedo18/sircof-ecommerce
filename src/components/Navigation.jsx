@@ -2,11 +2,11 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import logo from '../assets/webp/logo.webp'
 import portada from '../assets/webp/portada.webp'
-import avatar from '../assets/webp/avatar.webp'
 import CartDrawer from './Cart/CartDrawer'
 import SearchBox from './navigation/SearchBox'
 import { useAuthContext } from '../context/AuthContext'
 import { useAuth } from '../hooks/useAuth'
+import '../styles/Navigation.css'
 
 function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -28,7 +28,7 @@ function Navigation() {
   return (
     <>
       {/* Hero Section con Header superpuesto */}
-      <section className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden" style={{ backgroundImage: `url(${portada})`, backgroundSize: 'cover', backgroundPosition: 'center 20%', backgroundAttachment: 'fixed' }}>
+      <section className="navigation-hero relative w-full h-screen flex flex-col items-center justify-center overflow-hidden" style={{ backgroundImage: `url(${portada})` }}>
         <div className="absolute inset-0 bg-black/25"></div>
         
         {/* Header */}
@@ -68,21 +68,21 @@ function Navigation() {
                             <span className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
                           </button>
                         ) : (
-                          <a href="/login" className="hidden md:flex items-center gap-2 px-6 py-2 bg-coffee text-white font-semibold rounded-full hover:bg-coffee/90 transition-all hover:shadow-lg transform hover:scale-105">
+                          <a href="/login" className="hidden lg:flex items-center gap-2 px-6 py-2 bg-coffee text-white font-semibold rounded-full hover:bg-coffee/90 transition-all hover:shadow-lg transform hover:scale-105">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" /><path d="M7 12h14l-3 -3m0 6l3 -3" /></svg>
                             Inicia sesión
                           </a>
                         )}
 
-                        <button className="md:hidden text-white hover:scale-110 transition-transform text-2xl" aria-label="Menú" onClick={toggleMobileMenu}>☰</button>
+                        <button className="lg:hidden text-white hover:scale-110 transition-transform text-2xl" aria-label="Menú" onClick={toggleMobileMenu}>☰</button>
                         </div>
                       </div>
                       </div>
 
                       {/* Menú Mobile */}
           {mobileMenuOpen && (
-            <div className="fixed inset-0 md:hidden z-40" onClick={() => setMobileMenuOpen(false)}>
-              <nav className="absolute top-0 right-0 h-screen w-3/4 max-w-xs bg-gradient-to-b from-black/95 to-black/90 backdrop-blur-md shadow-2xl animate-in slide-in-from-right">
+            <div className="fixed inset-0 lg:hidden z-50" onClick={() => setMobileMenuOpen(false)}>
+              <nav className="absolute top-0 right-0 h-screen w-3/4 max-w-xs bg-gradient-to-b from-black/95 to-black/90 backdrop-blur-md shadow-2xl animate-in slide-in-from-right z-50">
                 <div className="flex justify-end p-6">
                   <button 
                     onClick={() => setMobileMenuOpen(false)}
@@ -101,7 +101,7 @@ function Navigation() {
                   {user ? (
                     <li><a href="/user-settings" className="text-white font-medium text-lg hover:text-coffee transition-colors block py-3 px-4 rounded-lg hover:bg-white/10" onClick={() => setMobileMenuOpen(false)}>Mi Cuenta</a></li>
                   ) : (
-                    <li><a href="/login" className="text-white font-medium text-lg hover:text-coffee transition-colors block py-3 px-4 rounded-lg hover:bg-white/10" onClick={() => setMobileMenuOpen(false)}>Login</a></li>
+                    <li><a href="/login" className="text-white font-medium text-lg hover:text-coffee transition-colors block py-3 px-4 rounded-lg hover:bg-white/10" onClick={() => setMobileMenuOpen(false)}>Iniciar Sesión</a></li>
                   )}
                 </ul>
               </nav>

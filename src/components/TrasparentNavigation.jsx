@@ -80,12 +80,10 @@ function TrasparentNavigation() {
                 
                 </div>
               ) : (
-                <a href="/login" className="hidden md:block text-white hover:text-coffee font-medium text-sm transition-colors">
-                  Login
-                </a>
+                <button className="md:hidden text-white hover:scale-110 transition-transform text-2xl" aria-label="Menú" onClick={toggleMobileMenu}>☰</button>
               )}
               
-              <button className="md:hidden text-white hover:scale-110 transition-transform text-2xl" aria-label="Menú" onClick={toggleMobileMenu}>☰</button>
+     
             </div>
           </div>
         </div>
