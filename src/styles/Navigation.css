@@ -1,0 +1,40 @@
+/* Navigation Hero Section Background - Responsive */
+
+.navigation-hero {
+  background-size: cover;
+  background-position: center 20%;
+  background-attachment: fixed;
+}
+
+/* Tablet (768px to 1024px) */
+@media (max-width: 1024px) {
+  .navigation-hero {
+    background-position: center right;
+ 
+    background-size: auto 100%;
+    height: auto;
+    min-height: auto;
+  }
+}
+
+/* Mobile (390px to 768px) */
+@media (max-width: 768px) {
+  .navigation-hero {
+    background-position: center right;
+
+    background-size: auto 100%;
+    height: auto;
+    min-height: auto;
+  }
+}
+
+/* Extra small devices (less than 390px) */
+@media (max-width: 480px) {
+  .navigation-hero {
+    background-position: center right;
+    background-size: auto 100%;
+ 
+    height: auto;
+    min-height: auto;
+  }
+}

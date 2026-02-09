@@ -972,12 +972,12 @@ export default function InfiniteMenu({ items = [], scale = 1.0 }) {
           select-none
           absolute
           font-black
-          text-xl sm:text-2xl md:text-5xl lg:text-6xl xl:text-7xl
-          px-4 sm:px-6 md:px-8 lg:px-10
-          left-1/2 sm:left-1/2 md:left-4 lg:left-8 -translate-x-1/2 sm:-translate-x-1/2 md:translate-x-0
-          top-20 sm:top-40 md:top-1/2 lg:top-1/2 md:-translate-y-1/2 lg:-translate-y-1/2
-          max-w-[90vw] sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-2xl
-          text-white md:text-left
+          text-xl sm:text-2xl lg:text-5xl xl:text-6xl 2xl:text-7xl
+          px-4 sm:px-6 lg:px-8 2xl:px-10
+          left-1/2 sm:left-1/2 lg:left-8 -translate-x-1/2 sm:-translate-x-1/2 lg:translate-x-0
+          top-24 sm:top-28 lg:top-1/2 2xl:top-1/2 lg:-translate-y-1/2 2xl:-translate-y-1/2
+          max-w-[85vw] sm:max-w-sm lg:max-w-md 2xl:max-w-lg
+          text-white lg:text-left
           transition-all
           duration-300 ease-out
           z-20
@@ -995,13 +995,13 @@ export default function InfiniteMenu({ items = [], scale = 1.0 }) {
           {/* Descripción Desktop */}
           <p
             className={`
-          hidden md:block
+          hidden lg:block
           select-none
           absolute
-          text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl
-          max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg
-          px-5 sm:px-7 md:px-8 lg:px-10 py-4 sm:py-5 md:py-6
-          right-0 sm:right-4 md:right-6 lg:right-8
+          text-xs sm:text-sm lg:text-base 2xl:text-lg
+          max-w-xs sm:max-w-sm lg:max-w-md 2xl:max-w-lg
+          px-5 sm:px-7 lg:px-8 2xl:px-10 py-4 sm:py-5 lg:py-6
+          right-0 sm:right-4 lg:right-6 2xl:right-8
           top-1/2
           text-white font-light leading-relaxed
           bg-black/40 backdrop-blur-sm rounded-lg
@@ -1024,14 +1024,14 @@ export default function InfiniteMenu({ items = [], scale = 1.0 }) {
           {/* Descripción Mobile/Tablet */}
           <p
             className={`
-          md:hidden
+          lg:hidden
           select-none
           absolute
           text-xs sm:text-sm
-          max-w-xs sm:max-w-sm
-          px-5 sm:px-7 py-4 sm:py-5
+          max-w-[85vw] sm:max-w-sm
+          px-4 sm:px-6 py-3 sm:py-4
           left-1/2 -translate-x-1/2
-          bottom-24 sm:bottom-28
+          bottom-20 sm:bottom-24
           text-white font-light leading-relaxed text-center
           bg-black/40 backdrop-blur-sm rounded-lg
           border border-white/20

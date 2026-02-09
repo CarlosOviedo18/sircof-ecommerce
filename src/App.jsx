@@ -16,6 +16,7 @@ import Contactenos from "./pages/Contactenos.jsx";
 import { PageAnimated } from "./animations/PageAnimated.jsx";
 import { useSessionTimeout } from "./hooks/useSessionTimeout.js";
 import Galery from "./pages/Galery.jsx";
+import './styles/Navigation.css';
 
 
 function App() {

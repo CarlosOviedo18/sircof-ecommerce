@@ -45,7 +45,7 @@ function GranoTuMesa() {
             <p className="text-sm font-semibold text-gray-300 tracking-widest">
               DISFRUTA
             </p>
-            <h2 className="text-5xl md:text-4xl font-bold leading-tight mt-2">
+            <h2 className="text-5xl md:text-4xl font-serif leading-tight mt-2">
               Del grano a tu mesa
             </h2>
           </div>

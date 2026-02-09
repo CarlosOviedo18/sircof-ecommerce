@@ -22,10 +22,10 @@ function Footer() {
           <div className="flex flex-col items-center">
             <nav>
               <ul className="flex flex-row gap-2 text-center font-poppins">
-                <li><a href="#inicio" className="text-gray-100 text-base hover:text-coffee transition-colors">Inicio</a></li>
-                <li><a href="#sobre" className="text-gray-100 text-base hover:text-coffee transition-colors">Sobre Nosotros</a></li>
+                <li><a href="/inicio" className="text-gray-100 text-base hover:text-coffee transition-colors">Inicio</a></li>
+                <li><a href="/SobreNosotros" className="text-gray-100 text-base hover:text-coffee transition-colors">Sobre Nosotros</a></li>
                 <li><a href="/contactenos" className="text-gray-100 text-base hover:text-coffee transition-colors">Contacto</a></li>
-                <li><a href="#servicio" className="text-gray-100 text-base hover:text-coffee transition-colors">Galeria</a></li>
+                <li><a href="/galeria" className="text-gray-100 text-base hover:text-coffee transition-colors">Galeria</a></li>
                 <li><a href="/tienda" className="text-gray-100 text-base hover:text-coffee transition-colors">Tienda</a></li>
               </ul>
             </nav>

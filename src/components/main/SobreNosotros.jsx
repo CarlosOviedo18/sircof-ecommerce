@@ -66,14 +66,14 @@ function SobreNosotros() {
           {/* Izquierda */}
           <div>
             <p className="text-coffee font-serif text-xs tracking-wider mb-4">NUESTRO CAFE</p>
-            <h2 className="text-white font-serif font-bold text-4xl md:text-5xl leading-tight">
+            <h2 className="text-white font-serif  font-bold text-4xl md:text-5xl leading-tight">
               Saborea la mezcla de sabores clásicos
             </h2>
           </div>
           
           {/* Derecha */}
           <div>
-            <p className="text-gray-200 text-sm md:text-base leading-relaxed">
+            <p className="text-gray-200 font-sans text-sm md:text-base leading-relaxed">
               Café Sircof es un lugar que combina tradición, sabor y hospitalidad familiar. Ofrece un café de alta calidad cultivado en sus propias tierras, donde cada grano es cosechado con esmero para brindar una experiencia auténtica en cada taza.
             </p>
           </div>
@@ -89,7 +89,7 @@ function SobreNosotros() {
               </div>
               
               {/* Título */}
-              <h3 className="text-white font-serif font-bold text-base md:text-lg mb-4">
+              <h3 className="text-white font-sans font-bold text-base md:text-lg mb-4">
                 {feature.title}
               </h3>
               
