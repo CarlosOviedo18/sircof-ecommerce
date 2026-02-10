@@ -51,7 +51,8 @@ router.post('/register', async (req, res) => {
       user: {
         id: result.insertId,
         name,
-        email
+        email,
+        role: 'user'
       }
     })
   } catch (error) {
@@ -99,7 +100,7 @@ router.post('/login', async (req, res) => {
 
     const token = generateToken(user.id, user.email)
 
-    console.log(`Usuario login exitoso: ${user.email} (ID: ${user.id})`)
+    console.log(`Usuario login exitoso: ${user.email} (ID: ${user.id}, Role: ${user.role})`)
     res.json({
       success: true,
       message: 'Login exitoso',
@@ -107,7 +108,8 @@ router.post('/login', async (req, res) => {
       user: {
         id: user.id,
         name: user.name,
-        email: user.email
+        email: user.email,
+        role: user.role
       }
     })
   } catch (error) {
