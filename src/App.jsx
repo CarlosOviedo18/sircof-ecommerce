@@ -18,6 +18,15 @@ import { useSessionTimeout } from "./hooks/useSessionTimeout.js";
 import Galery from "./pages/Galery.jsx";
 import './styles/Navigation.css';
 
+// Admin imports
+import AdminRoute from "./components/admin/AdminRoute.jsx";
+import AdminLayout from "./components/admin/AdminLayout.jsx";
+import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
+import AdminProducts from "./pages/admin/AdminProducts.jsx";
+import AdminOrders from "./pages/admin/AdminOrders.jsx";
+import AdminUsers from "./pages/admin/AdminUsers.jsx";
+import AdminContacts from "./pages/admin/AdminContacts.jsx";
+
 
 function App() {
   const location = useLocation()
@@ -130,6 +139,23 @@ function App() {
           </PageAnimated>
         }
       />
+
+      {/* Panel de Administración */}
+      <Route
+        path="/admin"
+        element={
+          <AdminRoute>
+            <AdminLayout />
+          </AdminRoute>
+        }
+      >
+        <Route index element={<AdminDashboard />} />
+        <Route path="products" element={<AdminProducts />} />
+        <Route path="orders" element={<AdminOrders />} />
+        <Route path="users" element={<AdminUsers />} />
+        <Route path="contacts" element={<AdminContacts />} />
+      </Route>
+
       </Routes>
     </AnimatePresence>
   );
