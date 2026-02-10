@@ -76,6 +76,15 @@ CREATE TABLE order_items (
 
 ALTER TABLE products ADD COLUMN line VARCHAR(50);
 
+-- Tabla de contactos (mensajes del formulario de contacto)
+CREATE TABLE IF NOT EXISTS contacts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  subject VARCHAR(200),
+  message TEXT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 
 
 -- Insertar productos
