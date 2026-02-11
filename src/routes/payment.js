@@ -164,32 +164,6 @@ router.post("/process", authMiddleware, async (req, res) => {
       );
     }
 
-    // Enviar emails después de guardar la orden
-    const [userEmail] = await pool.query(
-      "SELECT name, email FROM users WHERE id = ?",
-      [userId],
-    );
-
-    if (userEmail.length > 0) {
-      const user = userEmail[0];
-      const orderData = {
-        orderId: orderReference,
-        products: cartItems,
-        total: amount,
-        clientName: user.name,
-        clientEmail: user.email,
-        clientPhone: phone,
-        address: address,
-      };
-
-      try {
-        await sendOrderEmails(orderData);
-        console.log("✓ Emails enviados correctamente desde payment.js");
-      } catch (error) {
-        console.error("⚠ Error al enviar emails:", error.message);
-      }
-    }
-
     res.json({
       success: true,
       paymentUrl: tilopayData.url,
@@ -202,6 +176,106 @@ router.post("/process", authMiddleware, async (req, res) => {
     res.status(500).json({
       success: false,
       message: error.message || "Error procesando pago",
+    });
+  }
+});
+
+// Confirmar pago exitoso y enviar emails
+router.post("/confirm", authMiddleware, async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { orderNumber, code } = req.body;
+
+    // Solo procesar si el pago fue exitoso (code === '1' en Tilopay)
+    if (code !== '1') {
+      return res.status(400).json({
+        success: false,
+        message: "El pago no fue aprobado",
+      });
+    }
+
+    if (!orderNumber) {
+      return res.status(400).json({
+        success: false,
+        message: "Número de orden requerido",
+      });
+    }
+
+    // Buscar la orden en la BD
+    const [orders] = await pool.query(
+      `SELECT o.id, o.total, o.status, o.tilopay_reference, o.phone, o.address, o.city, o.postal_code, o.country
+       FROM orders o WHERE o.tilopay_reference = ? AND o.user_id = ?`,
+      [orderNumber, userId],
+    );
+
+    if (orders.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Orden no encontrada",
+      });
+    }
+
+    const order = orders[0];
+
+    // Evitar enviar emails duplicados si ya fue confirmada
+    if (order.status === 'paid') {
+      return res.json({
+        success: true,
+        message: "La orden ya fue confirmada previamente",
+        alreadyConfirmed: true,
+      });
+    }
+
+    // Actualizar estado de la orden a 'paid'
+    await pool.query(
+      "UPDATE orders SET status = 'paid' WHERE id = ?",
+      [order.id],
+    );
+
+    // Obtener datos del usuario
+    const [users] = await pool.query(
+      "SELECT name, email FROM users WHERE id = ?",
+      [userId],
+    );
+
+    // Obtener items de la orden
+    const [orderItems] = await pool.query(
+      `SELECT oi.product_id, oi.quantity, oi.price, p.name 
+       FROM order_items oi 
+       JOIN products p ON oi.product_id = p.id 
+       WHERE oi.order_id = ?`,
+      [order.id],
+    );
+
+    if (users.length > 0) {
+      const user = users[0];
+      const orderData = {
+        orderId: order.tilopay_reference,
+        products: orderItems,
+        total: parseFloat(order.total),
+        clientName: user.name,
+        clientEmail: user.email,
+        clientPhone: order.phone,
+        address: order.address,
+      };
+
+      try {
+        await sendOrderEmails(orderData);
+        console.log("✓ Emails enviados después de pago confirmado");
+      } catch (emailError) {
+        console.error("⚠ Error al enviar emails:", emailError.message);
+      }
+    }
+
+    res.json({
+      success: true,
+      message: "Pago confirmado y emails enviados",
+    });
+  } catch (error) {
+    console.error("Error confirmando pago:", error.message);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Error confirmando pago",
     });
   }
 });

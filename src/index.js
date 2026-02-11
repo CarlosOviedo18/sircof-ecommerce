@@ -11,6 +11,7 @@ import ordersRoutes from './routes/orders.js';
 import userSettingsRoutes from './routes/UserSettings.js';
 import contactFormRoutes from './routes/contactForm.js';
 import adminRoutes from './routes/admin.js';
+import passwordResetRoutes from './routes/passwordReset.js';
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use('/api/orders', ordersRoutes);
 app.use('/api/user-settings', userSettingsRoutes);
 app.use('/api/contact', contactFormRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/auth', passwordResetRoutes);
 
 app.get('/', (req, res) => {
     res.json({ message: 'Sircof Backend-Servidor funcionando' });
