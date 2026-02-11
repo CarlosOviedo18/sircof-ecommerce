@@ -74,6 +74,19 @@ CREATE TABLE order_items (
     ON DELETE CASCADE
 );
 
+CREATE TABLE password_resets (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  code VARCHAR(6) NOT NULL,
+  expires_at DATETIME NOT NULL,
+  used TINYINT(1) DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_password_resets_user
+    FOREIGN KEY (user_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE
+);
+
 ALTER TABLE products ADD COLUMN line VARCHAR(50);
 
 -- Tabla de contactos (mensajes del formulario de contacto)
@@ -86,6 +99,20 @@ CREATE TABLE IF NOT EXISTS contacts (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+
+-- Tabla de códigos de recuperación de contraseña
+CREATE TABLE IF NOT EXISTS password_resets (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  code VARCHAR(6) NOT NULL,
+  expires_at DATETIME NOT NULL,
+  used TINYINT(1) DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_password_resets_user
+    FOREIGN KEY (user_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE
+);
 
 -- Insertar productos
 INSERT INTO products (name, description, price, line, stock) VALUES
