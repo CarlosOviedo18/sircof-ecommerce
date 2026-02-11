@@ -26,6 +26,7 @@ import AdminProducts from "./pages/admin/AdminProducts.jsx";
 import AdminOrders from "./pages/admin/AdminOrders.jsx";
 import AdminUsers from "./pages/admin/AdminUsers.jsx";
 import AdminContacts from "./pages/admin/AdminContacts.jsx";
+import ForgotPassword from "./pages/ForgotPassword.jsx";
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
       <Routes location={location} key={location.pathname}>
       {/* Rutas de autenticación sin Navigation ni Footer */}
       <Route path="/login" element={<PageAnimated><LoginUsers /></PageAnimated>} />
+      <Route path="/forgot-password" element={<PageAnimated><ForgotPassword /></PageAnimated>} />
 
       {/* Rutas protegidas con Navigation y Footer */}
       <Route

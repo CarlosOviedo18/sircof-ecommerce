@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import "../../styles/LoginUsers.css";
 
@@ -68,7 +68,7 @@ function SignIn() {
         onChange={handleChange}
       />
       {error && <p style={{ color: 'red', fontSize: '12px', margin: '8px 0' }}>{error}</p>}
-      <a href="#">¿Olvidaste tu contraseña?</a>
+      <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>
       <button disabled={loading}>{loading ? 'Iniciando sesión...' : 'Inicia Sesión'}</button>
     </form>
   );
