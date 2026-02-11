@@ -47,7 +47,7 @@ router.post('/', async (req, res) => {
 })
 
 
-// aqui a más rutas relacionadas con el formulario de contacto si es necesario(admin)
+
 
 
 export default router

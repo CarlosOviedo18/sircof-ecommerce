@@ -1,19 +1,22 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useConfirmPayment } from '../hooks/useConfirmPayment'
 
 const CheckoutSuccess = () => {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const [orderData, setOrderData] = useState(null)
-  const [emailSent, setEmailSent] = useState(false)
+  const { confirmPayment, clearCart, emailSent, confirming } = useConfirmPayment()
 
   useEffect(() => {
     const code = searchParams.get('code')
-    const orderNumber = searchParams.get('orderNumber')
+    const orderNumber = searchParams.get('order') 
+      || searchParams.get('returnData') 
+      || searchParams.get('orderNumber')
     const description = searchParams.get('description')
-    const tilopayOrderId = searchParams.get('tilopayOrderId')
-    const creditCardBrand = searchParams.get('creditCardBrand')
-    const last4CreditCardNumber = searchParams.get('last4CreditCardNumber')
+    const tilopayOrderId = searchParams.get('tilopay-transaction') || searchParams.get('tpt')
+    const creditCardBrand = searchParams.get('brand')
+    const last4CreditCardNumber = searchParams.get('last-digits')
 
     setOrderData({
       code,
@@ -26,38 +29,9 @@ const CheckoutSuccess = () => {
 
     if (code === '1') {
       clearCart()
-      localStorage.removeItem('anonCart')
-      localStorage.setItem('cartCleared', Date.now().toString())
+      confirmPayment(orderNumber, code)
     }
   }, [searchParams])
-
-  const clearCart = async () => {
-    try {
-      const token = localStorage.getItem('token')
-      if (!token) {
-        console.warn('No hay token, carrito no se puede limpiar en BD')
-        return
-      }
-
-      const response = await fetch('http://localhost:3000/api/cart/clear', {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      })
-
-      if (!response.ok) {
-        console.error('Error limpiando carrito:', response.statusText)
-        return
-      }
-
-      const data = await response.json()
-      console.log('Carrito limpiado:', data)
-    } catch (error) {
-      console.error('Error limpiando carrito:', error)
-    }
-  }
 
   if (!orderData) {
     return (
@@ -102,7 +76,7 @@ const CheckoutSuccess = () => {
                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                   <div>
                     <p className="text-sm text-gray-600 font-semibold uppercase tracking-wide">Número de Orden</p>
-                    <p className="text-2xl font-bold text-dark-coffee mt-1">{orderData.orderReference}</p>
+                    <p className="text-2xl font-bold text-dark-coffee mt-1">{orderData.orderNumber}</p>
                   </div>
                   <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
