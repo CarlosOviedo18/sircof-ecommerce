@@ -1,5 +1,7 @@
 import React, { createContext, useState, useCallback, useEffect } from 'react'
 
+const API_URL = import.meta.env.VITE_API_URL
+
 export const CartContext = createContext()
 
 export const CartProvider = ({ children }) => {
@@ -15,7 +17,7 @@ export const CartProvider = ({ children }) => {
       setLoading(true)
       setError(null)
 
-      const response = await fetch('http://localhost:3000/api/cart', {
+      const response = await fetch(`${API_URL}/api/cart`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -43,7 +45,7 @@ export const CartProvider = ({ children }) => {
       setError(null)
 
       const token = localStorage.getItem('token')
-      const response = await fetch('http://localhost:3000/api/cart/add', {
+      const response = await fetch(`${API_URL}/api/cart/add`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -70,7 +72,7 @@ export const CartProvider = ({ children }) => {
       setError(null)
 
       const token = localStorage.getItem('token')
-      const response = await fetch(`http://localhost:3000/api/cart/${cartItemId}`, {
+      const response = await fetch(`${API_URL}/api/cart/${cartItemId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -105,7 +107,7 @@ export const CartProvider = ({ children }) => {
       setError(null)
 
       const token = localStorage.getItem('token')
-      const response = await fetch(`http://localhost:3000/api/cart/${cartItemId}`, {
+      const response = await fetch(`${API_URL}/api/cart/${cartItemId}`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -129,7 +131,7 @@ export const CartProvider = ({ children }) => {
   // Función para limpiar el carrito
   const clearCart = useCallback(async (token) => {
     try {
-      const response = await fetch('http://localhost:3000/api/cart/clear', {
+      const response = await fetch(`${API_URL}/api/cart/clear`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

@@ -9,7 +9,7 @@ export const useProductosDestacados = () => {
     const fetchProductos = async () => {
       try {
         setLoading(true)
-        const response = await fetch('http://localhost:3000/api/productos-destacados')
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/productos-destacados`)
         
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: Error al obtener productos destacados`)

@@ -4,6 +4,8 @@ import { motion } from "framer-motion"
 import { useAuth } from "../../hooks/useAuth"
 import { staggerContainer, staggerItem } from "../../animations/animations"
 
+const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*\d).{8,}$/
+
 function SignUp({ onSignUpSuccess }) {
   const navigate = useNavigate()
   const [state, setState] = React.useState({
@@ -11,6 +13,7 @@ function SignUp({ onSignUpSuccess }) {
     email: "",
     password: "",
   })
+  const [passwordError, setPasswordError] = React.useState("")
   const { register, loading, error } = useAuth()
 
   const handleChange = (evt) => {
@@ -19,11 +22,21 @@ function SignUp({ onSignUpSuccess }) {
       ...state,
       [evt.target.name]: value,
     })
+    // Limpiar error de contraseña al escribir
+    if (evt.target.name === 'password') {
+      setPasswordError('')
+    }
   }
 
   const handleOnSubmit = async (evt) => {
     evt.preventDefault()
     const { name, email, password } = state
+
+    // Validar contraseña antes de enviar
+    if (!PASSWORD_REGEX.test(password)) {
+      setPasswordError('Mínimo 8 caracteres, una mayúscula y un número')
+      return
+    }
     
     try {
       await register(name, email, password)
@@ -72,6 +85,14 @@ function SignUp({ onSignUpSuccess }) {
         value={state.password}
         onChange={handleChange}
       />
+      {state.password && !PASSWORD_REGEX.test(state.password) && (
+        <div style={{ fontSize: '11px', color: '#888', margin: '4px 0', textAlign: 'left', width: '100%' }}>
+          <span style={{ color: state.password.length >= 8 ? 'green' : '#888' }}>✓ 8 caracteres</span>{' · '}
+          <span style={{ color: /[A-Z]/.test(state.password) ? 'green' : '#888' }}>✓ Mayúscula</span>{' · '}
+          <span style={{ color: /\d/.test(state.password) ? 'green' : '#888' }}>✓ Número</span>
+        </div>
+      )}
+      {passwordError && <p style={{ color: 'red', fontSize: '12px', margin: '8px 0' }}>{passwordError}</p>}
       {error && <p style={{ color: 'red', fontSize: '12px', margin: '8px 0' }}>{error}</p>}
       <button disabled={loading}>{loading ? 'Registrando...' : 'Registrarse'}</button>
     </form>

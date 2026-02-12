@@ -11,7 +11,7 @@ export const useConfirmPayment = () => {
 
       setConfirming(true)
 
-      const response = await fetch('http://localhost:3000/api/payment/confirm', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/payment/confirm`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -38,7 +38,7 @@ export const useConfirmPayment = () => {
       const token = localStorage.getItem('token')
       if (!token) return
 
-      await fetch('http://localhost:3000/api/cart/clear', {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/cart/clear`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
