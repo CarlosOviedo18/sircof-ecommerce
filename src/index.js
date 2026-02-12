@@ -1,6 +1,7 @@
 import 'dotenv/config.js'
 import express from 'express';
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 import pool from './database.js';
 import routes from './routes/routes.js';
 import authRoutes from './routes/auth.js';
@@ -15,7 +16,22 @@ import passwordResetRoutes from './routes/passwordReset.js';
 
 const app = express();
 
-app.use(cors());
+// CORS restringido al origen del frontend
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  credentials: true
+}));
+
+// Rate limit general: 100 peticiones por minuto por IP
+const generalLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 100,
+  message: { success: false, message: 'Demasiadas peticiones, por favor espera un momento' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+app.use('/api', generalLimiter);
+
 app.use(express.json({ limit: '10mb', strict: false }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 

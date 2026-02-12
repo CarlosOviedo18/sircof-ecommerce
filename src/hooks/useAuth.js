@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useAuthContext } from '../context/AuthContext'
 
-const API_URL = 'http://localhost:3000/api/auth'
+const API_URL = `${import.meta.env.VITE_API_URL}/api/auth`
 
 export const useAuth = () => {
   const [loading, setLoading] = useState(false)

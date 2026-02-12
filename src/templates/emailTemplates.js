@@ -35,7 +35,7 @@ export const clientEmailTemplate = (orderData) => {
     <body>
       <div class="container">
         <div class="logo-section">
-          <img src="http://localhost:3000/src/assets/img/logo.png" alt="Sircof Logo" class="logo">
+          <img src="${process.env.VITE_API_URL || 'http://localhost:3000'}/src/assets/img/logo.png" alt="Sircof Logo" class="logo">
         </div>
         <div class="header">
           <h1>¡Gracias por tu compra!</h1>

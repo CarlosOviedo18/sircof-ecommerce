@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useEffect, useState, useMemo } from 'react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useProductos } from '../hooks/useProductos'
 import { useCart } from '../hooks/useCart'
 import { useAuthContext } from '../context/AuthContext'
@@ -11,19 +11,46 @@ function StoreProduct() {
   const { addToCart, refetchCart } = useCart()
   const { user } = useAuthContext()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const searchQuery = searchParams.get('search') || ''
   const [sortedProductos, setSortedProductos] = useState([])
   const [selectedCategory, setSelectedCategory] = useState('All categories')
   const [sortOrder, setSortOrder] = useState('latest')
+  const [maxPrice, setMaxPrice] = useState(10000)
   const [agrandoProductos, setAgrandoProductos] = useState({})
   const [mensajosExito, setMensajosExito] = useState({})
 
+  // Calcular rango de precios real de los productos
+  const priceRange = useMemo(() => {
+    if (!productos || productos.length === 0) return { min: 0, max: 10000 }
+    const prices = productos.map(p => p.price)
+    return { min: Math.min(...prices), max: Math.max(...prices) }
+  }, [productos])
+
+  // Inicializar maxPrice al precio máximo real
+  useEffect(() => {
+    if (priceRange.max > 0) {
+      setMaxPrice(priceRange.max)
+    }
+  }, [priceRange.max])
+
   useEffect(() => {
     let filtered = [...(productos || [])]
+
+    // Filtrar por búsqueda
+    if (searchQuery) {
+      filtered = filtered.filter(p =>
+        p.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    }
 
     // Filtrar por categoría
     if (selectedCategory !== 'All categories') {
       filtered = filtered.filter(p => p.line === selectedCategory)
     }
+
+    // Filtrar por precio
+    filtered = filtered.filter(p => p.price <= maxPrice)
 
     // Ordenar
     if (sortOrder === 'price-asc') {
@@ -35,7 +62,7 @@ function StoreProduct() {
     }
 
     setSortedProductos(filtered)
-  }, [productos, selectedCategory, sortOrder])
+  }, [productos, selectedCategory, sortOrder, searchQuery, maxPrice])
 
   const categories = ['All categories', ...new Set(productos?.map(p => p.line) || [])]
 
@@ -87,6 +114,17 @@ function StoreProduct() {
         <h1 className="text-4xl font-bold text-center text-dark-coffee mb-4">
           Tienda SIRCOF
         </h1>
+        {searchQuery && (
+          <div className="text-center mb-4">
+            <p className="text-gray-600">Resultados para: <strong>"{searchQuery}"</strong></p>
+            <button
+              onClick={() => navigate('/tienda')}
+              className="text-coffee hover:underline text-sm mt-1"
+            >
+              Limpiar búsqueda
+            </button>
+          </div>
+        )}
         <p className="text-center text-gray-600 mb-12">
           Mostrando {sortedProductos.length} resultado{sortedProductos.length !== 1 ? 's' : ''}
         </p>
@@ -121,16 +159,19 @@ function StoreProduct() {
 
             {/* Price range */}
             <div className="mb-8">
-              <h3 className="text-lg font-bold text-dark-coffee mb-4">Price</h3>
+              <h3 className="text-lg font-bold text-dark-coffee mb-4">Precio</h3>
               <div className="space-y-3">
                 <input
                   type="range"
-                  min="0"
-                  max="5000"
-                  className="w-full"
+                  min={priceRange.min}
+                  max={priceRange.max}
+                  step={100}
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(Number(e.target.value))}
+                  className="w-full accent-amber-700"
                 />
                 <p className="text-gray-600 text-sm">
-                  Price: 2400 - 4500
+                  Hasta: <strong>₡{maxPrice.toLocaleString('es-CR')}</strong>
                 </p>
               </div>
             </div>
@@ -189,12 +230,6 @@ function StoreProduct() {
                       decoding="async"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    {/* Corazón favorito */}
-                    <button className="absolute top-4 right-4 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-100 transition-colors">
-                      <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                      </svg>
-                    </button>
                   </Link>
 
                   {/* Info del producto */}
