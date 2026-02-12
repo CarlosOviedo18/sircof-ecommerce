@@ -39,7 +39,7 @@ function CartDrawer({ isOpen, onClose }) {
       localStorage.removeItem('cartCleared')
       const token = localStorage.getItem('token')
       if (token && user?.id) {
-        fetch('http://localhost:3001/api/cart/clear', {
+        fetch(`${import.meta.env.VITE_API_URL}/api/cart/clear`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`,

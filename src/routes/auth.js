@@ -1,13 +1,27 @@
-
-
 import { Router } from 'express'
+import rateLimit from 'express-rate-limit'
 import pool from '../database.js'
 import { hashPassword, comparePassword } from '../lib/crypto.js'
 import { generateToken } from '../lib/jwt.js'
 
 const router = Router()
 
-router.post('/register', async (req, res) => {
+// Rate limit estricto para login/register: 5 intentos cada 15 minutos por IP
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: { success: false, message: 'Demasiados intentos, por favor espera 15 minutos' },
+  standardHeaders: true,
+  legacyHeaders: false
+})
+
+// Validación de contraseña segura
+const validatePassword = (password) => {
+  const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/
+  return passwordRegex.test(password)
+}
+
+router.post('/register', authLimiter, async (req, res) => {
   try {
     const { name, email, password } = req.body
 
@@ -23,6 +37,13 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({
         success: false,
         message: 'Email inválido'
+      })
+    }
+
+    if (!validatePassword(password)) {
+      return res.status(400).json({
+        success: false,
+        message: 'La contraseña debe tener al menos 8 caracteres, una mayúscula y un número'
       })
     }
 
@@ -64,7 +85,7 @@ router.post('/register', async (req, res) => {
   }
 })
 
-router.post('/login', async (req, res) => {
+router.post('/login', authLimiter, async (req, res) => {
   try {
     const { email, password } = req.body
 
