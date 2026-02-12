@@ -28,11 +28,8 @@ function SignIn() {
       await login(email, password);
       setState({ email: "", password: "" });
       
-    setState({ email: "", password: "" });
-      setTimeout(() => navigate("/"), 500);
-      if(location.state?.returnTo ){
-      setTimeout(() => navigate("/tienda"), 500);
-    }
+      const returnTo = location.state?.returnTo;
+      setTimeout(() => navigate(returnTo || "/"), 500);
     } catch (err) {
       console.error('Error en login:', err.message);
     }

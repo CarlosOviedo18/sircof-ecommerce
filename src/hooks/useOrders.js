@@ -14,7 +14,7 @@ export const usePurchases = () => {
         throw new Error('No hay token disponible')
       }
 
-      const response = await fetch('http://localhost:3000/api/orders/orders', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/orders/orders`, {
         headers: { 
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

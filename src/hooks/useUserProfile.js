@@ -14,7 +14,7 @@ export const useUserProfile = () => {
         throw new Error('No hay sesión activa')
       }
 
-      const response = await fetch('http://localhost:3000/api/user-settings/email', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-settings/email`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -49,7 +49,7 @@ export const useUserProfile = () => {
         throw new Error('No hay sesión activa')
       }
 
-      const response = await fetch('http://localhost:3000/api/user-settings/password', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-settings/password`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

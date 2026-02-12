@@ -18,8 +18,8 @@ function ProductDetail() {
 
   // Función para agregar el producto al carrito
   const handleAddToCart = async () => {
-    // ✅ PASO 1: Verificar si el usuario está logueado
-    if (!eusr) {
+    // Verificar si el usuario está logueado
+    if (!user) {
       navigate('/login', { state: { returnTo: `/producto/${id}` } })
       return
     }
@@ -166,9 +166,9 @@ function ProductDetail() {
               </button>
 
               {/* Botón favoritos */}
-              <button className="w-full border-2 border-coffee text-coffee hover:bg-coffee hover:text-white font-bold py-3 px-6 rounded text-lg transition-colors duration-300">
+              {/* <button className="w-full border-2 border-coffee text-coffee hover:bg-coffee hover:text-white font-bold py-3 px-6 rounded text-lg transition-colors duration-300">
                 ❤ Agregar a favoritos
-              </button>
+              </button> */}
             </div>
 
             <div className="bg-gray-50 p-6 rounded-lg mt-6 space-y-3 text-sm text-gray-700">
