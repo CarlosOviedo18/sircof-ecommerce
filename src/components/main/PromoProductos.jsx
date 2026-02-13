@@ -69,7 +69,7 @@ function PromoProductos() {
                 </p>
 
                 {/* Nombre del producto */}
-                <h3 className="text-white font-serif font-bold text-lg md:text-xl leading-tight group-hover:text-coffee transition-colors duration-300">
+                <h3 className="text-white font-sans font-bold text-lg md:text-xl leading-tight group-hover:text-coffee transition-colors duration-300">
                   {producto.name}
                 </h3>
 
