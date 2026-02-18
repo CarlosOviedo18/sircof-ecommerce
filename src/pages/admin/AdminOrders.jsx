@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useAdmin } from '../../hooks/useAdmin'
+import { useAdmin } from '../../hooks/admin/useAdmin'
 
 const STATUS_CONFIG = {
   pending: { label: 'Pendiente', bg: 'bg-yellow-100', text: 'text-yellow-800', dot: 'bg-yellow-500' },

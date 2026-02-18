@@ -1,5 +1,5 @@
 import React from "react";
-import { useProductDetail } from "../../hooks/useProductDetail";
+import { useProductDetail } from "../../hooks/products/useProductDetail";
 import cafeNacional from "../../assets/webp/cafeNacional.webp";
 import cafePremium from "../../assets/webp/cafePremium.webp";
 

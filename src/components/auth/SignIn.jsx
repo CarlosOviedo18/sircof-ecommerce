@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/auth/useAuth";
 import "../../styles/LoginUsers.css";
 
 function SignIn() {

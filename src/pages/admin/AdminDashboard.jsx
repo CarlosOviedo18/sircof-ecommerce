@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useAdmin } from '../../hooks/useAdmin'
+import { useAdmin } from '../../hooks/admin/useAdmin'
 
 /**
  * Tarjeta de estadística reutilizable para el dashboard
