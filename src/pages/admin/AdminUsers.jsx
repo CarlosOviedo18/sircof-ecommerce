@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useAdmin } from '../../hooks/useAdmin'
+import { useAdmin } from '../../hooks/admin/useAdmin'
 import { useAuthContext } from '../../context/AuthContext'
 
 function AdminUsers() {

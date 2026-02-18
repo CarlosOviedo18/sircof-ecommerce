@@ -1,0 +1,288 @@
+import React, { useEffect, useState, useMemo } from 'react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { useProductos } from '../../hooks/products/useProductos'
+import { useCart } from '../../hooks/cart/useCart'
+import { useAuthContext } from '../../context/AuthContext'
+import cafeNacional from '../../assets/webp/cafeNacional.webp'
+import cafePremium from '../../assets/webp/cafePremium.webp'
+
+function StoreProduct() {
+  const { productos, loading, error } = useProductos()
+  const { addToCart, refetchCart } = useCart()
+  const { user } = useAuthContext()
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const searchQuery = searchParams.get('search') || ''
+  const [sortedProductos, setSortedProductos] = useState([])
+  const [selectedCategory, setSelectedCategory] = useState('All categories')
+  const [sortOrder, setSortOrder] = useState('latest')
+  const [maxPrice, setMaxPrice] = useState(10000)
+  const [agrandoProductos, setAgrandoProductos] = useState({})
+  const [mensajosExito, setMensajosExito] = useState({})
+
+  // Calcular rango de precios real de los productos
+  const priceRange = useMemo(() => {
+    if (!productos || productos.length === 0) return { min: 0, max: 10000 }
+    const prices = productos.map(p => p.price)
+    return { min: Math.min(...prices), max: Math.max(...prices) }
+  }, [productos])
+
+  // Inicializar maxPrice al precio máximo real
+  useEffect(() => {
+    if (priceRange.max > 0) {
+      setMaxPrice(priceRange.max)
+    }
+  }, [priceRange.max])
+
+  useEffect(() => {
+    let filtered = [...(productos || [])]
+
+    // Filtrar por búsqueda
+    if (searchQuery) {
+      filtered = filtered.filter(p =>
+        p.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    }
+
+    // Filtrar por categoría
+    if (selectedCategory !== 'All categories') {
+      filtered = filtered.filter(p => p.line === selectedCategory)
+    }
+
+    // Filtrar por precio
+    filtered = filtered.filter(p => p.price <= maxPrice)
+
+    // Ordenar
+    if (sortOrder === 'price-asc') {
+      filtered.sort((a, b) => a.price - b.price)
+    } else if (sortOrder === 'price-desc') {
+      filtered.sort((a, b) => b.price - a.price)
+    } else if (sortOrder === 'name') {
+      filtered.sort((a, b) => a.name.localeCompare(b.name))
+    }
+
+    setSortedProductos(filtered)
+  }, [productos, selectedCategory, sortOrder, searchQuery, maxPrice])
+
+  const categories = ['All categories', ...new Set(productos?.map(p => p.line) || [])]
+
+  
+  const handleAddToCart = async (productId) => {
+    // Si el usuario no está logueado, redirigir a login
+    if (!user) {
+      navigate('/login', { state: { returnTo: '/tienda' } })
+      return
+    }
+
+    try {
+      setAgrandoProductos(prev => ({ ...prev, [productId]: true }))
+      await addToCart(productId, 1)
+      await refetchCart()
+      
+      setMensajosExito(prev => ({ ...prev, [productId]: true }))
+      
+      setTimeout(() => {
+        setMensajosExito(prev => ({ ...prev, [productId]: false }))
+      }, 2000)
+    } catch (error) {
+      console.error('Error al agregar al carrito:', error)
+    } finally {
+      setAgrandoProductos(prev => ({ ...prev, [productId]: false }))
+    }
+  }
+
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white pt-20 pb-20 flex items-center justify-center">
+        <p className="text-gray-500 text-lg">Cargando productos...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-white pt-20 pb-20 flex items-center justify-center">
+        <p className="text-red-500 text-lg">Error: {error}</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-white pt-20 pb-20">
+      <div className="max-w-7xl mx-auto px-4">
+        <h1 className="text-4xl font-bold text-center text-dark-coffee mb-4">
+          Tienda SIRCOF
+        </h1>
+        {searchQuery && (
+          <div className="text-center mb-4">
+            <p className="text-gray-600">Resultados para: <strong>"{searchQuery}"</strong></p>
+            <button
+              onClick={() => navigate('/tienda')}
+              className="text-coffee hover:underline text-sm mt-1"
+            >
+              Limpiar búsqueda
+            </button>
+          </div>
+        )}
+        <p className="text-center text-gray-600 mb-12">
+          Mostrando {sortedProductos.length} resultado{sortedProductos.length !== 1 ? 's' : ''}
+        </p>
+
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Sidebar - Filtros */}
+          <div className="lg:w-64 flex-shrink-0">
+            {/* Filter by category */}
+            <div className="mb-8">
+              <h3 className="text-lg font-bold text-dark-coffee mb-4 flex items-center justify-between cursor-pointer">
+                Filter by category
+                <span>−</span>
+              </h3>
+              <div className="space-y-2">
+                {categories.map((cat) => (
+                  <label key={cat} className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="category"
+                      value={cat}
+                      checked={selectedCategory === cat}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
+                      className="w-4 h-4"
+                    />
+                    <span className={selectedCategory === cat ? 'text-dark-coffee font-semibold' : 'text-gray-600'}>
+                      {cat}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Price range */}
+            <div className="mb-8">
+              <h3 className="text-lg font-bold text-dark-coffee mb-4">Precio</h3>
+              <div className="space-y-3">
+                <input
+                  type="range"
+                  min={priceRange.min}
+                  max={priceRange.max}
+                  step={100}
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(Number(e.target.value))}
+                  className="w-full accent-amber-700"
+                />
+                <p className="text-gray-600 text-sm">
+                  Hasta: <strong>₡{maxPrice.toLocaleString('es-CR')}</strong>
+                </p>
+              </div>
+            </div>
+
+            {/* Rating */}
+            <div>
+              <h3 className="text-lg font-bold text-dark-coffee mb-4">Rating</h3>
+              <div className="space-y-2">
+                {[5, 4, 3, 2, 1].map((stars) => (
+                  <label key={stars} className="flex items-center gap-3 cursor-pointer">
+                    <input type="checkbox" className="w-4 h-4" />
+                    <span className="text-yellow-400">
+                      {'★'.repeat(stars)}{'☆'.repeat(5 - stars)}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Main content - Productos */}
+          <div className="flex-1">
+            {/* Header con ordenamiento */}
+            <div className="flex items-center justify-between mb-8 pb-4 border-b">
+              <p className="text-gray-600 text-sm">
+                Mostrando {sortedProductos.length} resultado{sortedProductos.length !== 1 ? 's' : ''}
+              </p>
+              <div className="flex items-center gap-2">
+                <label htmlFor="sort" className="text-gray-600 font-semibold">
+                  Ordenar por los últimos
+                </label>
+                <select
+                  id="sort"
+                  value={sortOrder}
+                  onChange={(e) => setSortOrder(e.target.value)}
+                  className="px-3 py-2 border border-gray-300 rounded text-gray-700 text-sm focus:outline-none focus:border-coffee"
+                >
+                  <option value="latest">Últimos</option>
+                  <option value="price-asc">Precio: Menor a Mayor</option>
+                  <option value="price-desc">Precio: Mayor a Menor</option>
+                  <option value="name">Nombre A-Z</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Grid de productos */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {sortedProductos.map((producto) => (
+                <div key={producto.id} className="flex flex-col group bg-gray-50 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                  {/* Imagen */}
+                  <Link to={`/producto/${producto.id}`} className="relative overflow-hidden h-72 bg-gray-300 block">
+                    <img
+                      src={producto.line === 'Premium' ? cafePremium : cafeNacional}
+                      alt={producto.name}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </Link>
+
+                  {/* Info del producto */}
+                  <div className="p-4 flex flex-col gap-2">
+                    {/* Categoría */}
+                    <p className="text-gray-500 text-xs font-semibold tracking-wider">
+                      LÍNEA {producto.line?.toUpperCase()}
+                    </p>
+
+                    {/* Nombre */}
+                    <h3 className="text-dark-coffee font-bold text-lg group-hover:text-coffee transition-colors duration-300">
+                      {producto.name}
+                    </h3>
+
+                    {/* Precio y Rating */}
+                    <div className="flex items-center justify-between mt-2">
+                      <p className="text-dark-coffee font-bold text-lg">
+                        ₡{producto.price.toLocaleString('es-CR')}
+                      </p>
+                      <div className="flex gap-1">
+                        <span className="text-yellow-400 text-sm">★★★★★</span>
+                      </div>
+                    </div>
+
+                    {/* Botón agregar */}
+                    {mensajosExito[producto.id] ? (
+                      <div className="mt-4 w-full bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded text-center font-semibold animate-pulse">
+                        ✓ Agregado al carrito
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => handleAddToCart(producto.id)}
+                        disabled={agrandoProductos[producto.id]}
+                        className="mt-4 w-full bg-coffee hover:bg-dark-coffee disabled:bg-gray-400 text-white font-semibold py-2 px-4 rounded transition-colors duration-300"
+                      >
+                        {agrandoProductos[producto.id] ? 'Agregando...' : 'Agregar al carrito'}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {sortedProductos.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-gray-500 text-lg">No se encontraron productos</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default StoreProduct

@@ -1,27 +1,27 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { lazy, Suspense } from "react";
-import Navigation from "./components/Navigation.jsx";
-import SecondNavigation from "./components/SecondNavigation.jsx";
-import Footer from "./components/Footer.jsx";
+import Navigation from "./components/layout/Navigation.jsx";
+import SecondNavigation from "./components/layout/SecondNavigation.jsx";
+import Footer from "./components/layout/Footer.jsx";
 import SobreNosotros from "./components/main/SobreNosotros.jsx";
 import ExperienciaEnTaza from "./components/main/ExperienciaEnTaza.jsx";
 import PromoProductos from "./components/main/PromoProductos.jsx";
 import GranoTuMesa from "./components/main/GranoTuMesa.jsx";
 import { PageAnimated } from "./animations/PageAnimated.jsx";
-import { useSessionTimeout } from "./hooks/useSessionTimeout.js";
-import ScrollToTopButton from "./components/ScrollToTopButton.jsx";
+import { useSessionTimeout } from "./hooks/auth/useSessionTimeout.js";
+import ScrollToTopButton from "./components/layout/ScrollToTopButton.jsx";
 import './styles/Navigation.css';
 
 // Lazy load - páginas secundarias
-const LoginUsers = lazy(() => import("./pages/LoginUsers.jsx"));
-const StoreProduct = lazy(() => import("./pages/StoreProduct.jsx"));
-const ProductDetail = lazy(() => import("./pages/ProductDetail.jsx"));
-const CheckoutSuccess = lazy(() => import("./pages/CheckoutSuccess.jsx"));
-const UserSettings = lazy(() => import("./pages/UserSettings.jsx"));
-const Contactenos = lazy(() => import("./pages/Contactenos.jsx"));
-const Galery = lazy(() => import("./pages/Galery.jsx"));
-const ForgotPassword = lazy(() => import("./pages/ForgotPassword.jsx"));
+const LoginUsers = lazy(() => import("./pages/auth/LoginUsers.jsx"));
+const StoreProduct = lazy(() => import("./pages/store/StoreProduct.jsx"));
+const ProductDetail = lazy(() => import("./pages/store/ProductDetail.jsx"));
+const CheckoutSuccess = lazy(() => import("./pages/checkout/CheckoutSuccess.jsx"));
+const UserSettings = lazy(() => import("./pages/user/UserSettings.jsx"));
+const Contactenos = lazy(() => import("./pages/contact/Contactenos.jsx"));
+const Galery = lazy(() => import("./pages/content/Galery.jsx"));
+const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword.jsx"));
 
 // Lazy load - admin
 const AdminRoute = lazy(() => import("./components/admin/AdminRoute.jsx"));
