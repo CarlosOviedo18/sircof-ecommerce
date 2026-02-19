@@ -4,7 +4,7 @@ import fotosPatrones from "../../assets/webp/foto patrones.webp";
 import canastoCafe from "../../assets/webp/canasto con cafe.webp";
 import sobreNosotros from "../../assets/webp/SobreNosotros.webp";
 import tour1 from "../../assets/webp/tours1.webp";
-import Stack from "../Stack";
+import Stack from "../ui/Stack";
 
 function GranoTuMesa() {
   const images = [fotosPatrones, canastoCafe, tour1];

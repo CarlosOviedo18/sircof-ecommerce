@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { useProductosDestacados } from '../../hooks/useProductosDestacados'
+import { useProductosDestacados } from '../../hooks/products/useProductosDestacados'
 import cafeNacional from '../../assets/webp/cafeNacional.webp'
 import cafePremium from '../../assets/webp/cafePremium.webp'
 import sobreNosotrosImg from '../../assets/webp/SobreNosotros.webp'
