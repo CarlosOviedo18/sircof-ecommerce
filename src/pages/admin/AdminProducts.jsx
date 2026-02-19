@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useAdmin } from '../../hooks/useAdmin'
+import { useAdmin } from '../../hooks/admin/useAdmin'
 
 const EMPTY_FORM = { name: '', price: '', line: '', description: '', stock: '', image_url: '' }
 

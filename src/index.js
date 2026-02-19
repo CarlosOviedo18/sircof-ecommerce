@@ -3,16 +3,16 @@ import express from 'express';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import pool from './database.js';
-import routes from './routes/routes.js';
-import authRoutes from './routes/auth.js';
-import usersRoutes from './routes/users.js';
-import cartRoutes from './routes/cart.js';
-import paymentRoutes from './routes/payment.js';
-import ordersRoutes from './routes/orders.js';
-import userSettingsRoutes from './routes/UserSettings.js';
-import contactFormRoutes from './routes/contactForm.js';
+import productsRoutes from './routes/products/products.js';
+import authRoutes from './routes/auth/auth.js';
+import passwordResetRoutes from './routes/auth/passwordReset.js';
+import usersRoutes from './routes/user/users.js';
+import userSettingsRoutes from './routes/user/userSettings.js';
+import cartRoutes from './routes/cart/cart.js';
+import paymentRoutes from './routes/payment/payment.js';
+import ordersRoutes from './routes/orders/orders.js';
+import contactFormRoutes from './routes/contact/contactForm.js';
 import adminRoutes from './routes/admin.js';
-import passwordResetRoutes from './routes/passwordReset.js';
 
 const app = express();
 
@@ -35,7 +35,7 @@ app.use('/api', generalLimiter);
 app.use(express.json({ limit: '10mb', strict: false }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
-app.use('/api', routes);
+app.use('/api', productsRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/cart', cartRoutes);
