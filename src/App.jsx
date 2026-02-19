@@ -12,6 +12,7 @@ import { PageAnimated } from "./animations/PageAnimated.jsx";
 import { useSessionTimeout } from "./hooks/auth/useSessionTimeout.js";
 import ScrollToTopButton from "./components/layout/ScrollToTopButton.jsx";
 import './styles/Navigation.css';
+import TrasparentNavigation from "./components/layout/TrasparentNavigation.jsx";
 
 // Lazy load - páginas secundarias
 const LoginUsers = lazy(() => import("./pages/auth/LoginUsers.jsx"));
@@ -22,6 +23,7 @@ const UserSettings = lazy(() => import("./pages/user/UserSettings.jsx"));
 const Contactenos = lazy(() => import("./pages/contact/Contactenos.jsx"));
 const Galery = lazy(() => import("./pages/content/Galery.jsx"));
 const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword.jsx"));
+const SobreNosotrosPage = lazy(() => import("./pages/about/SobreNosotrosPage.jsx"));
 
 // Lazy load - admin
 const AdminRoute = lazy(() => import("./components/admin/AdminRoute.jsx"));
@@ -122,6 +124,19 @@ function App() {
               <SecondNavigation />
               <Contactenos />
               <Footer />
+            </>
+          </PageAnimated>
+        }
+      />
+
+          {/* Página Sobre Nosotros */}
+      <Route
+        path="/sobre-nosotros"
+        element={
+          <PageAnimated>
+            <>
+              <SobreNosotrosPage />
+            
             </>
           </PageAnimated>
         }

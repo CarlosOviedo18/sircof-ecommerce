@@ -1,0 +1,519 @@
+@import url('https://fonts.cdnfonts.com/css/devil-breeze');
+@import url("https://fonts.googleapis.com/css?family=Poppins:400,600,700");
+
+/* ===== Base ===== */
+.about-page {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    background-color: #2A1810;
+    color: #F5E6D3;
+    overflow-x: hidden;
+}
+
+/* ===== Layout ===== */
+.about-page .about-section {
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* Solo el banner ocupa toda la pantalla */
+.about-page #banner {
+    min-height: 100vh;
+}
+
+/* Secciones internas más compactas */
+.about-page #intro,
+.about-page #description {
+    min-height: auto;
+}
+
+.about-page #global {
+    min-height: auto;
+}
+
+.about-page #mission {
+    min-height: auto;
+    padding-block: 2em;
+}
+
+.about-page #contact {
+    min-height: auto;
+}
+
+.about-page .about-content-fit {
+    width: min(1100px, 88vw);
+    margin: auto;
+    position: relative;
+    padding-block: 5em;
+}
+
+/* Banner content sigue centrado verticalmente */
+.about-page #banner .about-content-fit {
+    min-height: 100vh;
+}
+
+.about-page .about-section .decorate {
+    position: absolute;
+}
+
+/* ===== Separadores entre secciones ===== */
+.about-page #intro::before,
+.about-page #description::before,
+.about-page #global::before,
+.about-page #mission::before,
+.about-page #contact::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #D4A574, transparent);
+    opacity: 0.4;
+}
+
+/* ===== Banner ===== */
+.about-page #banner .about-content-fit {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.about-page #banner .about-title-main {
+    color: #D4A574;
+    font-size: clamp(3rem, 10vw, 11rem);
+    font-family: "devil breeze", sans-serif;
+    font-weight: bold;
+    position: relative;
+    line-height: 1;
+    text-shadow: 0 4px 30px rgba(212, 165, 116, 0.15);
+}
+
+.about-page #banner .about-title-main::before {
+    content: attr(data-before);
+    position: absolute;
+    top: 0.5em;
+    inset: 0.66em 0 0 0;
+    z-index: -1;
+    color: #6B4423;
+}
+
+.about-page .banner-subtitle {
+    font-size: clamp(0.9rem, 2vw, 1.3rem);
+    color: #D4A574;
+    opacity: 0.7;
+    margin-top: 1em;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+/* ===== Banner Leaf ===== */
+.about-page .leaf4-banner {
+    width: 35vw;
+    max-width: 500px;
+    bottom: 5vh;
+    right: 5vw;
+    filter: drop-shadow(0 15px 30px rgba(0,0,0,0.4)) brightness(1.15) contrast(1.2) saturate(1.1);
+    transform: scaleX(-1) rotate(5deg);
+    animation: aboutFloatLeaf 5s ease-in-out infinite;
+    z-index: 2;
+}
+
+/* ===== Description Leaf ===== */
+.about-page .leaf1-description {
+    width: 60vw;
+    max-width: 800px;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+    opacity: 0.6;
+}
+
+/* ===== Mission Leaf ===== */
+.about-page .leaf-mission {
+    width: 45vw;
+    max-width: 600px;
+    bottom: -50px;
+    left: -10vw;
+    opacity: 0.2;
+    z-index: 1;
+}
+
+/* ===== Scroll Indicator ===== */
+.about-page .scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: #D4A574;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    z-index: 50;
+    opacity: 0.5;
+}
+
+.about-page .scroll-indicator .arrow {
+    font-size: 1.6em;
+    animation: aboutBounce 2s ease-in-out infinite;
+}
+
+/* ===== Sections with Number + Description ===== */
+.about-page #intro .about-content-fit,
+.about-page #global .about-content-fit {
+    display: flex;
+    gap: 6%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.about-page .about-section .about-number {
+    font-family: "devil breeze", sans-serif;
+    font-size: clamp(5rem, 12vw, 12rem);
+    font-weight: bold;
+    color: #D4A574;
+    opacity: 0.12;
+    line-height: 1;
+    flex-shrink: 0;
+    user-select: none;
+}
+
+.about-page .about-section .about-des {
+    max-width: 550px;
+    line-height: 1.8;
+    letter-spacing: 0.3px;
+}
+
+.about-page .about-section .about-content-fit .about-title {
+    font-family: "devil breeze", sans-serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: bold;
+    margin-bottom: 0.4em;
+    line-height: 1.15;
+    color: #D4A574;
+    position: relative;
+    padding-bottom: 0.4em;
+}
+
+/* Línea decorativa bajo los títulos de sección */
+.about-page .about-section .about-content-fit .about-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(90deg, #D4A574, transparent);
+}
+
+.about-page .about-section .about-des p {
+    font-size: 1.02em;
+    line-height: 1.85;
+    color: #F5E6D3cc;
+    margin-bottom: 0;
+}
+
+/* ===== Description Section ===== */
+.about-page #description .about-content-fit {
+    padding-right: 25%;
+    max-width: 900px;
+    position: relative;
+    z-index: 5;
+}
+
+.about-page #description .about-number {
+    font-size: clamp(3rem, 5vw, 5rem);
+}
+
+/* ===== Mission Section ===== */
+.about-page #mission .mission-container {
+    max-width: 1000px;
+    margin: auto;
+}
+
+.about-page #mission .mission-title {
+    text-align: center;
+    margin-bottom: 2em;
+}
+
+.about-page #mission .mission-title h2 {
+    font-family: "devil breeze", sans-serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    color: #D4A574;
+    font-weight: bold;
+    margin: 0;
+    text-shadow: 0 4px 30px rgba(212, 165, 116, 0.1);
+}
+
+.about-page #mission .mission-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2em;
+    margin-bottom: 3em;
+    background: linear-gradient(135deg, rgba(107, 68, 35, 0.25), rgba(107, 68, 35, 0.1));
+    padding: 2.5em;
+    border-radius: 16px;
+    border: 1px solid rgba(212, 165, 116, 0.12);
+    backdrop-filter: blur(4px);
+}
+
+.about-page #mission .mission-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7em;
+}
+
+.about-page #mission .mission-subtitle {
+    font-family: "devil breeze", sans-serif;
+    font-size: 1.8em;
+    color: #D4A574;
+    font-weight: bold;
+}
+
+.about-page #mission .mission-item p {
+    font-size: 0.95em;
+    line-height: 1.8;
+    color: #F5E6D3cc;
+    letter-spacing: 0.3px;
+}
+
+.about-page #mission .values-section {
+    margin-top: 1.5em;
+}
+
+.about-page #mission .values-section h3 {
+    font-family: "devil breeze", sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: #D4A574;
+    text-align: center;
+    margin-bottom: 1.2em;
+    font-weight: bold;
+}
+
+.about-page #mission .values-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2em;
+}
+
+.about-page #mission .value-card {
+    background: linear-gradient(135deg, rgba(107, 68, 35, 0.2), rgba(107, 68, 35, 0.08));
+    padding: 1.4em;
+    border-radius: 12px;
+    border-left: 3px solid #D4A574;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.about-page #mission .value-card:hover {
+    background: linear-gradient(135deg, rgba(107, 68, 35, 0.4), rgba(107, 68, 35, 0.2));
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(212, 165, 116, 0.12);
+    border-left-color: #e8c49a;
+}
+
+.about-page #mission .value-number {
+    font-family: "devil breeze", sans-serif;
+    font-size: 2em;
+    color: #D4A574;
+    font-weight: bold;
+    margin-bottom: 0.2em;
+    opacity: 0.4;
+    line-height: 1;
+}
+
+.about-page #mission .value-title {
+    font-size: 1.15em;
+    font-weight: 600;
+    color: #D4A574;
+    margin-bottom: 0.5em;
+}
+
+.about-page #mission .value-card p {
+    font-size: 0.88em;
+    line-height: 1.7;
+    color: #F5E6D3cc;
+}
+
+/* ===== Contact Section ===== */
+.about-page #contact {
+    padding-block: 0;
+}
+
+.about-page #contact .about-content-fit {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    padding-top: 4em;
+    padding-bottom: 60vh;
+}
+
+.about-page #contact .contact-container {
+    text-align: center;
+}
+
+.about-page #contact .contact-container h2 {
+    font-family: "devil breeze", sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: #D4A574;
+    margin-bottom: 0;
+    line-height: 1.2;
+}
+
+/* ===== Animations ===== */
+@keyframes aboutFloatLeaf {
+    0%, 100% {
+        transform: scaleX(-1) rotate(5deg) translateY(0);
+    }
+    50% {
+        transform: scaleX(-1) rotate(5deg) translateY(-18px);
+    }
+}
+
+@keyframes aboutBounce {
+    0%, 100% {
+        transform: translateY(0);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translateY(-10px);
+        opacity: 1;
+    }
+}
+
+/* ===== Tablet (max 1023px) ===== */
+@media screen and (max-width: 1023px) {
+    .about-page #intro .about-content-fit,
+    .about-page #global .about-content-fit {
+        flex-direction: column;
+        gap: 1em;
+        text-align: center;
+    }
+
+    .about-page .about-section .about-content-fit .about-title::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .about-page .about-section .about-des {
+        max-width: 100%;
+    }
+
+    .about-page #description .about-content-fit {
+        padding-right: 10%;
+        max-width: 100%;
+    }
+
+    .about-page #mission .mission-content {
+        grid-template-columns: 1fr;
+        gap: 1.8em;
+        padding: 1.8em;
+    }
+
+    .about-page #mission .values-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* ===== Mobile (max 767px) ===== */
+@media screen and (max-width: 767px) {
+    .about-page .about-content-fit {
+        padding-block: 3.5em;
+    }
+
+    .about-page #banner .about-content-fit {
+        min-height: 100vh;
+    }
+
+    .about-page .leaf4-banner {
+        width: 55vw;
+        right: -5vw;
+        bottom: 10vh;
+        opacity: 0.5;
+    }
+
+    .about-page #intro .about-content-fit,
+    .about-page #global .about-content-fit {
+        flex-direction: column;
+        gap: 0.3em;
+        text-align: left;
+    }
+
+    .about-page .about-section .about-content-fit .about-title::after {
+        left: 0;
+        transform: none;
+    }
+
+    .about-page #global .about-content-fit {
+        padding-block: 2.5em;
+    }
+
+    .about-page .about-section .about-number {
+        font-size: 4rem;
+        opacity: 0.08;
+    }
+
+    .about-page #description .about-content-fit {
+        padding-right: 0;
+        max-width: 100%;
+    }
+
+    .about-page .leaf1-description {
+        width: 80vw;
+        opacity: 0.3;
+    }
+
+    .about-page #mission .mission-content {
+        grid-template-columns: 1fr;
+        gap: 1.5em;
+        padding: 1.2em;
+    }
+
+    .about-page #mission .mission-subtitle {
+        font-size: 1.5em;
+    }
+
+    .about-page #mission .values-grid {
+        grid-template-columns: 1fr;
+        gap: 1em;
+    }
+
+    .about-page #mission .value-card {
+        padding: 1.2em;
+    }
+
+    .about-page #mission .value-number {
+        font-size: 1.6em;
+    }
+
+    .about-page #mission .value-title {
+        font-size: 1.05em;
+    }
+
+    .about-page #mission .value-card p {
+        font-size: 0.85em;
+    }
+
+    .about-page .leaf-mission {
+        opacity: 0.1;
+    }
+
+    .about-page #contact .about-content-fit {
+        padding-top: 3em;
+        padding-bottom: 50vh;
+    }
+}

@@ -1,5 +1,4 @@
 import InfiniteMenu from "../../components/ui/InfiniteMenu.jsx";
-import SecondNavigation from "../../components/layout/SecondNavigation.jsx";
 import Footer from "../../components/layout/Footer.jsx";
 import TrasparentNavigation from "../../components/layout/TrasparentNavigation.jsx";
 import galeria1 from "../../assets/img/galeria1.png";
