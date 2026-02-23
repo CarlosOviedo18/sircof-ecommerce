@@ -53,4 +53,24 @@ router.get('/', protectAdmin, async (req, res) => {
   }
 })
 
+// GET /api/admin/stats/notifications - Conteos para badges de notificación
+router.get('/notifications', protectAdmin, async (req, res) => {
+  try {
+    const [[{ pendingOrders }]] = await pool.query(
+      "SELECT COUNT(*) as pendingOrders FROM orders WHERE status = 'pending'"
+    )
+    const [[{ unreadContacts }]] = await pool.query(
+      'SELECT COUNT(*) as unreadContacts FROM contacts'
+    )
+
+    res.json({
+      success: true,
+      notifications: { pendingOrders, unreadContacts }
+    })
+  } catch (error) {
+    console.error('Error en GET /admin/stats/notifications:', error)
+    res.status(500).json({ success: false, message: error.message })
+  }
+})
+
 export default router
