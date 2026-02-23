@@ -2,18 +2,22 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useAuthContext } from '../../context/AuthContext'
 import { useAuth } from '../../hooks/auth/useAuth'
+import { useAdminNotifications } from '../../hooks/admin/useAdminNotifications'
 import logo from '../../assets/webp/logo.webp'
 
-/**
- * Layout principal del panel de administración.
- * Incluye sidebar de navegación, barra superior y área de contenido.
- * Diseño inspirado en Tabler, construido 100% con Tailwind CSS.
- */
+
 function AdminLayout() {
   const { user } = useAuthContext()
   const { logout } = useAuth()
+  const { notifications } = useAdminNotifications()
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 768)
   const navigate = useNavigate()
+
+  // Mapa de badges por ruta
+  const badgeCounts = {
+    '/admin/orders': notifications.pendingOrders,
+    '/admin/contacts': notifications.unreadContacts
+  }
 
   const links = [
     { to: '/admin', label: 'Dashboard', end: true, icon: (
@@ -62,26 +66,45 @@ function AdminLayout() {
               <p className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold">Navegación</p>
             </div>
           )}
-          {links.map(link => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              end={link.end}
-              onClick={() => { if (window.innerWidth < 768) setSidebarOpen(false) }}
-              className={({ isActive }) =>
-                `flex items-center gap-3 mx-3 px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-200
-                ${isActive
-                  ? 'bg-amber-600/20 text-amber-400'
-                  : 'text-gray-400 hover:bg-white/5 hover:text-gray-200'
+          {links.map(link => {
+            const badge = badgeCounts[link.to] || 0
+            return (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                end={link.end}
+                onClick={() => { if (window.innerWidth < 768) setSidebarOpen(false) }}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 mx-3 px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-200
+                  ${isActive
+                    ? 'bg-amber-600/20 text-amber-400'
+                    : 'text-gray-400 hover:bg-white/5 hover:text-gray-200'
+                  }
+                  ${!sidebarOpen ? 'justify-center' : ''}`
                 }
-                ${!sidebarOpen ? 'justify-center' : ''}`
-              }
-              title={!sidebarOpen ? link.label : undefined}
-            >
-              <span className="flex-shrink-0">{link.icon}</span>
-              {sidebarOpen && <span>{link.label}</span>}
-            </NavLink>
-          ))}
+                title={!sidebarOpen ? link.label : undefined}
+              >
+                <span className="relative flex-shrink-0">
+                  {link.icon}
+                  {badge > 0 && !sidebarOpen && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1 shadow-lg animate-pulse">
+                      {badge > 99 ? '99+' : badge}
+                    </span>
+                  )}
+                </span>
+                {sidebarOpen && (
+                  <span className="flex-1 flex items-center justify-between">
+                    <span>{link.label}</span>
+                    {badge > 0 && (
+                      <span className="bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1 shadow-lg animate-pulse">
+                        {badge > 99 ? '99+' : badge}
+                      </span>
+                    )}
+                  </span>
+                )}
+              </NavLink>
+            )
+          })}
         </nav>
 
         {/* User section at bottom */}
