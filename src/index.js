@@ -14,6 +14,7 @@ import ordersRoutes from './routes/orders/orders.js';
 import contactFormRoutes from './routes/contact/contactForm.js';
 import adminRoutes from './routes/admin.js';
 
+
 const app = express();
 
 // CORS restringido al origen del frontend
@@ -46,6 +47,7 @@ app.use('/api/user-settings', userSettingsRoutes);
 app.use('/api/contact', contactFormRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/auth', passwordResetRoutes);
+
 
 app.get('/', (req, res) => {
     res.json({ message: 'Sircof Backend-Servidor funcionando' });
