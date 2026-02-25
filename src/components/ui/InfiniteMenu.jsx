@@ -1107,7 +1107,7 @@ export default function InfiniteMenu({ items = [], scale = 1.0 }) {
                
               </svg>
               <span className="text-xs sm:text-sm text-white/70 font-light tracking-widest uppercase">
-                Desliza para explorar
+                Deja presionado y desliza para explorar
               </span>
             </div>
           </div>

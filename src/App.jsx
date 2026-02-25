@@ -11,19 +11,23 @@ import GranoTuMesa from "./components/main/GranoTuMesa.jsx";
 import { PageAnimated } from "./animations/PageAnimated.jsx";
 import { useSessionTimeout } from "./hooks/auth/useSessionTimeout.js";
 import ScrollToTopButton from "./components/layout/ScrollToTopButton.jsx";
-import './styles/Navigation.css';
+import "./styles/Navigation.css";
 import TrasparentNavigation from "./components/layout/TrasparentNavigation.jsx";
 
 // Lazy load - páginas secundarias
 const LoginUsers = lazy(() => import("./pages/auth/LoginUsers.jsx"));
 const StoreProduct = lazy(() => import("./pages/store/StoreProduct.jsx"));
 const ProductDetail = lazy(() => import("./pages/store/ProductDetail.jsx"));
-const CheckoutSuccess = lazy(() => import("./pages/checkout/CheckoutSuccess.jsx"));
+const CheckoutSuccess = lazy(
+  () => import("./pages/checkout/CheckoutSuccess.jsx"),
+);
 const UserSettings = lazy(() => import("./pages/user/UserSettings.jsx"));
 const Contactenos = lazy(() => import("./pages/contact/Contactenos.jsx"));
 const Galery = lazy(() => import("./pages/content/Galery.jsx"));
 const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword.jsx"));
-const SobreNosotrosPage = lazy(() => import("./pages/about/SobreNosotrosPage.jsx"));
+const SobreNosotrosPage = lazy(
+  () => import("./pages/about/SobreNosotrosPage.jsx"),
+);
 
 // Lazy load - admin
 const AdminRoute = lazy(() => import("./components/admin/AdminRoute.jsx"));
@@ -41,152 +45,165 @@ const PageLoader = () => (
   </div>
 );
 
-
 function App() {
-  const location = useLocation()
+  const location = useLocation();
   // Logout automático después de 30 minutos de inactividad
-  useSessionTimeout(30)
+  useSessionTimeout(30);
 
   return (
     <AnimatePresence mode="wait">
       <Suspense fallback={<PageLoader />}>
         <Routes location={location} key={location.pathname}>
-      {/* Rutas de autenticación sin Navigation ni Footer */}
-      <Route path="/login" element={<PageAnimated><LoginUsers /></PageAnimated>} />
-      <Route path="/forgot-password" element={<PageAnimated><ForgotPassword /></PageAnimated>} />
+          {/* Rutas de autenticación sin Navigation ni Footer */}
+          <Route
+            path="/login"
+            element={
+              <PageAnimated>
+                <LoginUsers />
+              </PageAnimated>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              <PageAnimated>
+                <ForgotPassword />
+              </PageAnimated>
+            }
+          />
 
-      {/* Rutas protegidas con Navigation y Footer */}
-      <Route
-        path="/"
-        element={
-          <PageAnimated>
-            <>
-              <Navigation />
-              <SobreNosotros />
-              <ExperienciaEnTaza />
-              <GranoTuMesa />
-              <PromoProductos />
-              <Footer />
-              <ScrollToTopButton />
-            </>
-          </PageAnimated>
-        }
-      />
+          {/* Rutas protegidas con Navigation y Footer */}
+          <Route
+            path="/"
+            element={
+              <PageAnimated>
+                <>
+                  <Navigation />
+                  <SobreNosotros />
+                  <ExperienciaEnTaza />
+                  <GranoTuMesa />
+                  <PromoProductos />
+                  <Footer />
+                  <ScrollToTopButton />
+                </>
+              </PageAnimated>
+            }
+          />
 
-      {/* Página de Tienda */}
-      <Route
-        path="/tienda"
-        element={
-          <PageAnimated>
-            <>
-              <SecondNavigation />
-              <StoreProduct />
-              <Footer />
-            </>
-          </PageAnimated>
-        }
-      />
+          {/* Página de Tienda */}
+          <Route
+            path="/tienda"
+            element={
+              <PageAnimated>
+                <>
+                  <SecondNavigation />
+                  <StoreProduct />
+                  <Footer />
+                  <ScrollToTopButton />
+                </>
+              </PageAnimated>
+            }
+          />
 
-      {/* Página de Detalle del Producto */}
-      <Route
-        path="/producto/:id"
-        element={
-          <PageAnimated>
-            <>
-              <SecondNavigation />
-              <ProductDetail />
-              <Footer />
-            </>
-          </PageAnimated>
-        }
-      />
+          {/* Página de Detalle del Producto */}
+          <Route
+            path="/producto/:id"
+            element={
+              <PageAnimated>
+                <>
+                  <SecondNavigation />
+                  <ProductDetail />
+                  <Footer />
+                </>
+              </PageAnimated>
+            }
+          />
 
-        {/* Página de Configuración de Usuario */}
-      <Route
-        path="/user-settings"
-        element={
-          <PageAnimated>
-            <>
-              <SecondNavigation />
-              <UserSettings />
-              <Footer />
-            </>
-          </PageAnimated>
-        }
-      />
+          {/* Página de Configuración de Usuario */}
+          <Route
+            path="/user-settings"
+            element={
+              <PageAnimated>
+                <>
+                  <SecondNavigation />
+                  <UserSettings />
+                  <Footer />
+                  <ScrollToTopButton />
+                </>
+              </PageAnimated>
+            }
+          />
 
-        {/* Página de Contactenos */}
-      <Route
-        path="/contactenos"
-        element={
-          <PageAnimated>
-            <>
-              <SecondNavigation />
-              <Contactenos />
-              <Footer />
-            </>
-          </PageAnimated>
-        }
-      />
+          {/* Página de Contactenos */}
+          <Route
+            path="/contactenos"
+            element={
+              <PageAnimated>
+                <>
+                  <SecondNavigation />
+                  <Contactenos />
+                  <Footer />
+                  <ScrollToTopButton />
+                </>
+              </PageAnimated>
+            }
+          />
 
           {/* Página Sobre Nosotros */}
-      <Route
-        path="/sobre-nosotros"
-        element={
-          <PageAnimated>
-            <>
-              <SobreNosotrosPage />
-            
-            </>
-          </PageAnimated>
-        }
-      />
+          <Route
+            path="/sobre-nosotros"
+            element={
+              <PageAnimated>
+                <>
+                  <SobreNosotrosPage />
+                  <ScrollToTopButton />
+                </>
+              </PageAnimated>
+            }
+          />
 
           {/* Página de Galeria */}
-      <Route
-        path="/galeria"
-        element={
-          <PageAnimated>
-            <>
-            
-              <Galery />
-            
-            </>
-          </PageAnimated>
-        }
-      />
+          <Route
+            path="/galeria"
+            element={
+              <PageAnimated>
+                <>
+                  <Galery />
+                </>
+              </PageAnimated>
+            }
+          />
 
-      {/* Página de Éxito del Pago */}
-      <Route
-        path="/checkout/success"
-        element={
-          <PageAnimated>
-            <>
-              <SecondNavigation />
-              <CheckoutSuccess />
-              <Footer />
-            </>
-          </PageAnimated>
-        }
-      />
+          {/* Página de Éxito del Pago */}
+          <Route
+            path="/checkout/success"
+            element={
+              <PageAnimated>
+                <>
+                  <SecondNavigation />
+                  <CheckoutSuccess />
+                  <Footer />
+                </>
+              </PageAnimated>
+            }
+          />
 
-      {/* Panel de Administración */}
-      <Route
-        path="/admin"
-        element={
-          <AdminRoute>
-            <AdminLayout />
-          </AdminRoute>
-        }
-      >
-        <Route index element={<AdminDashboard />} />
-        <Route path="products" element={<AdminProducts />} />
-        <Route path="orders" element={<AdminOrders />} />
-        <Route path="users" element={<AdminUsers />} />
-        <Route path="contacts" element={<AdminContacts />} />
-      </Route>
-
-      </Routes>
+          {/* Panel de Administración */}
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <AdminLayout />
+              </AdminRoute>
+            }
+          >
+            <Route index element={<AdminDashboard />} />
+            <Route path="products" element={<AdminProducts />} />
+            <Route path="orders" element={<AdminOrders />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="contacts" element={<AdminContacts />} />
+          </Route>
+        </Routes>
       </Suspense>
     </AnimatePresence>
   );
