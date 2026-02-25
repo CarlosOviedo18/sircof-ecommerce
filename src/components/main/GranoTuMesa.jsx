@@ -21,6 +21,7 @@ function GranoTuMesa() {
         {/* Lado Izquierdo - Imágenes con Stack */}
         <div className="flex items-center justify-center w-full md:w-auto">
           <div style={{ width: 500, height: 500, perspective: "1000px" }}>
+            <h1 className=" text-center text-xs sm:text-sm text-white/70 font-light tracking-widest uppercase">Presiona arriba de la imagen  y mueve para cambiar</h1>
             <Stack
               randomRotation={true}
               sensitivity={180}
