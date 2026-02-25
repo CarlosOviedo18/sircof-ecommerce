@@ -12,7 +12,7 @@ Una plataforma de e-commerce moderna desarrollada con **React** y **Express.js**
 - Hash de contraseñas con bcrypt
 - Gestión de sesiones de usuario
 
-✅ **Catálogo de Productos**
+ **Catálogo de Productos**
 - Visualización de productos con filtros por línea (Premium/Nacional)
 - Detalles de productos con imágenes y precios
 - Acceso público sin requerir autenticación
