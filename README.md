@@ -7,7 +7,7 @@ Una plataforma de e-commerce moderna desarrollada con **React** y **Express.js**
 
 ## Características Principales
 
-✅ **Sistema de Autenticación**
+ **Sistema de Autenticación**
 - Registro e inicio de sesión seguro con JWT
 - Hash de contraseñas con bcrypt
 - Gestión de sesiones de usuario
@@ -17,24 +17,24 @@ Una plataforma de e-commerce moderna desarrollada con **React** y **Express.js**
 - Detalles de productos con imágenes y precios
 - Acceso público sin requerir autenticación
 
-✅ **Carrito de Compras**
+ **Carrito de Compras**
 - Agregar/remover productos en tiempo real
 - Actualización dinámica de cantidad
 - Badge contador de items en el carrito
 - Sincronización automática entre componentes
 
-✅ **Pasarela de Pagos**
+ **Pasarela de Pagos**
 - Integración con Tilopay para procesos de pago seguros
 - Validación de números telefónicos
 - Confirmación de compra con número de orden
 
-✅ **Gestión de Cuenta de Usuario**
+ **Gestión de Cuenta de Usuario**
 - Dashboard con perfil de usuario
 - Historial de pedidos completo
 - Actualización de email y contraseña
 - Información de facturas y envíos
 
-✅ **Interfaz Moderna**
+ **Interfaz Moderna**
 - Diseño responsivo con Tailwind CSS
 - Animaciones suaves con Framer Motion
 - Tema visual profesional basado en café
@@ -243,7 +243,7 @@ Este proyecto está bajo licencia MIT. Ver el archivo `LICENSE` para más detall
 
 ##  Desarrollador
 
-**Carlos Sircof** - [LinkedIn](www.linkedin.com/in/carlos-oviedo-135a1426b) | [GitHub](https://github.com/CarlosOviedo18)
+[LinkedIn](www.linkedin.com/in/carlos-oviedo-135a1426b) | [GitHub](https://github.com/CarlosOviedo18)
 
 ##  Contacto
 
