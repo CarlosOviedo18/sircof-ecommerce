@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-export const useProductos = () => {
+export const useProducts = () => {
   const [productos, setProductos] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)

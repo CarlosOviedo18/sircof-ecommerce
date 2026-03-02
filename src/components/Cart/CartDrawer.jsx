@@ -1,9 +1,8 @@
 import React from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCart } from '../../hooks/cart/useCart'
-import { usePayment } from '../../hooks/payment/usePayment'
 import { useAuthContext } from '../../context/AuthContext'
 import CartHeader from './CartHeader'
 import CartItems from './CartItems'
@@ -11,18 +10,8 @@ import CartFooter from './CartFooter'
 
 function CartDrawer({ isOpen, onClose }) {
   const { cartItems, loading, removeFromCart, updateQuantity, refetchCart } = useCart()
-  const { processPayment, loading: paymentLoading, error: paymentError } = usePayment()
   const { user } = useAuthContext()
   const navigate = useNavigate()
-  
-  const [shippingData, setShippingData] = useState({
-    phone: '',
-    address: '',
-    city: '',
-    postalCode: '',
-    country: 'Costa Rica'
-  })
-  const [formError, setFormError] = useState('')
 
   // Recargar carrito cuando se abre el drawer
   useEffect(() => {
@@ -58,48 +47,14 @@ function CartDrawer({ isOpen, onClose }) {
   const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
   const estaVacio = cartItems.length === 0
 
-  // Manejar checkout
-  const handleCheckout = async () => {
+  // Navegar a la página de checkout
+  const handleGoToCheckout = () => {
     if (!user) {
       navigate('/login', { state: { returnTo: '/checkout' } })
-      return
+    } else {
+      navigate('/checkout')
     }
-
-    if (!shippingData.address.trim()) {
-      setFormError('La dirección es requerida')
-      return
-    }
-    if (!shippingData.city.trim()) {
-      setFormError('La ciudad es requerida')
-      return
-    }
-    if (!shippingData.postalCode.trim()) {
-      setFormError('El código postal es requerido')
-      return
-    }
-
-    setFormError('')
-
-    try {
-      const result = await processPayment({
-        cartItems,
-        amount: total,
-        phone: shippingData.phone.replace(/\s/g, ''),
-        address: shippingData.address,
-        city: shippingData.city,
-        postal_code: shippingData.postalCode,
-        country: shippingData.country
-      })
-
-      if (result.paymentUrl) {
-        window.location.href = result.paymentUrl
-      } else {
-        setFormError('Error: No se recibió URL de pago')
-      }
-    } catch (error) {
-      console.error('Error al procesar pago:', error.message)
-      setFormError(error.message || 'Error al procesar el pago')
-    }
+    onClose()
   }
 
   return (
@@ -133,13 +88,7 @@ function CartDrawer({ isOpen, onClose }) {
             <CartFooter 
               total={total}
               isEmpty={estaVacio}
-              isLoading={paymentLoading}
-              hasUser={!!user}
-              shippingData={shippingData}
-              setShippingData={setShippingData}
-              formError={formError}
-              paymentError={paymentError}
-              onCheckout={handleCheckout}
+              onGoToCheckout={handleGoToCheckout}
               onClose={onClose}
             />
           </motion.div>

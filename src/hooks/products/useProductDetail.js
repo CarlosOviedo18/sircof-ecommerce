@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { useProductos } from './useProductos'
+import { useProducts } from './useProducts'
 
 export function useProductDetail(productId) {
-  const { productos, loading, error } = useProductos()
+  const { productos, loading, error } = useProducts()
   const [producto, setProducto] = useState(null)
 
   useEffect(() => {
