@@ -1,20 +1,76 @@
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import gsap from 'gsap'
 
 // ===== Responsive helpers =====
+const isMobile = () => window.innerWidth < 768
+const isSmallMobile = () => window.innerWidth < 480
+
 const getResponsiveFactor = () => {
   const w = window.innerWidth
-  if (w < 480) return 0.35
-  if (w < 768) return 0.5
-  if (w < 1024) return 0.75
+  if (w < 480) return 0.65   // Mucho más grande en móvil
+  if (w < 768) return 0.75   // Visible en tablet pequeña
+  if (w < 1024) return 0.85
   return 1
 }
 
 // Posiciones del modelo 3D según la sección visible
+// En móvil: centrado y más cerca de la cámara para que se vea bien
 const getPositions = () => {
   const f = getResponsiveFactor()
+  const mobile = isMobile()
+  const smallMobile = isSmallMobile()
+
+  if (smallMobile) {
+    // ── Teléfonos pequeños (<480px) ──
+    // Solo visible en banner, desaparece en el resto
+    const hidden = { position: { x: 0, y: 5, z: -10 }, rotation: { x: 0, y: 0, z: 0 }, scale: 0 }
+    return [
+      {
+        id: 'banner',
+        position: { x: 0, y: -0.3, z: 1 },
+        rotation: { x: 0.1, y: 1.5, z: 0.2 },
+        scale: 0.75,
+      },
+      { id: 'intro', ...hidden },
+      { id: 'description', ...hidden },
+      { id: 'global', ...hidden },
+      { id: 'mission', ...hidden },
+      {
+        id: 'contact',
+        position: { x: 0, y: -0.2, z: 1 },
+        rotation: { x: 0.1, y: 1.5, z: 0.15 },
+        scale: 0.75,
+      },
+    ]
+  }
+
+  if (mobile) {
+    // ── Móviles medianos (480-767px) ──
+    // Solo visible en banner, desaparece en el resto
+    const hidden = { position: { x: 0, y: 5, z: -10 }, rotation: { x: 0, y: 0, z: 0 }, scale: 0 }
+    return [
+      {
+        id: 'banner',
+        position: { x: 0, y: -0.3, z: 0.5 },
+        rotation: { x: 0.1, y: 1.5, z: 0.2 },
+        scale: 0.85,
+      },
+      { id: 'intro', ...hidden },
+      { id: 'description', ...hidden },
+      { id: 'global', ...hidden },
+      { id: 'mission', ...hidden },
+      {
+        id: 'contact',
+        position: { x: 0, y: -0.2, z: 0.5 },
+        rotation: { x: 0.1, y: 1.5, z: 0.15 },
+        scale: 0.85,
+      },
+    ]
+  }
+
+  // ── Desktop / Tablet grande ──
   return [
     {
       id: 'banner',
@@ -42,15 +98,15 @@ const getPositions = () => {
     },
     {
       id: 'mission',
-      position: { x: 2 * f, y: -0.4 * f, z: -2 * f },
-      rotation: { x: 0.2, y: 1.2, z: 0 },
-      scale: f * 0.7,
+      position: { x: 2.2 * f, y: -0.3 * f, z: -1 * f },
+      rotation: { x: 0.15, y: -0.9, z: 0.05 },
+      scale: f * 0.85,
     },
     {
       id: 'contact',
-      position: { x: 0, y: -0.6 * f, z: -1 * f },
-      rotation: { x: 0.3, y: -0.6, z: 0.1 },
-      scale: f * 1,
+      position: { x: 0, y: -0.4 * f, z: 0 },
+      rotation: { x: 0.1, y: 1.5, z: 0.15 },
+      scale: f * 1.1,
     },
   ]
 }
@@ -58,6 +114,8 @@ const getPositions = () => {
 /**
  * Componente que renderiza un modelo 3D GLB flotante
  * que se mueve al hacer scroll entre secciones.
+ *
+ * Usa RAF-throttled scroll + overwrite para que nunca se bugee.
  */
 function CoffeeCup3D({ modelPath = '/models/sample.glb', sectionSelector = '.about-section' }) {
   const containerRef = useRef(null)
@@ -68,67 +126,92 @@ function CoffeeCup3D({ modelPath = '/models/sample.glb', sectionSelector = '.abo
   const cameraRef = useRef(null)
   const animFrameRef = useRef(null)
   const mountedRef = useRef(true)
-
-  const modelMove = useCallback(() => {
-    const sections = document.querySelectorAll(sectionSelector)
-    let currentSection = ''
-    sections.forEach((section) => {
-      const rect = section.getBoundingClientRect()
-      if (rect.top <= window.innerHeight / 3) {
-        currentSection = section.id
-      }
-    })
-
-    const positions = getPositions()
-    const posIndex = positions.findIndex((val) => val.id === currentSection)
-
-    if (posIndex >= 0 && modelRef.current) {
-      const coords = positions[posIndex]
-      gsap.to(modelRef.current.position, {
-        x: coords.position.x,
-        y: coords.position.y,
-        z: coords.position.z,
-        duration: 1.5,
-        ease: 'power3.inOut',
-      })
-      gsap.to(modelRef.current.rotation, {
-        x: coords.rotation.x,
-        y: coords.rotation.y,
-        z: coords.rotation.z,
-        duration: 1.5,
-        ease: 'power3.inOut',
-      })
-      gsap.to(modelRef.current.scale, {
-        x: coords.scale,
-        y: coords.scale,
-        z: coords.scale,
-        duration: 1.5,
-        ease: 'power3.inOut',
-      })
-    }
-  }, [sectionSelector])
+  // Track last section to avoid redundant animations
+  const lastSectionRef = useRef('')
+  // RAF-based scroll throttle
+  const scrollRafRef = useRef(null)
 
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
 
     mountedRef.current = true
+    lastSectionRef.current = ''
 
-    // Escena
+    // ─── Detectar sección actual y mover modelo ───
+    const modelMove = () => {
+      if (!modelRef.current || !mountedRef.current) return
+
+      const sections = document.querySelectorAll(sectionSelector)
+      let currentSection = ''
+
+      // Buscar la sección más visible
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect()
+        if (rect.top <= window.innerHeight / 3) {
+          currentSection = section.id
+        }
+      })
+
+      // Si no cambió la sección, no hacer nada (evita animaciones redundantes)
+      if (!currentSection || currentSection === lastSectionRef.current) return
+      lastSectionRef.current = currentSection
+
+      const positions = getPositions()
+      const posIndex = positions.findIndex((val) => val.id === currentSection)
+      if (posIndex < 0) return
+
+      const coords = positions[posIndex]
+      const model = modelRef.current
+
+      // Matar cualquier animación anterior en este objeto antes de crear nuevas
+      gsap.killTweensOf(model.position)
+      gsap.killTweensOf(model.rotation)
+      gsap.killTweensOf(model.scale)
+
+      gsap.to(model.position, {
+        x: coords.position.x,
+        y: coords.position.y,
+        z: coords.position.z,
+        duration: 0.8,
+        ease: 'power2.out',
+        overwrite: true,
+      })
+      gsap.to(model.rotation, {
+        x: coords.rotation.x,
+        y: coords.rotation.y,
+        z: coords.rotation.z,
+        duration: 0.8,
+        ease: 'power2.out',
+        overwrite: true,
+      })
+      gsap.to(model.scale, {
+        x: coords.scale,
+        y: coords.scale,
+        z: coords.scale,
+        duration: 0.8,
+        ease: 'power2.out',
+        overwrite: true,
+      })
+    }
+
+    // ─── Escena ───
     const scene = new THREE.Scene()
     sceneRef.current = scene
 
-    // Cámara
+    // ─── Cámara ───
+    // En móvil usar FOV más amplio para que el modelo se vea más grande
+    const mobileFov = isMobile() ? 14 : 10
     const camera = new THREE.PerspectiveCamera(
-      10,
+      mobileFov,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
     )
-    camera.position.z = 13
+    camera.position.z = isMobile() ? 10 : 13
     cameraRef.current = camera
 
-    // Renderer - compatible con Three.js 0.183+
+    // ─── Renderer ───
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true })
     renderer.setSize(window.innerWidth, window.innerHeight)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
@@ -138,7 +221,7 @@ function CoffeeCup3D({ modelPath = '/models/sample.glb', sectionSelector = '.abo
     container.appendChild(renderer.domElement)
     rendererRef.current = renderer
 
-    // Iluminación
+    // ─── Iluminación ───
     const ambientLight = new THREE.AmbientLight(0xffffff, 2.5)
     scene.add(ambientLight)
 
@@ -150,9 +233,8 @@ function CoffeeCup3D({ modelPath = '/models/sample.glb', sectionSelector = '.abo
     bottomLight.position.set(-500, -500, 500)
     scene.add(bottomLight)
 
-    // Cargar modelo 3D
+    // ─── Cargar modelo 3D ───
     const loader = new GLTFLoader()
-    console.log('[CoffeeCup3D] Cargando modelo desde:', modelPath)
 
     loader.load(
       modelPath,
@@ -160,7 +242,6 @@ function CoffeeCup3D({ modelPath = '/models/sample.glb', sectionSelector = '.abo
         if (!mountedRef.current) return
 
         const model = gltf.scene
-        console.log('[CoffeeCup3D] Modelo cargado correctamente')
 
         // Centrar el modelo basándose en su bounding box
         const box = new THREE.Box3().setFromObject(model)
@@ -176,30 +257,40 @@ function CoffeeCup3D({ modelPath = '/models/sample.glb', sectionSelector = '.abo
         const f = getResponsiveFactor()
         wrapper.scale.set(f, f, f)
 
-        console.log('[CoffeeCup3D] BoundingBox:', box.min, box.max)
-        console.log('[CoffeeCup3D] Scale factor:', f)
-
-        // Animaciones del modelo
+        // Animaciones del modelo (si tiene)
         const mixer = new THREE.AnimationMixer(model)
         mixerRef.current = mixer
         if (gltf.animations.length > 0) {
-          console.log('[CoffeeCup3D] Reproduciendo', gltf.animations.length, 'animaciones')
           mixer.clipAction(gltf.animations[0]).play()
         }
 
-        modelMove()
-      },
-      (xhr) => {
-        if (xhr.total > 0) {
-          console.log('[CoffeeCup3D] Progreso:', Math.round((xhr.loaded / xhr.total) * 100) + '%')
+        // Posicionar inmediatamente sin animación en la carga inicial
+        const sections = document.querySelectorAll(sectionSelector)
+        let currentSection = ''
+        sections.forEach((section) => {
+          const rect = section.getBoundingClientRect()
+          if (rect.top <= window.innerHeight / 3) {
+            currentSection = section.id
+          }
+        })
+
+        const positions = getPositions()
+        const posIndex = positions.findIndex((val) => val.id === (currentSection || 'banner'))
+        if (posIndex >= 0) {
+          const coords = positions[posIndex]
+          wrapper.position.set(coords.position.x, coords.position.y, coords.position.z)
+          wrapper.rotation.set(coords.rotation.x, coords.rotation.y, coords.rotation.z)
+          wrapper.scale.set(coords.scale, coords.scale, coords.scale)
+          lastSectionRef.current = currentSection || 'banner'
         }
       },
+      undefined,
       (error) => {
         console.error('[CoffeeCup3D] Error cargando modelo 3D:', error)
       }
     )
 
-    // Loop de renderizado
+    // ─── Loop de renderizado ───
     const clock = new THREE.Clock()
     const animate = () => {
       if (!mountedRef.current) return
@@ -210,29 +301,42 @@ function CoffeeCup3D({ modelPath = '/models/sample.glb', sectionSelector = '.abo
     }
     animate()
 
-    // Scroll
+    // ─── Scroll (throttled con RAF — máximo 1 vez por frame) ───
     const handleScroll = () => {
-      if (modelRef.current) modelMove()
+      if (scrollRafRef.current) return // ya hay un frame pendiente
+      scrollRafRef.current = requestAnimationFrame(() => {
+        scrollRafRef.current = null
+        modelMove()
+      })
     }
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
 
-    // Resize
+    // ─── Resize ───
     const handleResize = () => {
       const w = window.innerWidth
       const h = window.innerHeight
       camera.aspect = w / h
       camera.updateProjectionMatrix()
       renderer.setSize(w, h)
-      if (modelRef.current) modelMove()
+      // Forzar re-evaluación de sección al cambiar tamaño
+      lastSectionRef.current = ''
+      modelMove()
     }
     window.addEventListener('resize', handleResize)
 
-    // Cleanup
+    // ─── Cleanup ───
     return () => {
       mountedRef.current = false
       window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('resize', handleResize)
+      if (scrollRafRef.current) cancelAnimationFrame(scrollRafRef.current)
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current)
+      // Matar todas las animaciones GSAP pendientes del modelo
+      if (modelRef.current) {
+        gsap.killTweensOf(modelRef.current.position)
+        gsap.killTweensOf(modelRef.current.rotation)
+        gsap.killTweensOf(modelRef.current.scale)
+      }
       renderer.dispose()
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement)
@@ -248,7 +352,7 @@ function CoffeeCup3D({ modelPath = '/models/sample.glb', sectionSelector = '.abo
         }
       })
     }
-  }, [modelPath, modelMove])
+  }, [modelPath, sectionSelector])
 
   return (
     <div
@@ -261,6 +365,7 @@ function CoffeeCup3D({ modelPath = '/models/sample.glb', sectionSelector = '.abo
         height: '100vh',
         zIndex: 10,
         pointerEvents: 'none',
+        willChange: 'transform',
       }}
     />
   )

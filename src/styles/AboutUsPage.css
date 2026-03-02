@@ -431,19 +431,34 @@
 
 /* ===== Mobile (max 767px) ===== */
 @media screen and (max-width: 767px) {
+    .about-page {
+        font-size: 13px;
+    }
+
     .about-page .about-content-fit {
-        padding-block: 3.5em;
+        width: min(1100px, 92vw);
+        padding-block: 3em;
     }
 
     .about-page #banner .about-content-fit {
         min-height: 100vh;
+        min-height: 100dvh; /* dynamic viewport height para móviles */
+    }
+
+    .about-page #banner .about-title-main {
+        font-size: clamp(2.5rem, 14vw, 5rem);
+    }
+
+    .about-page .banner-subtitle {
+        font-size: clamp(0.7rem, 2.5vw, 0.95rem);
+        letter-spacing: 2px;
     }
 
     .about-page .leaf4-banner {
-        width: 55vw;
+        width: 50vw;
         right: -5vw;
-        bottom: 10vh;
-        opacity: 0.5;
+        bottom: 12vh;
+        opacity: 0.4;
     }
 
     .about-page #intro .about-content-fit,
@@ -458,13 +473,23 @@
         transform: none;
     }
 
+    .about-page .about-section .about-content-fit .about-title {
+        font-size: clamp(1.6rem, 7vw, 2.5rem);
+        margin-bottom: 0.3em;
+    }
+
     .about-page #global .about-content-fit {
         padding-block: 2.5em;
     }
 
     .about-page .about-section .about-number {
-        font-size: 4rem;
+        font-size: 3.5rem;
         opacity: 0.08;
+    }
+
+    .about-page .about-section .about-des p {
+        font-size: 0.92em;
+        line-height: 1.7;
     }
 
     .about-page #description .about-content-fit {
@@ -474,46 +499,127 @@
 
     .about-page .leaf1-description {
         width: 80vw;
-        opacity: 0.3;
+        opacity: 0.25;
+    }
+
+    .about-page #mission {
+        padding-block: 1em;
+    }
+
+    .about-page #mission .mission-title h2 {
+        font-size: clamp(2rem, 8vw, 3rem);
+    }
+
+    .about-page #mission .mission-title {
+        margin-bottom: 1.2em;
     }
 
     .about-page #mission .mission-content {
         grid-template-columns: 1fr;
         gap: 1.5em;
         padding: 1.2em;
+        border-radius: 12px;
     }
 
     .about-page #mission .mission-subtitle {
-        font-size: 1.5em;
+        font-size: 1.4em;
+    }
+
+    .about-page #mission .mission-item p {
+        font-size: 0.88em;
+    }
+
+    .about-page #mission .values-section h3 {
+        font-size: clamp(1.6rem, 6vw, 2.2rem);
+        margin-bottom: 0.8em;
     }
 
     .about-page #mission .values-grid {
-        grid-template-columns: 1fr;
-        gap: 1em;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8em;
     }
 
     .about-page #mission .value-card {
-        padding: 1.2em;
+        padding: 1em;
+        border-radius: 10px;
     }
 
     .about-page #mission .value-number {
-        font-size: 1.6em;
+        font-size: 1.4em;
     }
 
     .about-page #mission .value-title {
-        font-size: 1.05em;
+        font-size: 0.95em;
     }
 
     .about-page #mission .value-card p {
-        font-size: 0.85em;
+        font-size: 0.8em;
+        line-height: 1.6;
     }
 
     .about-page .leaf-mission {
-        opacity: 0.1;
+        opacity: 0.08;
+    }
+
+    .about-page #contact .contact-container h2 {
+        font-size: clamp(1.6rem, 7vw, 2.5rem);
     }
 
     .about-page #contact .about-content-fit {
         padding-top: 3em;
-        padding-bottom: 50vh;
+        padding-bottom: 40vh;
+    }
+
+    .about-page .scroll-indicator {
+        bottom: 20px;
+        font-size: 0.75rem;
+    }
+}
+
+/* ===== Small Mobile (max 400px) ===== */
+@media screen and (max-width: 400px) {
+    .about-page .about-content-fit {
+        width: 94vw;
+        padding-block: 2.5em;
+    }
+
+    .about-page #banner .about-title-main {
+        font-size: clamp(2rem, 16vw, 4rem);
+    }
+
+    .about-page .banner-subtitle {
+        font-size: 0.7rem;
+        letter-spacing: 1.5px;
+    }
+
+    .about-page .leaf4-banner {
+        width: 45vw;
+        opacity: 0.3;
+    }
+
+    .about-page .about-section .about-number {
+        font-size: 3rem;
+    }
+
+    .about-page .about-section .about-content-fit .about-title {
+        font-size: clamp(1.4rem, 8vw, 2rem);
+    }
+
+    .about-page .about-section .about-des p {
+        font-size: 0.85em;
+        line-height: 1.65;
+    }
+
+    .about-page #mission .values-grid {
+        grid-template-columns: 1fr;
+        gap: 0.7em;
+    }
+
+    .about-page #mission .mission-content {
+        padding: 1em;
+    }
+
+    .about-page #contact .about-content-fit {
+        padding-bottom: 35vh;
     }
 }

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useContactForm } from '../../hooks/contact/useContactForm'
 
-function Contactenos() {
+function ContactUs() {
   const { sendMessage, loading: isSubmitting } = useContactForm()
 
   const [formData, setFormData] = useState({
@@ -296,4 +296,4 @@ function Contactenos() {
   )
 }
 
-export default Contactenos
+export default ContactUs

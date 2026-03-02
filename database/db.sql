@@ -51,6 +51,14 @@ CREATE TABLE orders (
   user_id INT NOT NULL,
   total DECIMAL(10,2) NOT NULL,
   status ENUM('pending','paid','cancelled') DEFAULT 'pending',
+  payment_method ENUM('tilopay','paypal') DEFAULT 'tilopay',
+  tilopay_reference VARCHAR(255) DEFAULT NULL,
+  tilopay_order_number VARCHAR(255) DEFAULT NULL,
+  phone VARCHAR(20) DEFAULT NULL,
+  address VARCHAR(255) DEFAULT NULL,
+  city VARCHAR(100) DEFAULT NULL,
+  postal_code VARCHAR(20) DEFAULT NULL,
+  country VARCHAR(100) DEFAULT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_orders_user
     FOREIGN KEY (user_id)

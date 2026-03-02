@@ -1,7 +1,7 @@
 import React from 'react'
 import sobreNosotrosImg from '../../assets/webp/SobreNosotros.webp'
 
-function SobreNosotros() {
+function AboutUs() {
   const features = [
     {
       icon: (
@@ -103,4 +103,4 @@ function SobreNosotros() {
   )
 }
 
-export default SobreNosotros
+export default AboutUs
