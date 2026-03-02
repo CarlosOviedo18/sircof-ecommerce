@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { useProductosDestacados } from '../../hooks/products/useProductosDestacados'
+import { useFeaturedProducts } from '../../hooks/products/useFeaturedProducts'
 import cafeNacional from '../../assets/webp/cafeNacional.webp'
 import cafePremium from '../../assets/webp/cafePremium.webp'
 import sobreNosotrosImg from '../../assets/webp/SobreNosotros.webp'
 
-function PromoProductos() {
-  const { productos, loading, error } = useProductosDestacados()
+function FeaturedProducts() {
+  const { productos, loading, error } = useFeaturedProducts()
 
   useEffect(() => {
   
@@ -93,4 +93,4 @@ function PromoProductos() {
   )
 }
 
-export default PromoProductos
+export default FeaturedProducts

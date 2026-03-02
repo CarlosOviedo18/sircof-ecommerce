@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-export const useProductosDestacados = () => {
+export const useFeaturedProducts = () => {
   const [productos, setProductos] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)

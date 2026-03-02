@@ -124,14 +124,15 @@ router.post("/process", protectRoute, async (req, res) => {
     const tilopayData = await tilopayResponse.json();
 
     const [orderResult] = await pool.query(
-      `INSERT INTO orders (user_id, total, status, tilopay_reference, tilopay_order_number, phone, address, city, postal_code, country) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO orders (user_id, total, status, tilopay_reference, tilopay_order_number, payment_method, phone, address, city, postal_code, country) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         userId,
         amount,
         "pending",
         orderReference,
         tilopayData.id || tilopayData.orderNumber,
+        "tilopay",
         phone,
         address || null,
         city || null,

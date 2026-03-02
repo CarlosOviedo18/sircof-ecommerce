@@ -4,29 +4,32 @@ import { lazy, Suspense } from "react";
 import Navigation from "./components/layout/Navigation.jsx";
 import SecondNavigation from "./components/layout/SecondNavigation.jsx";
 import Footer from "./components/layout/Footer.jsx";
-import SobreNosotros from "./components/main/SobreNosotros.jsx";
-import ExperienciaEnTaza from "./components/main/ExperienciaEnTaza.jsx";
-import PromoProductos from "./components/main/PromoProductos.jsx";
-import GranoTuMesa from "./components/main/GranoTuMesa.jsx";
+import AboutUs from "./components/main/AboutUs.jsx";
+import CupExperience from "./components/main/CupExperience.jsx";
+import FeaturedProducts from "./components/main/FeaturedProducts.jsx";
+import BeanToTable from "./components/main/BeanToTable.jsx";
 import { PageAnimated } from "./animations/PageAnimated.jsx";
 import { useSessionTimeout } from "./hooks/auth/useSessionTimeout.js";
 import ScrollToTopButton from "./components/layout/ScrollToTopButton.jsx";
 import "./styles/Navigation.css";
-import TrasparentNavigation from "./components/layout/TrasparentNavigation.jsx";
+import TransparentNavigation from "./components/layout/TransparentNavigation.jsx";
 
 // Lazy load - páginas secundarias
 const LoginUsers = lazy(() => import("./pages/auth/LoginUsers.jsx"));
 const StoreProduct = lazy(() => import("./pages/store/StoreProduct.jsx"));
 const ProductDetail = lazy(() => import("./pages/store/ProductDetail.jsx"));
+const CheckoutPage = lazy(
+  () => import("./pages/checkout/CheckoutPage.jsx"),
+);
 const CheckoutSuccess = lazy(
   () => import("./pages/checkout/CheckoutSuccess.jsx"),
 );
 const UserSettings = lazy(() => import("./pages/user/UserSettings.jsx"));
-const Contactenos = lazy(() => import("./pages/contact/Contactenos.jsx"));
+const ContactUs = lazy(() => import("./pages/contact/ContactUs.jsx"));
 const Galery = lazy(() => import("./pages/content/Galery.jsx"));
 const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword.jsx"));
-const SobreNosotrosPage = lazy(
-  () => import("./pages/about/SobreNosotrosPage.jsx"),
+const AboutUsPage = lazy(
+  () => import("./pages/about/AboutUsPage.jsx"),
 );
 
 // Lazy load - admin
@@ -79,10 +82,10 @@ function App() {
               <PageAnimated>
                 <>
                   <Navigation />
-                  <SobreNosotros />
-                  <ExperienciaEnTaza />
-                  <GranoTuMesa />
-                  <PromoProductos />
+                  <AboutUs />
+                  <CupExperience />
+                  <BeanToTable />
+                  <FeaturedProducts />
                   <Footer />
                   <ScrollToTopButton />
                 </>
@@ -141,7 +144,7 @@ function App() {
               <PageAnimated>
                 <>
                   <SecondNavigation />
-                  <Contactenos />
+                  <ContactUs />
                   <Footer />
                   <ScrollToTopButton />
                 </>
@@ -155,7 +158,7 @@ function App() {
             element={
               <PageAnimated>
                 <>
-                  <SobreNosotrosPage />
+                  <AboutUsPage />
                   <ScrollToTopButton />
                 </>
               </PageAnimated>
@@ -169,6 +172,20 @@ function App() {
               <PageAnimated>
                 <>
                   <Galery />
+                </>
+              </PageAnimated>
+            }
+          />
+
+          {/* Página de Checkout */}
+          <Route
+            path="/checkout"
+            element={
+              <PageAnimated>
+                <>
+                  <SecondNavigation />
+                  <CheckoutPage />
+                  <Footer />
                 </>
               </PageAnimated>
             }

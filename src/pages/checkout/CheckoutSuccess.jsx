@@ -1,35 +1,87 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { useConfirmPayment } from '../../hooks/payment/useConfirmPayment'
+import { usePayPalPayment } from '../../hooks/payment/usePayPalPayment'
 
 const CheckoutSuccess = () => {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const [orderData, setOrderData] = useState(null)
   const { confirmPayment, clearCart, emailSent, confirming } = useConfirmPayment()
+  const { capturePayPalOrder, loading: capturingPayPal } = usePayPalPayment()
+  const [paypalCaptured, setPaypalCaptured] = useState(false)
 
   useEffect(() => {
-    const code = searchParams.get('code')
-    const orderNumber = searchParams.get('order') 
-      || searchParams.get('returnData') 
-      || searchParams.get('orderNumber')
-    const description = searchParams.get('description')
-    const tilopayOrderId = searchParams.get('tilopay-transaction') || searchParams.get('tpt')
-    const creditCardBrand = searchParams.get('brand')
-    const last4CreditCardNumber = searchParams.get('last-digits')
+    const method = searchParams.get('method')
+    
+    if (method === 'paypal') {
+      // Flujo PayPal: el token es el PayPal Order ID
+      const paypalOrderId = searchParams.get('token')
+      const payerId = searchParams.get('PayerID')
 
-    setOrderData({
-      code,
-      orderNumber,
-      description,
-      tilopayOrderId,
-      creditCardBrand,
-      last4CreditCardNumber
-    })
+      if (paypalOrderId && payerId && !paypalCaptured) {
+        setPaypalCaptured(true)
+        // Capturar el pago
+        capturePayPalOrder(paypalOrderId)
+          .then((result) => {
+            if (result.success) {
+              clearCart()
+              setOrderData({
+                code: '1',
+                orderNumber: paypalOrderId,
+                description: 'Pago aprobado via PayPal',
+                tilopayOrderId: result.captureId || paypalOrderId,
+                creditCardBrand: 'PayPal',
+                last4CreditCardNumber: null,
+                isPayPal: true
+              })
+            } else {
+              setOrderData({
+                code: '0',
+                description: result.message || 'Error al capturar pago PayPal',
+                isPayPal: true
+              })
+            }
+          })
+          .catch((err) => {
+            setOrderData({
+              code: '0',
+              description: err.message || 'Error al procesar pago PayPal',
+              isPayPal: true
+            })
+          })
+      } else if (!paypalOrderId) {
+        setOrderData({
+          code: '0',
+          description: 'Pago PayPal cancelado',
+          isPayPal: true
+        })
+      }
+    } else {
+      // Flujo Tilopay (original)
+      const code = searchParams.get('code')
+      const orderNumber = searchParams.get('order') 
+        || searchParams.get('returnData') 
+        || searchParams.get('orderNumber')
+      const description = searchParams.get('description')
+      const tilopayOrderId = searchParams.get('tilopay-transaction') || searchParams.get('tpt')
+      const creditCardBrand = searchParams.get('brand')
+      const last4CreditCardNumber = searchParams.get('last-digits')
 
-    if (code === '1') {
-      clearCart()
-      confirmPayment(orderNumber, code)
+      setOrderData({
+        code,
+        orderNumber,
+        description,
+        tilopayOrderId,
+        creditCardBrand,
+        last4CreditCardNumber,
+        isPayPal: false
+      })
+
+      if (code === '1') {
+        clearCart()
+        confirmPayment(orderNumber, code)
+      }
     }
   }, [searchParams])
 
@@ -97,8 +149,12 @@ const CheckoutSuccess = () => {
                   <div>
                     <p className="text-sm text-gray-600 font-semibold uppercase tracking-wide">Método de Pago</p>
                     <p className="text-gray-700 mt-1">
-                      {orderData.creditCardBrand || 'Tarjeta'} 
-                      {orderData.last4CreditCardNumber && ` ****${orderData.last4CreditCardNumber}`}
+                      {orderData.isPayPal ? 'PayPal' : (
+                        <>
+                          {orderData.creditCardBrand || 'Tarjeta'} 
+                          {orderData.last4CreditCardNumber && ` ****${orderData.last4CreditCardNumber}`}
+                        </>
+                      )}
                     </p>
                   </div>
                   <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
