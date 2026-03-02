@@ -4,7 +4,7 @@ import bandolasCafe from '../../assets/webp/bandolasCafe.webp'
 import sobreNosotrosImg from '../../assets/webp/SobreNosotros.webp'
 import iconoExperiencia from '../../assets/webp/iconoExperienciataza.webp'
 
-function ExperienciaEnTaza() {
+function CupExperience() {
 return (
     <section className="w-full py-20 px-4 md:px-8 bg-cover bg-center relative" style={{ backgroundImage: `url(${sobreNosotrosImg})` }}>
         {/* Overlay café oscuro */}
@@ -75,4 +75,4 @@ return (
 )
 }
 
-export default ExperienciaEnTaza
+export default CupExperience

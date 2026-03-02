@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { useProductos } from '../../hooks/products/useProductos'
+import { useProducts } from '../../hooks/products/useProducts'
 import { useCart } from '../../hooks/cart/useCart'
 import { useAuthContext } from '../../context/AuthContext'
 import cafeNacional from '../../assets/webp/cafeNacional.webp'
 import cafePremium from '../../assets/webp/cafePremium.webp'
 
 function StoreProduct() {
-  const { productos, loading, error } = useProductos()
+  const { productos, loading, error } = useProducts()
   const { addToCart, refetchCart } = useCart()
   const { user } = useAuthContext()
   const navigate = useNavigate()

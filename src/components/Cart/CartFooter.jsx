@@ -1,33 +1,18 @@
-import ShippingForm from './ShippingForm'
-
-function CartFooter({ total, isEmpty, isLoading, hasUser, shippingData, setShippingData, formError, paymentError, onCheckout, onClose }) {
+function CartFooter({ total, isEmpty, onGoToCheckout, onClose }) {
   return (
-    <div className="border-t p-6 space-y-4 overflow-y-auto max-h-96">
+    <div className="border-t p-6 space-y-4">
       <div className="flex justify-between items-center text-lg font-bold">
         <span>Total:</span>
         <span className="text-coffee">₡{total.toLocaleString('es-CR')}</span>
       </div>
 
-      {!isEmpty && (
-        <ShippingForm 
-          data={shippingData}
-          setData={setShippingData}
-          formError={formError}
-        />
-      )}
-
-      {paymentError && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded text-sm">
-          {paymentError}
-        </div>
-      )}
-
       <button
-        onClick={onCheckout}
-        disabled={isEmpty || isLoading || !hasUser}
-        className="w-full bg-coffee hover:bg-dark-coffee disabled:bg-gray-300 text-white font-bold py-3 rounded transition-colors text-sm"
+        onClick={onGoToCheckout}
+        disabled={isEmpty}
+        className="w-full bg-coffee hover:bg-dark-coffee disabled:bg-gray-300 text-white font-bold py-3 rounded transition-colors text-sm flex items-center justify-center gap-2"
       >
-        {isLoading ? 'Procesando...' : 'Proceder al Pago'}
+      
+        Ir a Pagar
       </button>
 
       <button

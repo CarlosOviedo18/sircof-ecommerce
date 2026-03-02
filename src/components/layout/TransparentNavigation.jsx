@@ -7,7 +7,7 @@ import { useAuthContext } from '../../context/AuthContext'
 import { useAuth } from '../../hooks/auth/useAuth'
 import { useCart } from '../../hooks/cart/useCart'
 
-function TrasparentNavigation() {
+function TransparentNavigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
   const { user } = useAuthContext()
@@ -84,4 +84,4 @@ function TrasparentNavigation() {
   )
 }
 
-export default TrasparentNavigation
+export default TransparentNavigation

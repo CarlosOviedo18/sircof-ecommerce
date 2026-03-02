@@ -1,6 +1,6 @@
 import InfiniteMenu from "../../components/ui/InfiniteMenu.jsx";
 import Footer from "../../components/layout/Footer.jsx";
-import TrasparentNavigation from "../../components/layout/TrasparentNavigation.jsx";
+import TransparentNavigation from "../../components/layout/TransparentNavigation.jsx";
 import galeria1 from "../../assets/img/galeria1.png";
 import galeria2 from "../../assets/img/galeria2.png";
 import galeria3 from "../../assets/img/galeria3.png";
@@ -38,7 +38,7 @@ function Galery() {
     <div className="relative w-full h-screen overflow-hidden bg-gradient-to-b from-[#1a1a1a] via-[#2d1810] to-[#1a1a1a]">
       {/* Menú transparente */}
       <div className="absolute top-0 left-0 right-0 z-50">
-        <TrasparentNavigation />
+        <TransparentNavigation />
       </div>
 
       {/* Galería - ocupa el espacio disponible */}

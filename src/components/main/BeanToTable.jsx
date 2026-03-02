@@ -6,7 +6,7 @@ import sobreNosotros from "../../assets/webp/SobreNosotros.webp";
 import tour1 from "../../assets/webp/tours1.webp";
 import Stack from "../ui/Stack";
 
-function GranoTuMesa() {
+function BeanToTable() {
   const images = [fotosPatrones, canastoCafe, tour1];
   return (
     <div
@@ -69,4 +69,4 @@ function GranoTuMesa() {
   );
 }
 
-export default GranoTuMesa;
+export default BeanToTable;

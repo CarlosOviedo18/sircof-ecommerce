@@ -1,9 +1,9 @@
 import CoffeeCup3D from '../../animations/CoffeeCup3D'
 import leaf4 from '../../assets/img/leaf4.png'
 import leaf1 from '../../assets/img/leaf1.png'
-import '../../styles/SobreNosotrosPage.css'
-import TrasparentNavigation from "../../components/layout/TrasparentNavigation.jsx";
-function SobreNosotrosPage() {
+import '../../styles/AboutUsPage.css'
+import TransparentNavigation from "../../components/layout/TransparentNavigation.jsx";
+function AboutUsPage() {
   return (
 
 
@@ -16,7 +16,7 @@ function SobreNosotrosPage() {
       />
 
          <div className="absolute top-0 left-0 right-0 z-50">
-        <TrasparentNavigation />
+        <TransparentNavigation />
       </div>
 
       {/* Banner */}
@@ -145,4 +145,4 @@ function SobreNosotrosPage() {
   )
 }
 
-export default SobreNosotrosPage
+export default AboutUsPage
