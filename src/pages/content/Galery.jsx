@@ -1,36 +1,54 @@
 import InfiniteMenu from "../../components/ui/InfiniteMenu.jsx";
 import Footer from "../../components/layout/Footer.jsx";
 import TransparentNavigation from "../../components/layout/TransparentNavigation.jsx";
+import { useTranslation } from "react-i18next";
 import galeria1 from "../../assets/img/galeria1.png";
 import galeria2 from "../../assets/img/galeria2.png";
 import galeria3 from "../../assets/img/galeria3.png";
 import galeria4 from "../../assets/img/galeria4.png";
+import galeria5 from "../../assets/img/galeria5.jpg";
+import galeria6 from "../../assets/img/galeria6.jpg";
+
 
 function Galery() {
+  const { t } = useTranslation('gallery');
+
   const items = [
     {
       image: galeria1,
       link: "",
-      title: "Bandolas de Café",
-      description: "Accesorios esenciales para el café",
+      title: t('items.bandolas.title'),
+      description: t('items.bandolas.description'),
     },
     {
       image: galeria2,
       link: "",
-      title: "Plantaciones de Café",
-      description: "Nuestras plantas en la finca",
+      title: t('items.plantaciones.title'),
+      description: t('items.plantaciones.description'),
     },
     {
       image: galeria3,
       link: "",
-      title: "Invernadero",
-      description: "Cultivo controlado y sostenible",
+      title: t('items.invernadero.title'),
+      description: t('items.invernadero.description'),
     },
     {
       image: galeria4,
       link: "",
-      title: "Naturaleza de la Finca",
-      description: "La belleza del cultivo artesanal",
+      title: t('items.naturaleza.title'),
+      description: t('items.naturaleza.description'),
+    },
+    {
+      image: galeria5,
+      link: "",
+      title: t('items.recoleccion.title'),
+      description: t('items.recoleccion.description'),
+    },
+    {
+      image: galeria6,
+      link: "",
+      title: t('items.tour.title'),
+      description: t('items.tour.description'),
     },
   ];
 

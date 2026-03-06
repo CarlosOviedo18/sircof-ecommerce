@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 function SearchBox() {
   const [isOpen, setIsOpen] = useState(false)
@@ -8,6 +9,7 @@ function SearchBox() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
   const navigate = useNavigate()
   const inputRef = useRef(null)
+  const { t } = useTranslation('common')
 
   // Detectar cambios de tamaño de pantalla
   useEffect(() => {
@@ -162,7 +164,7 @@ function SearchBox() {
                 transition={{ delay: 0.1 }}
                 className="text-2xl font-bold text-white mb-6 mt-4"
               >
-                Buscar Café
+                {t('searchBox.searchCoffee')}
               </motion.h2>
 
               {/* Input */}
@@ -176,7 +178,7 @@ function SearchBox() {
                 <input
                   ref={inputRef}
                   type="text"
-                  placeholder="¿Qué café buscas?"
+                  placeholder={t('searchBox.placeholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="flex-1 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-300 text-gray-900 placeholder:text-gray-500 font-medium"
@@ -210,7 +212,7 @@ function SearchBox() {
                 transition={{ delay: 0.3 }}
                 className="w-full max-w-sm mt-8"
               >
-                <p className="text-amber-100 text-sm font-semibold mb-4">Populares:</p>
+                <p className="text-amber-100 text-sm font-semibold mb-4">{t('searchBox.popular')}</p>
                 <div className="flex flex-wrap gap-2">
                   {['Espresso', 'Cappuccino', 'Premium', 'Nacional'].map((term, idx) => (
                     <motion.button
@@ -299,8 +301,8 @@ function SearchBox() {
                 transition={{ delay: 0.1 }}
                 className="mb-4"
               >
-                <h3 className="text-lg font-bold text-gray-900">Buscar Café</h3>
-                <p className="text-sm text-gray-500">Encuentra tu café favorito</p>
+                <h3 className="text-lg font-bold text-gray-900">{t('searchBox.searchCoffee')}</h3>
+                <p className="text-sm text-gray-500">{t('searchBox.findFavorite')}</p>
               </motion.div>
 
               {/* Input */}
@@ -314,7 +316,7 @@ function SearchBox() {
                 <input
                   ref={inputRef}
                   type="text"
-                  placeholder="Escribe aquí..."
+                  placeholder={t('searchBox.desktopPlaceholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-amber-700 transition-colors text-gray-900 placeholder:text-gray-400 font-medium"
@@ -355,7 +357,7 @@ function SearchBox() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.25 }}
               >
-                <p className="text-sm font-bold text-gray-700 mb-3">Búsquedas Populares:</p>
+                <p className="text-sm font-bold text-gray-700 mb-3">{t('searchBox.popularSearches')}</p>
                 <div className="flex flex-wrap gap-2">
                   {['Espresso', 'Cappuccino', 'Premium', 'Nacional'].map((term, idx) => (
                     <motion.button
@@ -381,7 +383,7 @@ function SearchBox() {
                 transition={{ delay: 0.4 }}
                 className="text-xs text-gray-400 mt-4 text-center"
               >
-                Presiona Enter para buscar
+                {t('searchBox.pressEnter')}
               </motion.p>
             </motion.div>
           </>

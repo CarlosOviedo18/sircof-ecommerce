@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 function ShippingForm({ data, setData, formError }) {
+  const { t } = useTranslation('cart')
   const [phoneError, setPhoneError] = useState('')
   const [countries, setCountries] = useState([])
 
@@ -22,7 +24,7 @@ function ShippingForm({ data, setData, formError }) {
   const handlePhoneChange = (value) => {
     setData({ ...data, phone: value })
     if (value.trim() && !validatePhone(value)) {
-      setPhoneError('Formato inválido. Usa: 8765-4321 o 87654321')
+      setPhoneError(t('shipping.phoneError'))
     } else {
       setPhoneError('')
     }
@@ -30,12 +32,12 @@ function ShippingForm({ data, setData, formError }) {
 
   return (
     <div className="space-y-3 pt-4 border-t">
-      <h3 className="font-bold text-sm">Datos de Envío</h3>
+      <h3 className="font-bold text-sm">{t('shipping.title')}</h3>
       
       <div>
         <input
           type="tel"
-          placeholder="Teléfono (ej: 8765-4321)"
+          placeholder={t('shipping.phonePlaceholder')}
           value={data.phone}
           onChange={(e) => handlePhoneChange(e.target.value)}
           className={`w-full border rounded px-3 py-2 text-sm focus:outline-none transition-colors ${
@@ -47,7 +49,7 @@ function ShippingForm({ data, setData, formError }) {
 
       <input
         type="text"
-        placeholder="Dirección"
+        placeholder={t('shipping.addressPlaceholder')}
         value={data.address}
         onChange={(e) => setData({ ...data, address: e.target.value })}
         className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-coffee transition-colors"
@@ -55,7 +57,7 @@ function ShippingForm({ data, setData, formError }) {
 
       <input
         type="text"
-        placeholder="Ciudad"
+        placeholder={t('shipping.cityPlaceholder')}
         value={data.city}
         onChange={(e) => setData({ ...data, city: e.target.value })}
         className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-coffee transition-colors"
@@ -63,7 +65,7 @@ function ShippingForm({ data, setData, formError }) {
 
       <input
         type="text"
-        placeholder="Código Postal"
+        placeholder={t('shipping.postalCodePlaceholder')}
         value={data.postalCode}
         onChange={(e) => setData({ ...data, postalCode: e.target.value })}
         className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-coffee transition-colors"
@@ -74,7 +76,7 @@ function ShippingForm({ data, setData, formError }) {
         onChange={(e) => setData({ ...data, country: e.target.value })}
         className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-coffee transition-colors"
       >
-        <option value="">Selecciona un país</option>
+        <option value="">{t('shipping.selectCountry')}</option>
         {countries.map(c => (
           <option key={c} value={c}>{c}</option>
         ))}

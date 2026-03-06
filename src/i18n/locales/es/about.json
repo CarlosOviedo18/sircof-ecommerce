@@ -1,0 +1,53 @@
+{
+  "banner": {
+    "dataBefore": "ARTESANAL",
+    "title": "CAFE SIRCOF",
+    "subtitle": "Café artesanal de las montañas de Costa Rica",
+    "scroll": "Scroll"
+  },
+  "section01": {
+    "title": "Una Empresa Familiar",
+    "description": "Café Sircof es una empresa familiar costarricense con más de 20 años de tradición y pasión por el café. Nacida en el corazón de las montañas de Costa Rica, nuestra empresa es impulsada principalmente por mi papá, quien junto con la familia dedica su vida a cada detalle de nuestro proceso."
+  },
+  "section02": {
+    "title": "Proceso Artesanal",
+    "description": "Controlamos todo el proceso de producción: desde la recolección manual de los granos hasta el empaquetado final. Cada paso es realizado con dedicación para asegurar un producto de calidad superior."
+  },
+  "section03": {
+    "title": "Global & Local",
+    "description": "Nuestro café está presente en los principales mercados de Costa Rica y trasciende fronteras: exportamos a Estados Unidos y China, llevando la calidad y tradición de Café Sircof a mercados internacionales de alto valor."
+  },
+  "essence": {
+    "title": "Nuestra Esencia",
+    "mission": {
+      "title": "Misión",
+      "description": "Producir café artesanal de excelencia que represente la esencia de Costa Rica, combinando tradición familiar con innovación en cada grano."
+    },
+    "vision": {
+      "title": "Visión",
+      "description": "Ser reconocidos como la marca de café artesanal familiar más confiable y de mayor calidad en Centroamérica, despertando pasión por el café en cada taza."
+    },
+    "valuesTitle": "Nuestros Valores",
+    "values": {
+      "tradition": {
+        "title": "Tradición",
+        "description": "Conocimiento y experiencia transmitidos de generación en generación."
+      },
+      "quality": {
+        "title": "Calidad",
+        "description": "Excelencia en cada detalle, desde el grano hasta el producto final."
+      },
+      "sustainability": {
+        "title": "Sostenibilidad",
+        "description": "Cuidamos nuestras montañas y comunidades para las próximas generaciones."
+      },
+      "passion": {
+        "title": "Pasión",
+        "description": "Amor y entusiasmo reflejados en cada aspecto de Café Sircof."
+      }
+    }
+  },
+  "contact": {
+    "title": "¿Te gustaría probar nuestro café?"
+  }
+}

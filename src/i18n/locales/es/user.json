@@ -1,0 +1,49 @@
+{
+  "title": "Mi Cuenta",
+  "welcome": "Bienvenido",
+  "back": "← Atrás",
+  "backTitle": "Volver",
+  "user": "Usuario",
+  "tabs": {
+    "profile": "Perfil",
+    "purchases": "Mis Compras"
+  },
+  "email": {
+    "title": "Cambiar Correo Electrónico",
+    "currentEmail": "Correo Actual",
+    "newEmail": "Nuevo Correo",
+    "placeholder": "ejemplo@correo.com",
+    "submit": "Actualizar Correo",
+    "updating": "Actualizando...",
+    "emptyError": "Por favor ingresa un correo"
+  },
+  "password": {
+    "title": "Cambiar Contraseña",
+    "current": "Contraseña Actual",
+    "new": "Nueva Contraseña",
+    "confirm": "Confirmar Nueva Contraseña",
+    "placeholder": "••••••••",
+    "submit": "Actualizar Contraseña",
+    "updating": "Actualizando...",
+    "emptyError": "Por favor completa todos los campos",
+    "mismatchError": "Las contraseñas no coinciden"
+  },
+  "logout": {
+    "title": "Cerrar Sesión",
+    "description": "Cierra tu sesión de forma segura",
+    "submit": "Cerrar Sesión"
+  },
+  "purchases": {
+    "title": "Mis Compras",
+    "loading": "Cargando compras...",
+    "empty": "No tienes compras realizadas aún",
+    "order": "Orden",
+    "products": "Productos",
+    "viewInvoice": "Ver Factura",
+    "status": {
+      "completed": "Entregado",
+      "pending": "Pendiente",
+      "inTransit": "En tránsito"
+    }
+  }
+}

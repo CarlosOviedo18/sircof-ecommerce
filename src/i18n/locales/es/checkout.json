@@ -1,0 +1,87 @@
+{
+  "title": "Checkout",
+  "subtitle": "Completa tu información para finalizar la compra",
+  "back": "Volver",
+  "shippingData": {
+    "title": "Datos de Envío",
+    "phone": "Teléfono",
+    "phonePlaceholder": "Ej: 8765-4321",
+    "phoneError": "Formato inválido. Usa: 8765-4321 o 87654321",
+    "address": "Dirección",
+    "addressPlaceholder": "Dirección de envío",
+    "city": "Ciudad",
+    "cityPlaceholder": "Ciudad",
+    "postalCode": "Código Postal",
+    "postalCodePlaceholder": "Código Postal",
+    "country": "País",
+    "selectCountry": "Selecciona un país"
+  },
+  "orderSummary": {
+    "title": "Resumen del Pedido",
+    "product": "Producto",
+    "qty": "Cant.",
+    "price": "Precio",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "line": "Línea",
+    "loading": "Cargando..."
+  },
+  "payment": {
+    "title": "Método de Pago",
+    "card": "Tarjeta de Crédito / Débito",
+    "cardBrands": "Visa, Mastercard, American Express",
+    "paypal": "PayPal",
+    "paypalDesc": "Paga con tu cuenta PayPal (USD)",
+    "confirmPay": "Confirmar y Pagar",
+    "payWithPaypal": "Pagar con PayPal",
+    "processing": "Procesando...",
+    "securePayment": "Pago seguro procesado por"
+  },
+  "errors": {
+    "addressRequired": "La dirección es requerida",
+    "cityRequired": "La ciudad es requerida",
+    "postalCodeRequired": "El código postal es requerido",
+    "noPaymentUrl": "Error: No se recibió URL de pago",
+    "noPaypalUrl": "Error: No se recibió URL de PayPal",
+    "paymentError": "Error al procesar el pago",
+    "paypalError": "Error al procesar el pago con PayPal"
+  },
+  "emptyCart": {
+    "title": "Tu carrito está vacío",
+    "description": "Agrega productos antes de continuar al checkout",
+    "goToStore": "Ir a la Tienda"
+  },
+  "success": {
+    "title": "¡Pago Aprobado!",
+    "subtitle": "Tu orden ha sido procesada correctamente",
+    "orderNumber": "Número de Orden",
+    "transactionId": "ID de Transacción",
+    "paymentMethod": "Método de Pago",
+    "card": "Tarjeta",
+    "status": "Estado",
+    "paid": "Pagado",
+    "emailNotice": "Recibirás un email de confirmación",
+    "emailNoticeDesc": "en breve con los detalles de tu pedido y el estado del envío.",
+    "nextSteps": "Próximos Pasos",
+    "step1Title": "Verificaremos tu pedido",
+    "step1Desc": "Nuestro equipo revisa los detalles",
+    "step2Title": "Preparación y empaque",
+    "step2Desc": "Empacaremos tu orden con cuidado",
+    "step3Title": "Envío y seguimiento",
+    "step3Desc": "Te enviaremos el número de seguimiento",
+    "backToHome": "Volver al Inicio",
+    "continueShopping": "Seguir Comprando",
+    "loadingConfirmation": "Cargando tu confirmación..."
+  },
+  "rejected": {
+    "title": "Pago Rechazado",
+    "defaultMessage": "Hubo un problema con tu pago",
+    "errorCode": "Código de Error",
+    "howToResolve": "Cómo resolver esto:",
+    "tip1": "Verifica que los datos de tu tarjeta sean correctos",
+    "tip2": "Intenta con otra tarjeta si tienes disponible",
+    "tip3": "Contacta con tu banco si el problema persiste",
+    "tryAgain": "Intentar Nuevamente",
+    "backToHome": "Volver al Inicio"
+  }
+}

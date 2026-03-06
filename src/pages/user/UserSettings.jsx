@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuthContext } from "../../context/AuthContext";
 import { useAuth } from "../../hooks/auth/useAuth";
 import { usePurchases } from "../../hooks/orders/useOrders";
@@ -7,6 +8,7 @@ import { useUserProfile } from "../../hooks/user/useUserProfile";
 
 function UserSettings() {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation('user');
   const { user } = useAuthContext();
   const { logout } = useAuth();
   const { purchases, loading: loadingPurchases, error: purchasesError, fetchPurchases } = usePurchases();
@@ -41,7 +43,7 @@ function UserSettings() {
   const handleChangeEmail = async (e) => {
     e.preventDefault();
     if (!formData.email) {
-      setMessage({ type: "error", text: "Por favor ingresa un correo" });
+      setMessage({ type: "error", text: t('email.emptyError') });
       return;
     }
 
@@ -62,11 +64,11 @@ function UserSettings() {
   const handleChangePassword = async (e) => {
     e.preventDefault();
     if (!formData.currentPassword || !formData.newPassword || !formData.confirmPassword) {
-      setMessage({ type: "error", text: "Por favor completa todos los campos" });
+      setMessage({ type: "error", text: t('password.emptyError') });
       return;
     }
     if (formData.newPassword !== formData.confirmPassword) {
-      setMessage({ type: "error", text: "Las contraseñas no coinciden" });
+      setMessage({ type: "error", text: t('password.mismatchError') });
       return;
     }
 
@@ -91,7 +93,7 @@ function UserSettings() {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('es-ES', {
+    return new Date(dateString).toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'es-ES', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -107,13 +109,13 @@ function UserSettings() {
             <button
               onClick={() => navigate("/")}
               className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all"
-              title="Volver"
+              title={t('backTitle')}
             >
-              ← Atrás
+              {t('back')}
             </button>
-            <h1 className="text-3xl font-bold text-gray-900">Mi Cuenta</h1>
+            <h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
           </div>
-          <p className="text-gray-600">Bienvenido, {user?.name || "Usuario"}</p>
+          <p className="text-gray-600">{t('welcome')}, {user?.name || t('user')}</p>
         </div>
       </div>
 
@@ -129,7 +131,7 @@ function UserSettings() {
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
-            Perfil
+            {t('tabs.profile')}
           </button>
           <button
             onClick={() => setActiveTab("purchases")}
@@ -139,7 +141,7 @@ function UserSettings() {
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
-            Mis Compras
+            {t('tabs.purchases')}
           </button>
         </div>
 
@@ -150,7 +152,7 @@ function UserSettings() {
             <div className="space-y-8">
               {/* Change Email */}
               <div className="bg-white rounded-lg shadow-md p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Cambiar Correo Electrónico</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('email.title')}</h2>
                 {message.type && animatingField === "email" && (
                   <div className={`mb-4 p-4 rounded-lg animate-pulse ${message.type === "success" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
                     {message.text}
@@ -158,7 +160,7 @@ function UserSettings() {
                 )}
                 <form onSubmit={handleChangeEmail} className="space-y-4">
                   <div>
-                    <label className="block text-gray-700 font-medium mb-2">Correo Actual</label>
+                    <label className="block text-gray-700 font-medium mb-2">{t('email.currentEmail')}</label>
                     <input
                       type="email"
                       value={user?.email || ""}
@@ -167,13 +169,13 @@ function UserSettings() {
                     />
                   </div>
                   <div>
-                    <label className="block text-gray-700 font-medium mb-2">Nuevo Correo</label>
+                    <label className="block text-gray-700 font-medium mb-2">{t('email.newEmail')}</label>
                     <input
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder="ejemplo@correo.com"
+                      placeholder={t('email.placeholder')}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-coffee"
                     />
                   </div>
@@ -182,14 +184,14 @@ function UserSettings() {
                     disabled={loadingProfile}
                     className="px-6 py-2 bg-coffee text-white font-semibold rounded-lg hover:bg-coffee/90 transition-colors disabled:opacity-50"
                   >
-                    {loadingProfile ? "Actualizando..." : "Actualizar Correo"}
+                    {loadingProfile ? t('email.updating') : t('email.submit')}
                   </button>
                 </form>
               </div>
 
               {/* Change Password */}
               <div className="bg-white rounded-lg shadow-md p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Cambiar Contraseña</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('password.title')}</h2>
                 {message.type && animatingField === "password" && (
                   <div className={`mb-4 p-4 rounded-lg animate-pulse ${message.type === "success" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
                     {message.text}
@@ -197,7 +199,7 @@ function UserSettings() {
                 )}
                 <form onSubmit={handleChangePassword} className="space-y-4">
                   <div>
-                    <label className="block text-gray-700 font-medium mb-2">Contraseña Actual</label>
+                    <label className="block text-gray-700 font-medium mb-2">{t('password.current')}</label>
                     <input
                       type="password"
                       name="currentPassword"
@@ -208,7 +210,7 @@ function UserSettings() {
                     />
                   </div>
                   <div>
-                    <label className="block text-gray-700 font-medium mb-2">Nueva Contraseña</label>
+                    <label className="block text-gray-700 font-medium mb-2">{t('password.new')}</label>
                     <input
                       type="password"
                       name="newPassword"
@@ -219,7 +221,7 @@ function UserSettings() {
                     />
                   </div>
                   <div>
-                    <label className="block text-gray-700 font-medium mb-2">Confirmar Nueva Contraseña</label>
+                    <label className="block text-gray-700 font-medium mb-2">{t('password.confirm')}</label>
                     <input
                       type="password"
                       name="confirmPassword"
@@ -234,20 +236,20 @@ function UserSettings() {
                     disabled={loadingProfile}
                     className="px-6 py-2 bg-coffee text-white font-semibold rounded-lg hover:bg-coffee/90 transition-colors disabled:opacity-50"
                   >
-                    {loadingProfile ? "Actualizando..." : "Actualizar Contraseña"}
+                    {loadingProfile ? t('password.updating') : t('password.submit')}
                   </button>
                 </form>
               </div>
 
               {/* Logout */}
               <div className="bg-red-50 rounded-lg shadow-md p-8">
-                <h2 className="text-2xl font-bold text-red-900 mb-4">Cerrar Sesión</h2>
-                <p className="text-gray-700 mb-6">Cierra tu sesión de forma segura</p>
+                <h2 className="text-2xl font-bold text-red-900 mb-4">{t('logout.title')}</h2>
+                <p className="text-gray-700 mb-6">{t('logout.description')}</p>
                 <button
                   onClick={handleLogout}
                   className="px-6 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors"
                 >
-                  Cerrar Sesión
+                  {t('logout.submit')}
                 </button>
               </div>
             </div>
@@ -256,20 +258,20 @@ function UserSettings() {
           {/* PURCHASES TAB */}
           {activeTab === "purchases" && (
             <div className="bg-white rounded-lg shadow-md p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Mis Compras</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('purchases.title')}</h2>
               {loadingPurchases ? (
-                <p className="text-gray-600 text-center py-8">Cargando compras...</p>
+                <p className="text-gray-600 text-center py-8">{t('purchases.loading')}</p>
               ) : purchasesError ? (
                 <p className="text-red-600 text-center py-8">Error: {purchasesError}</p>
               ) : purchases.length === 0 ? (
-                <p className="text-gray-600 text-center py-8">No tienes compras realizadas aún</p>
+                <p className="text-gray-600 text-center py-8">{t('purchases.empty')}</p>
               ) : (
                 <div className="space-y-4">
                   {purchases.map(purchase => (
                     <div key={purchase.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
                       <div className="flex justify-between items-start mb-4">
                         <div>
-                          <h3 className="font-semibold text-gray-900">Orden #{purchase.id}</h3>
+                          <h3 className="font-semibold text-gray-900">{t('purchases.order')} #{purchase.id}</h3>
                           <p className="text-gray-600 text-sm">{formatDate(purchase.created_at)}</p>
                         </div>
                         <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
@@ -279,11 +281,11 @@ function UserSettings() {
                             ? "bg-yellow-100 text-yellow-700"
                             : "bg-blue-100 text-blue-700"
                         }`}>
-                          {purchase.status === "completed" ? "Entregado" : purchase.status === "pending" ? "Pendiente" : "En tránsito"}
+                          {purchase.status === "completed" ? t('purchases.status.completed') : purchase.status === "pending" ? t('purchases.status.pending') : t('purchases.status.inTransit')}
                         </span>
                       </div>
                       <div className="mb-3">
-                        <p className="text-gray-700 font-medium mb-2">Productos:</p>
+                        <p className="text-gray-700 font-medium mb-2">{t('purchases.products')}:</p>
                         <ul className="list-disc list-inside">
                           {purchase.items?.map((item, idx) => (
                             <li key={idx} className="text-gray-600">
@@ -295,7 +297,7 @@ function UserSettings() {
                       <div className="flex justify-between items-center">
                         <p className="text-2xl font-bold text-coffee">₡{parseFloat(purchase.total).toFixed(2)}</p>
                         <button className="px-4 py-2 bg-gray-200 text-gray-900 font-semibold rounded-lg hover:bg-gray-300 transition-colors">
-                          Ver Factura
+                          {t('purchases.viewInvoice')}
                         </button>
                       </div>
                     </div>

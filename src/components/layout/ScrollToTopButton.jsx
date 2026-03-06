@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 
 function ScrollToTopButton() {
   const [visible, setVisible] = useState(false)
+  const { t } = useTranslation('common')
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,7 +40,7 @@ function ScrollToTopButton() {
   return (
     <button
       onClick={scrollToTop}
-      aria-label="Volver arriba"
+      aria-label={t('scrollToTop')}
       className={`fixed bottom-6 right-6 z-50 bg-coffee hover:bg-dark-coffee text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-700 ease-in-out cursor-pointer ${
         visible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-10 scale-75 pointer-events-none'
       }`}

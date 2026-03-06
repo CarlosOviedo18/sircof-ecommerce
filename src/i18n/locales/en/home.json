@@ -1,0 +1,42 @@
+{
+  "hero": {
+    "title": "Premium High-Altitude Coffee",
+    "subtitle": "From the mountains of Costa Rica to your cup",
+    "cta": "Explore Products"
+  },
+  "aboutUs": {
+    "ourCoffee": "OUR COFFEE",
+    "title": "About Us",
+    "description": "We are a Costa Rican company dedicated to producing high-quality coffee, grown in the fertile highlands of Costa Rica.",
+    "ingredientQuality": "Quality Ingredients",
+    "familyLove": "Made with Family Love",
+    "freshCoffee": "Always Fresh Coffee",
+    "beanVariety": "Bean Variety"
+  },
+  "cupExperience": {
+    "title": "Experience Every Cup",
+    "description": "Every bean tells a story. Our high-altitude coffee offers unique notes that transform your daily routine into a special moment.",
+    "cultivated": "Cultivated in Costa Rican highland lands",
+    "roasted": "Artisanally roasted for maximum flavor",
+    "madeFor": "Made for lovers of great coffee",
+    "knowUs": "Get to Know Us"
+  },
+  "beanToTable": {
+    "title": "From Bean to Your Table",
+    "description": "We control every step of the process, from planting to packaging, ensuring maximum freshness and quality in every bag of SIRCOF coffee.",
+    "enjoy": "ENJOY",
+    "orderYours": "Order Yours",
+    "dragHint": "Drag to explore"
+  },
+  "featuredProducts": {
+    "title": "Featured Products",
+    "addToCart": "Add",
+    "viewProduct": "View Product",
+    "line": "Line",
+    "mostBought": "Most",
+    "bought": "Bought",
+    "comment": "No comments",
+    "orderYours": "Order Yours",
+    "noProducts": "No featured products"
+  }
+}

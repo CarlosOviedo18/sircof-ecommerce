@@ -1,0 +1,53 @@
+{
+  "banner": {
+    "dataBefore": "ARTISANAL",
+    "title": "SIRCOF COFFEE",
+    "subtitle": "Artisanal coffee from the mountains of Costa Rica",
+    "scroll": "Scroll"
+  },
+  "section01": {
+    "title": "A Family Business",
+    "description": "Café Sircof is a Costa Rican family business with over 20 years of tradition and passion for coffee. Born in the heart of Costa Rica's mountains, our company is primarily driven by my father, who alongside the family dedicates his life to every detail of our process."
+  },
+  "section02": {
+    "title": "Artisanal Process",
+    "description": "We control the entire production process: from hand-picking the beans to the final packaging. Every step is carried out with dedication to ensure a superior quality product."
+  },
+  "section03": {
+    "title": "Global & Local",
+    "description": "Our coffee is present in the main markets of Costa Rica and transcends borders: we export to the United States and China, bringing the quality and tradition of Café Sircof to high-value international markets."
+  },
+  "essence": {
+    "title": "Our Essence",
+    "mission": {
+      "title": "Mission",
+      "description": "To produce artisanal coffee of excellence that represents the essence of Costa Rica, combining family tradition with innovation in every bean."
+    },
+    "vision": {
+      "title": "Vision",
+      "description": "To be recognized as the most reliable and highest quality family artisanal coffee brand in Central America, awakening passion for coffee in every cup."
+    },
+    "valuesTitle": "Our Values",
+    "values": {
+      "tradition": {
+        "title": "Tradition",
+        "description": "Knowledge and experience passed down from generation to generation."
+      },
+      "quality": {
+        "title": "Quality",
+        "description": "Excellence in every detail, from the bean to the final product."
+      },
+      "sustainability": {
+        "title": "Sustainability",
+        "description": "We care for our mountains and communities for future generations."
+      },
+      "passion": {
+        "title": "Passion",
+        "description": "Love and enthusiasm reflected in every aspect of Café Sircof."
+      }
+    }
+  },
+  "contact": {
+    "title": "Would you like to try our coffee?"
+  }
+}

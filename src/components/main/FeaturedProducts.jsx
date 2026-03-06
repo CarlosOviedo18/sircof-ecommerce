@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useFeaturedProducts } from '../../hooks/products/useFeaturedProducts'
 import cafeNacional from '../../assets/webp/cafeNacional.webp'
 import cafePremium from '../../assets/webp/cafePremium.webp'
@@ -7,6 +8,7 @@ import sobreNosotrosImg from '../../assets/webp/SobreNosotros.webp'
 
 function FeaturedProducts() {
   const { productos, loading, error } = useFeaturedProducts()
+  const { t } = useTranslation('home')
 
   useEffect(() => {
   
@@ -18,7 +20,7 @@ function FeaturedProducts() {
         <div className="absolute inset-0 bg-black bg-opacity-10"></div>
         <div className="max-w-7xl mx-auto relative z-10">
           <h2 className="text-white font-serif font-bold text-3xl md:text-4xl text-center mb-16">
-            Productos
+            {t('featuredProducts.title')}
           </h2>
           <p className="text-red-500 text-center">Error: {error}</p>
         </div>
@@ -32,7 +34,7 @@ function FeaturedProducts() {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Título */}
         <h2 className="text-white font-serif font-bold text-4xl md:text-5xl text-center mb-16">
-          Productos
+          {t('featuredProducts.title')}
         </h2>
 
         {/* Grid de Productos */}
@@ -51,8 +53,8 @@ function FeaturedProducts() {
                 
                 {/* Etiqueta de fecha */}
                 <div className="absolute top-4 right-4 bg-yellow-400 text-black px-3 py-2 rounded font-serif font-bold text-sm">
-                  <div>Más </div>
-                  <div className="text-xs">comprado</div>
+                  <div>{t('featuredProducts.mostBought')} </div>
+                  <div className="text-xs">{t('featuredProducts.bought')}</div>
                 </div>
               </div>
 
@@ -60,12 +62,12 @@ function FeaturedProducts() {
               <div className="flex flex-col gap-2">
                 {/* Categoría */}
                 <p className="text-gray-400 text-sm tracking-wider font-serif">
-                  LÍNEA {producto.line?.toUpperCase()}
+                  {t('featuredProducts.line')} {producto.line?.toUpperCase()}
                 </p>
 
                 {/* Comentarios */}
                 <p className="text-gray-400 text-xs font-serif">
-                  1 Comment
+                  {t('featuredProducts.comment')}
                 </p>
 
                 {/* Nombre del producto */}
@@ -85,7 +87,7 @@ function FeaturedProducts() {
         {/* Botón */}
         <div className="flex justify-center">
           <Link to="/tienda" onClick={() => window.scrollTo(0, 0)} className="bg-red-400 hover:bg-red-500 text-white font-poppins font-semibold px-10 py-3 rounded transition-colors duration-300 inline-block">
-            Ordena al tuyo
+            {t('featuredProducts.orderYours')}
           </Link>
         </div>
       </div>

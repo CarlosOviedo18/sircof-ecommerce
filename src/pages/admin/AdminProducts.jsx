@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAdmin } from '../../hooks/admin/useAdmin'
 
 const EMPTY_FORM = { name: '', price: '', line: '', description: '', stock: '', image_url: '' }
 
 function AdminProducts() {
+  const { t } = useTranslation('admin')
   const { getProducts, createProduct, updateProduct, deleteProduct, loading } = useAdmin()
   const [products, setProducts] = useState([])
   const [showModal, setShowModal] = useState(false)
@@ -38,10 +40,10 @@ function AdminProducts() {
     try {
       if (editingProduct) {
         await updateProduct(editingProduct.id, form)
-        setFeedback({ type: 'success', message: 'Producto actualizado exitosamente' })
+        setFeedback({ type: 'success', message: t('products.updated') })
       } else {
         await createProduct(form)
-        setFeedback({ type: 'success', message: 'Producto creado exitosamente' })
+        setFeedback({ type: 'success', message: t('products.created') })
       }
       closeModal()
       loadProducts()
@@ -64,10 +66,10 @@ function AdminProducts() {
   }
 
   const handleDelete = async (id, name) => {
-    if (!window.confirm(`¿Estás seguro de eliminar "${name}"? Esta acción no se puede deshacer.`)) return
+    if (!window.confirm(t('products.confirmDelete', { name }))) return
     try {
       await deleteProduct(id)
-      setFeedback({ type: 'success', message: 'Producto eliminado exitosamente' })
+      setFeedback({ type: 'success', message: t('products.deleted') })
       loadProducts()
     } catch (err) {
       setFeedback({ type: 'error', message: err.message })
@@ -100,15 +102,15 @@ function AdminProducts() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Productos</h1>
-          <p className="text-sm text-gray-500 mt-1">{products.length} productos en catálogo</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('products.title')}</h1>
+          <p className="text-sm text-gray-500 mt-1">{products.length} {t('products.count')}</p>
         </div>
         <button
           onClick={openCreate}
           className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 self-start"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Nuevo producto
+          {t('products.newProduct')}
         </button>
       </div>
 
@@ -127,7 +129,7 @@ function AdminProducts() {
         <div className="px-4 md:px-6 py-4 border-b border-gray-200">
           <input
             type="text"
-            placeholder="Buscar por nombre o línea..."
+            placeholder={t('products.searchPlaceholder')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full sm:w-80 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
@@ -149,14 +151,14 @@ function AdminProducts() {
               </div>
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
-                  {product.line || 'Sin línea'}
+                  {product.line || t('products.noLine')}
                 </span>
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                   product.stock > 10 ? 'bg-green-100 text-green-800' :
                   product.stock > 0 ? 'bg-yellow-100 text-yellow-800' :
                   'bg-red-100 text-red-800'
                 }`}>
-                  Stock: {product.stock ?? 0}
+                  {t('products.stock')}: {product.stock ?? 0}
                 </span>
               </div>
               <div className="flex items-center justify-between pt-1">
@@ -168,13 +170,13 @@ function AdminProducts() {
                     onClick={() => handleEdit(product)}
                     className="text-blue-600 hover:text-blue-800 text-xs font-medium px-2.5 py-1.5 rounded-lg hover:bg-blue-50 transition-colors"
                   >
-                    Editar
+                    {t('products.edit')}
                   </button>
                   <button
                     onClick={() => handleDelete(product.id, product.name)}
                     className="text-red-500 hover:text-red-700 text-xs font-medium px-2.5 py-1.5 rounded-lg hover:bg-red-50 transition-colors"
                   >
-                    Eliminar
+                    {t('products.delete')}
                   </button>
                 </div>
               </div>
@@ -183,7 +185,7 @@ function AdminProducts() {
           {filteredProducts.length === 0 && (
             <div className="text-center py-12 text-gray-400">
               <p className="text-sm">
-                {searchTerm ? 'No se encontraron productos con ese filtro' : 'No hay productos en el catálogo'}
+                {searchTerm ? t('products.noFilterResults') : t('products.noProducts')}
               </p>
             </div>
           )}
@@ -194,12 +196,12 @@ function AdminProducts() {
           <table className="w-full">
             <thead>
               <tr className="bg-gray-50">
-                <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">ID</th>
-                <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Producto</th>
-                <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Línea</th>
-                <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Precio</th>
-                <th className="text-center text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Stock</th>
-                <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Acciones</th>
+                <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">{t('products.tableId')}</th>
+                <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">{t('products.tableProduct')}</th>
+                <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">{t('products.tableLine')}</th>
+                <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">{t('products.tablePrice')}</th>
+                <th className="text-center text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">{t('products.tableStock')}</th>
+                <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">{t('products.tableActions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -214,7 +216,7 @@ function AdminProducts() {
                   </td>
                   <td className="px-6 py-4">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
-                      {product.line || 'Sin línea'}
+                      {product.line || t('products.noLine')}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm text-right font-semibold text-gray-900">
@@ -235,13 +237,13 @@ function AdminProducts() {
                         onClick={() => handleEdit(product)}
                         className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors px-2 py-1 rounded hover:bg-blue-50"
                       >
-                        Editar
+                        {t('products.edit')}
                       </button>
                       <button
                         onClick={() => handleDelete(product.id, product.name)}
                         className="text-red-500 hover:text-red-700 text-sm font-medium transition-colors px-2 py-1 rounded hover:bg-red-50"
                       >
-                        Eliminar
+                        {t('products.delete')}
                       </button>
                     </div>
                   </td>
@@ -254,7 +256,7 @@ function AdminProducts() {
             <div className="text-center py-12 text-gray-400">
               <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-3 text-gray-300"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
               <p className="text-sm">
-                {searchTerm ? 'No se encontraron productos con ese filtro' : 'No hay productos en el catálogo'}
+                {searchTerm ? t('products.noFilterResults') : t('products.noProducts')}
               </p>
             </div>
           )}
@@ -269,7 +271,7 @@ function AdminProducts() {
             {/* Modal Header */}
             <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white rounded-t-xl">
               <h3 className="text-lg font-semibold text-gray-900">
-                {editingProduct ? 'Editar producto' : 'Nuevo producto'}
+                {editingProduct ? t('products.modal.editTitle') : t('products.modal.createTitle')}
               </h3>
               <button
                 onClick={closeModal}
@@ -282,20 +284,20 @@ function AdminProducts() {
             {/* Modal Body */}
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nombre del producto *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('products.modal.name')}</label>
                 <input
                   type="text"
                   required
                   value={form.name}
                   onChange={(e) => updateField('name', e.target.value)}
-                  placeholder="Ej: Café Premium Tueste Medio 500g"
+                  placeholder={t('products.modal.namePlaceholder')}
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Precio (₡) *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('products.modal.price')}</label>
                   <input
                     type="number"
                     required
@@ -308,7 +310,7 @@ function AdminProducts() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('products.modal.stock')}</label>
                   <input
                     type="number"
                     min="0"
@@ -321,37 +323,37 @@ function AdminProducts() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Línea *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('products.modal.line')}</label>
                 <select
                   required
                   value={form.line}
                   onChange={(e) => updateField('line', e.target.value)}
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                 >
-                  <option value="">Seleccionar línea</option>
-                  <option value="Nacional">Nacional</option>
-                  <option value="Premium">Premium</option>
+                  <option value="">{t('products.modal.selectLine')}</option>
+                  <option value="Nacional">{t('products.modal.national')}</option>
+                  <option value="Premium">{t('products.modal.premium')}</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">URL de imagen</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('products.modal.imageUrl')}</label>
                 <input
                   type="text"
                   value={form.image_url}
                   onChange={(e) => updateField('image_url', e.target.value)}
-                  placeholder="https://ejemplo.com/imagen.webp"
+                  placeholder={t('products.modal.imagePlaceholder')}
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('products.modal.description')}</label>
                 <textarea
                   rows="3"
                   value={form.description}
                   onChange={(e) => updateField('description', e.target.value)}
-                  placeholder="Descripción del producto..."
+                  placeholder={t('products.modal.descriptionPlaceholder')}
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
                 ></textarea>
               </div>
@@ -363,14 +365,14 @@ function AdminProducts() {
                   disabled={loading}
                   className="flex-1 bg-amber-600 hover:bg-amber-700 text-white py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading ? 'Guardando...' : editingProduct ? 'Actualizar producto' : 'Crear producto'}
+                  {loading ? t('products.modal.saving') : editingProduct ? t('products.modal.update') : t('products.modal.create')}
                 </button>
                 <button
                   type="button"
                   onClick={closeModal}
                   className="px-6 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
                 >
-                  Cancelar
+                  {t('products.modal.cancel')}
                 </button>
               </div>
             </form>

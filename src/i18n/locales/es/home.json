@@ -1,0 +1,42 @@
+{
+  "hero": {
+    "title": "Café de Altura Premium",
+    "subtitle": "Desde las montañas de Costa Rica a tu taza",
+    "cta": "Explorar Productos"
+  },
+  "aboutUs": {
+    "ourCoffee": "NUESTRO CAFÉ",
+    "title": "Sobre Nosotros",
+    "description": "Somos una empresa costarricense dedicada a la producción de café de alta calidad, cultivado en las fértiles tierras de altura de Costa Rica.",
+    "ingredientQuality": "Ingredientes de Calidad",
+    "familyLove": "Hecho con Amor Familiar",
+    "freshCoffee": "Café Fresco Siempre",
+    "beanVariety": "Variedad de Granos"
+  },
+  "cupExperience": {
+    "title": "Experimenta Cada Taza",
+    "description": "Cada grano cuenta una historia. Nuestro café de altura ofrece notas únicas que transforman tu rutina diaria en un momento especial.",
+    "cultivated": "Cultivado en tierras de altura costarricenses",
+    "roasted": "Tostado artesanalmente para máximo sabor",
+    "madeFor": "Hecho para los amantes del buen café",
+    "knowUs": "Conócenos"
+  },
+  "beanToTable": {
+    "title": "Del Grano a Tu Mesa",
+    "description": "Controlamos cada paso del proceso, desde la siembra hasta el empaque, garantizando la máxima frescura y calidad en cada bolsa de café SIRCOF.",
+    "enjoy": "DISFRUTA",
+    "orderYours": "Ordena el Tuyo",
+    "dragHint": "Arrastra para explorar"
+  },
+  "featuredProducts": {
+    "title": "Productos Destacados",
+    "addToCart": "Agregar",
+    "viewProduct": "Ver Producto",
+    "line": "Línea",
+    "mostBought": "Más",
+    "bought": "Comprado",
+    "comment": "Sin comentarios",
+    "orderYours": "Ordena el Tuyo",
+    "noProducts": "No hay productos destacados"
+  }
+}
