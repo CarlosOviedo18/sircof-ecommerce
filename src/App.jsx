@@ -14,6 +14,8 @@ import ScrollToTopButton from "./components/layout/ScrollToTopButton.jsx";
 import "./styles/Navigation.css";
 import TransparentNavigation from "./components/layout/TransparentNavigation.jsx";
 
+
+
 // Lazy load - páginas secundarias
 const LoginUsers = lazy(() => import("./pages/auth/LoginUsers.jsx"));
 const StoreProduct = lazy(() => import("./pages/store/StoreProduct.jsx"));

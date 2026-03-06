@@ -1,0 +1,30 @@
+{
+  "title": "Galería",
+  "subtitle": "Nuestro café en imágenes",
+  "items": {
+    "bandolas": {
+      "title": "Bandolas de Café",
+      "description": "Accesorios esenciales para el café"
+    },
+    "plantaciones": {
+      "title": "Plantaciones de Café",
+      "description": "Nuestras plantas en la finca"
+    },
+    "invernadero": {
+      "title": "Invernadero",
+      "description": "Cultivo controlado y sostenible"
+    },
+    "naturaleza": {
+      "title": "Naturaleza de la Finca",
+      "description": "La belleza del cultivo artesanal"
+    },
+    "recoleccion": {
+      "title": "Recolección de Café",
+      "description": "Proceso de cosecha de granos de café"
+    },
+    "tour": {
+      "title": "Tour con extranjeros en la finca",
+      "description": "Descubre nuestra finca con nosotros"
+    }
+  }
+}

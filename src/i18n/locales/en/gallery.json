@@ -1,0 +1,30 @@
+{
+  "title": "Gallery",
+  "subtitle": "Our coffee in images",
+  "items": {
+    "bandolas": {
+      "title": "Coffee Bandolas",
+      "description": "Essential coffee accessories"
+    },
+    "plantaciones": {
+      "title": "Coffee Plantations",
+      "description": "Our plants at the farm"
+    },
+    "invernadero": {
+      "title": "Greenhouse",
+      "description": "Controlled and sustainable cultivation"
+    },
+    "naturaleza": {
+      "title": "Farm Nature",
+      "description": "The beauty of artisanal farming"
+    },
+    "recoleccion": {
+      "title": "Coffee Harvesting",
+      "description": "Coffee bean harvesting process"
+    },
+    "tour": {
+      "title": "Farm Tour with Visitors",
+      "description": "Discover our farm with us"
+    }
+  }
+}

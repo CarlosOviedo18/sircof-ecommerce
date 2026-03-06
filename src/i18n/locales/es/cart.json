@@ -1,0 +1,32 @@
+{
+  "title": "Carrito de Compra",
+  "closeCart": "Cerrar carrito",
+  "empty": "El carrito está vacío",
+  "item": {
+    "line": "Línea",
+    "remove": "Remover",
+    "loading": "Cargando producto...",
+    "notFound": "Producto no encontrado",
+    "decreaseQty": "Disminuir cantidad",
+    "increaseQty": "Aumentar cantidad"
+  },
+  "footer": {
+    "total": "Total:",
+    "checkout": "Ir a Pagar",
+    "continueShopping": "Seguir Comprando"
+  },
+  "shipping": {
+    "title": "Datos de Envío",
+    "phone": "Teléfono",
+    "phonePlaceholder": "Teléfono (ej: 8765-4321)",
+    "phoneError": "Formato inválido. Usa: 8765-4321 o 87654321",
+    "address": "Dirección",
+    "addressPlaceholder": "Dirección",
+    "city": "Ciudad",
+    "cityPlaceholder": "Ciudad",
+    "postalCode": "Código Postal",
+    "postalCodePlaceholder": "Código Postal",
+    "country": "País",
+    "selectCountry": "Selecciona un país"
+  }
+}

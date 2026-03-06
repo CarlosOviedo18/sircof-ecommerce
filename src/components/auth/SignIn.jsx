@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { useAuth } from "../../hooks/auth/useAuth";
 import "../../styles/LoginUsers.css";
 
@@ -10,6 +11,7 @@ function SignIn() {
   });
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation('auth');
   const { login, loading, error } = useAuth();
 
   const handleChange = (evt) => {
@@ -37,36 +39,32 @@ function SignIn() {
 
   return (
     <form onSubmit={handleOnSubmit}>
-      <h1>Iniciar Sesión</h1>
+      <h1>{t('signIn.title')}</h1>
       <div className="social-container">
-        <a href="#" className="social">
-          <i className="fab fa-facebook-f" />
-        </a>
+      
         <a href="#" className="social">
           <i className="fab fa-google-plus-g" />
         </a>
-        <a href="#" className="social">
-          <i className="fab fa-linkedin-in" />
-        </a>
+       
       </div>
-      <span>o usa tu cuenta SIRCOF</span>
+      <span>{t('signIn.orUseAccount')}</span>
       <input
         type="email"
-        placeholder="Correo"
+        placeholder={t('signIn.email')}
         name="email"
         value={state.email}
         onChange={handleChange}
       />
       <input
         type="password"
-        placeholder="Contraseña"
+        placeholder={t('signIn.password')}
         name="password"
         value={state.password}
         onChange={handleChange}
       />
       {error && <p style={{ color: 'red', fontSize: '12px', margin: '8px 0' }}>{error}</p>}
-      <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>
-      <button disabled={loading}>{loading ? 'Iniciando sesión...' : 'Inicia Sesión'}</button>
+      <Link to="/forgot-password">{t('signIn.forgotPassword')}</Link>
+      <button disabled={loading}>{loading ? t('signIn.loading') : t('signIn.submit')}</button>
     </form>
   );
 }

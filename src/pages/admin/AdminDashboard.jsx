@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAdmin } from '../../hooks/admin/useAdmin'
 
 /**
@@ -27,15 +28,16 @@ function StatCard({ icon, label, value, description, color }) {
  * Badge de estado para órdenes
  */
 function StatusBadge({ status }) {
+  const { t } = useTranslation('admin')
   const styles = {
     pending: 'bg-yellow-100 text-yellow-800',
     paid: 'bg-green-100 text-green-800',
     cancelled: 'bg-red-100 text-red-800'
   }
   const labels = {
-    pending: 'Pendiente',
-    paid: 'Pagado',
-    cancelled: 'Cancelado'
+    pending: t('dashboard.statusPending'),
+    paid: t('dashboard.statusPaid'),
+    cancelled: t('dashboard.statusCancelled')
   }
 
   return (
@@ -47,6 +49,7 @@ function StatusBadge({ status }) {
 
 function AdminDashboard() {
   const { getStats, loading } = useAdmin()
+  const { t, i18n } = useTranslation('admin')
   const [stats, setStats] = useState(null)
   const [error, setError] = useState(null)
 
@@ -61,7 +64,7 @@ function AdminDashboard() {
       <div className="flex items-center justify-center h-64">
         <div className="flex flex-col items-center gap-3">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-600"></div>
-          <p className="text-sm text-gray-500">Cargando estadísticas...</p>
+          <p className="text-sm text-gray-500">{t('dashboard.loadingStats')}</p>
         </div>
       </div>
     )
@@ -70,7 +73,7 @@ function AdminDashboard() {
   if (error) {
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-        <p className="text-red-600 font-medium">Error al cargar estadísticas</p>
+        <p className="text-red-600 font-medium">{t('dashboard.errorStats')}</p>
         <p className="text-red-400 text-sm mt-1">{error}</p>
       </div>
     )
@@ -81,11 +84,11 @@ function AdminDashboard() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-sm text-gray-500 mt-1">Resumen general de la tienda</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('dashboard.title')}</h1>
+          <p className="text-sm text-gray-500 mt-1">{t('dashboard.subtitle')}</p>
         </div>
         <div className="text-sm text-gray-400">
-          {new Date().toLocaleDateString('es-ES', {
+          {new Date().toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'es-ES', {
             weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
           })}
         </div>
@@ -95,30 +98,30 @@ function AdminDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>}
-          label="Ingresos Totales"
+          label={t('dashboard.totalRevenue')}
           value={`₡${parseFloat(stats.totalRevenue).toLocaleString('es-CR')}`}
-          description="Órdenes completadas (pagadas)"
+          description={t('dashboard.revenueDesc')}
           color="bg-green-600"
         />
         <StatCard
           icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>}
-          label="Total Órdenes"
+          label={t('dashboard.totalOrders')}
           value={stats.totalOrders}
-          description={`${stats.pendingOrders} pendiente${stats.pendingOrders !== 1 ? 's' : ''}`}
+          description={`${stats.pendingOrders} ${stats.pendingOrders !== 1 ? t('dashboard.pendings') : t('dashboard.pending')}`}
           color="bg-blue-600"
         />
         <StatCard
           icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>}
-          label="Productos"
+          label={t('dashboard.totalProducts')}
           value={stats.totalProducts}
-          description="En catálogo"
+          description={t('dashboard.productsDesc')}
           color="bg-amber-600"
         />
         <StatCard
           icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>}
-          label="Usuarios"
+          label={t('dashboard.totalUsers')}
           value={stats.totalUsers}
-          description="Registrados en la plataforma"
+          description={t('dashboard.usersDesc')}
           color="bg-purple-600"
         />
       </div>
@@ -128,15 +131,15 @@ function AdminDashboard() {
         {/* Ventas recientes - 2 columnas */}
         <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200">
           <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="font-semibold text-gray-900">Ventas — Últimos 7 días</h2>
+            <h2 className="font-semibold text-gray-900">{t('dashboard.recentSales')}</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="bg-gray-50">
-                  <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Fecha</th>
-                  <th className="text-center text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Órdenes</th>
-                  <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Ingresos</th>
+                  <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">{t('dashboard.date')}</th>
+                  <th className="text-center text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">{t('dashboard.ordersCol')}</th>
+                  <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">{t('dashboard.revenue')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -144,7 +147,7 @@ function AdminDashboard() {
                   stats.recentSales.map(sale => (
                     <tr key={sale.date} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 text-sm text-gray-900">
-                        {new Date(sale.date).toLocaleDateString('es-ES', {
+                        {new Date(sale.date).toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'es-ES', {
                           weekday: 'short', day: 'numeric', month: 'short'
                         })}
                       </td>
@@ -161,7 +164,7 @@ function AdminDashboard() {
                 ) : (
                   <tr>
                     <td colSpan="3" className="px-6 py-12 text-center text-gray-400 text-sm">
-                      No hay ventas en los últimos 7 días
+                      {t('dashboard.noSales')}
                     </td>
                   </tr>
                 )}
@@ -173,7 +176,7 @@ function AdminDashboard() {
         {/* Últimas órdenes - 1 columna */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
           <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="font-semibold text-gray-900">Últimas órdenes</h2>
+            <h2 className="font-semibold text-gray-900">{t('dashboard.latestOrders')}</h2>
           </div>
           <div className="divide-y divide-gray-200">
             {stats.latestOrders?.length > 0 ? (
@@ -186,7 +189,7 @@ function AdminDashboard() {
                   <p className="text-xs text-gray-500">{order.user_name}</p>
                   <div className="flex items-center justify-between mt-1">
                     <span className="text-xs text-gray-400">
-                      {new Date(order.created_at).toLocaleDateString('es-ES')}
+                      {new Date(order.created_at).toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'es-ES')}
                     </span>
                     <span className="text-sm font-semibold text-gray-700">
                       ₡{parseFloat(order.total).toLocaleString('es-CR')}
@@ -196,7 +199,7 @@ function AdminDashboard() {
               ))
             ) : (
               <div className="px-6 py-12 text-center text-gray-400 text-sm">
-                No hay órdenes aún
+                {t('dashboard.noOrders')}
               </div>
             )}
           </div>

@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { useContactForm } from '../../hooks/contact/useContactForm'
 
 function ContactUs() {
   const { sendMessage, loading: isSubmitting } = useContactForm()
+  const { t } = useTranslation('contact')
 
   const [formData, setFormData] = useState({
     nombre: '',
@@ -32,14 +34,14 @@ function ContactUs() {
 
     // Validar campos requeridos
     if (!formData.nombre || !formData.email || !formData.mensaje) {
-      setFormError('Por favor completa los campos requeridos')
+      setFormError(t('validation.requiredFields'))
       return
     }
 
     // Validar email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(formData.email)) {
-      setFormError('Por favor ingresa un email válido')
+      setFormError(t('validation.invalidEmail'))
       return
     }
 
@@ -66,7 +68,7 @@ function ContactUs() {
       }, 3000)
     } else {
       // Mostrar error
-      setFormError(result.message || 'Error al enviar el mensaje')
+      setFormError(result.message || t('validation.sendError'))
       setPaperFly(false)
     }
   }
@@ -81,10 +83,10 @@ function ContactUs() {
         transition={{ duration: 0.6 }}
       >
         <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-          Ponte en Contacto
+          {t('title')}
         </h1>
         <p className="text-lg text-gray-600">
-          Nos encantaría escucharte. Completa el formulario y nos pondremos en contacto pronto.
+          {t('subtitle')}
         </p>
       </motion.div>
 
@@ -119,7 +121,7 @@ function ContactUs() {
                   transition={{ delay: 0.1 }}
                 >
                   <label htmlFor="nombre" className="block text-sm font-semibold text-gray-900 mb-2">
-                    Nombre <span className="text-red-500">*</span>
+                    {t('form.name')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -127,7 +129,7 @@ function ContactUs() {
                     name="nombre"
                     value={formData.nombre}
                     onChange={handleChange}
-                    placeholder="Tu nombre completo"
+                    placeholder={t('form.namePlaceholder')}
                     className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:outline-none focus:border-amber-700 transition-colors text-gray-900 placeholder:text-gray-400"
                   />
                 </motion.div>
@@ -139,7 +141,7 @@ function ContactUs() {
                   transition={{ delay: 0.2 }}
                 >
                   <label htmlFor="email" className="block text-sm font-semibold text-gray-900 mb-2">
-                    Email <span className="text-red-500">*</span>
+                    {t('form.email')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="email"
@@ -147,7 +149,7 @@ function ContactUs() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="tu@correo.com"
+                    placeholder={t('form.emailPlaceholder')}
                     className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:outline-none focus:border-amber-700 transition-colors text-gray-900 placeholder:text-gray-400"
                   />
                 </motion.div>
@@ -159,7 +161,7 @@ function ContactUs() {
                   transition={{ delay: 0.3 }}
                 >
                   <label htmlFor="asunto" className="block text-sm font-semibold text-gray-900 mb-2">
-                    Asunto <span className="text-gray-400 text-xs">(opcional)</span>
+                    {t('form.subject')} <span className="text-gray-400 text-xs">{t('form.subjectOptional')}</span>
                   </label>
                   <input
                     type="text"
@@ -167,7 +169,7 @@ function ContactUs() {
                     name="asunto"
                     value={formData.asunto}
                     onChange={handleChange}
-                    placeholder="¿De qué se trata?"
+                    placeholder={t('form.subjectPlaceholder')}
                     className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:outline-none focus:border-amber-700 transition-colors text-gray-900 placeholder:text-gray-400"
                   />
                 </motion.div>
@@ -179,14 +181,14 @@ function ContactUs() {
                   transition={{ delay: 0.4 }}
                 >
                   <label htmlFor="mensaje" className="block text-sm font-semibold text-gray-900 mb-2">
-                    Mensaje <span className="text-red-500">*</span>
+                    {t('form.message')} <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     id="mensaje"
                     name="mensaje"
                     value={formData.mensaje}
                     onChange={handleChange}
-                    placeholder="Cuéntanos lo que tengas en mente..."
+                    placeholder={t('form.messagePlaceholder')}
                     rows="6"
                     className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:outline-none focus:border-amber-700 transition-colors text-gray-900 placeholder:text-gray-400 resize-none"
                   />
@@ -211,7 +213,7 @@ function ContactUs() {
                       animate={{ opacity: isSubmitting ? 0 : 1 }}
                       transition={{ duration: 0.2 }}
                     >
-                      {isSubmitting ? 'Enviando...' : 'Enviar Mensaje'}
+                      {isSubmitting ? t('form.sending') : t('form.send')}
                     </motion.span>
 
                     {/* Animación del papel volando */}
@@ -249,7 +251,7 @@ function ContactUs() {
 
                 {/* Info de campos requeridos */}
                 <p className="text-xs text-gray-500 text-center">
-                  Los campos marcados con <span className="text-red-500">*</span> son obligatorios
+                  {t('validation.requiredNote', { defaultValue: 'Los campos marcados con * son obligatorios' })}
                 </p>
               </form>
             </motion.div>
@@ -277,15 +279,15 @@ function ContactUs() {
                 </motion.div>
 
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  Mensaje Enviado
+                  {t('success.title')}
                 </h2>
 
                 <p className="text-gray-600 mb-2">
-                  Gracias por tu mensaje. Nos pondremos en contacto pronto.
+                  {t('success.description')}
                 </p>
 
                 <p className="text-sm text-gray-500">
-                  Redirigiendo al formulario...
+                  {t('success.redirecting')}
                 </p>
               </div>
             </motion.div>

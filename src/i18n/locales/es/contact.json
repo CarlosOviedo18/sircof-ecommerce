@@ -1,0 +1,28 @@
+{
+  "title": "Ponte en Contacto",
+  "subtitle": "Nos encantaría escucharte. Completa el formulario y nos pondremos en contacto pronto.",
+  "form": {
+    "name": "Nombre",
+    "namePlaceholder": "Tu nombre completo",
+    "email": "Email",
+    "emailPlaceholder": "tu@correo.com",
+    "subject": "Asunto",
+    "subjectOptional": "(opcional)",
+    "subjectPlaceholder": "¿De qué se trata?",
+    "message": "Mensaje",
+    "messagePlaceholder": "Cuéntanos lo que tengas en mente...",
+    "send": "Enviar Mensaje",
+    "sending": "Enviando..."
+  },
+  "validation": {
+    "requiredFields": "Por favor completa los campos requeridos",
+    "invalidEmail": "Por favor ingresa un email válido",
+    "requiredNote": "Los campos marcados con <1>*</1> son obligatorios",
+    "sendError": "Error al enviar el mensaje"
+  },
+  "success": {
+    "title": "Mensaje Enviado",
+    "description": "Gracias por tu mensaje. Nos pondremos en contacto pronto.",
+    "redirecting": "Redirigiendo al formulario..."
+  }
+}

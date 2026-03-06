@@ -2,8 +2,10 @@ import CoffeeCup3D from '../../animations/CoffeeCup3D'
 import leaf4 from '../../assets/img/leaf4.png'
 import leaf1 from '../../assets/img/leaf1.png'
 import '../../styles/AboutUsPage.css'
+import { useTranslation } from 'react-i18next'
 import TransparentNavigation from "../../components/layout/TransparentNavigation.jsx";
 function AboutUsPage() {
+  const { t } = useTranslation('about');
   return (
 
 
@@ -22,12 +24,12 @@ function AboutUsPage() {
       {/* Banner */}
       <section className="about-section" id="banner">
         <div className="about-content-fit">
-          <div className="about-title-main" data-before="ARTESANAL">CAFE SIRCOF</div>
-          <p className="banner-subtitle">Café artesanal de las montañas de Costa Rica</p>
+          <div className="about-title-main" data-before={t('banner.dataBefore')}>{t('banner.title')}</div>
+          <p className="banner-subtitle">{t('banner.subtitle')}</p>
         </div>
         <img src={leaf4} className="decorate leaf4-banner" alt="" />
         <div className="scroll-indicator">
-          <span>Scroll</span>
+          <span>{t('banner.scroll')}</span>
           <div className="arrow">↓</div>
         </div>
       </section>
@@ -37,12 +39,9 @@ function AboutUsPage() {
         <div className="about-content-fit">
           <div className="about-number">01</div>
           <div className="about-des">
-            <div className="about-title">Una Empresa Familiar</div>
+            <div className="about-title">{t('section01.title')}</div>
             <p>
-              Café Sircof es una empresa familiar costarricense con más de 20 años de
-              tradición y pasión por el café. Nacida en el corazón de las montañas de
-              Costa Rica, nuestra empresa es impulsada principalmente por mi papá,
-              quien junto con la familia dedica su vida a cada detalle de nuestro proceso.
+              {t('section01.description')}
             </p>
           </div>
         </div>
@@ -53,11 +52,9 @@ function AboutUsPage() {
         <div className="about-content-fit">
           <div className="about-number">02</div>
           <div className="about-des">
-            <div className="about-title">Proceso Artesanal</div>
+            <div className="about-title">{t('section02.title')}</div>
             <p>
-              Controlamos todo el proceso de producción: desde la recolección manual de
-              los granos hasta el empaquetado final. Cada paso es realizado con dedicación
-              para asegurar un producto de calidad superior.
+              {t('section02.description')}
             </p>
           </div>
         </div>
@@ -69,11 +66,9 @@ function AboutUsPage() {
         <div className="about-content-fit">
           <div className="about-number">03</div>
           <div className="about-des">
-            <div className="about-title">Global &amp; Local</div>
+            <div className="about-title">{t('section03.title')}</div>
             <p>
-              Nuestro café está presente en los principales mercados de Costa Rica y
-              trasciende fronteras: exportamos a Estados Unidos y China, llevando la
-              calidad y tradición de Café Sircof a mercados internacionales de alto valor.
+              {t('section03.description')}
             </p>
           </div>
         </div>
@@ -85,47 +80,44 @@ function AboutUsPage() {
         <div className="about-content-fit">
           <div className="mission-container">
             <div className="mission-title">
-              <h2>Nuestra Esencia</h2>
+              <h2>{t('essence.title')}</h2>
             </div>
             <div className="mission-content">
               <div className="mission-item">
-                <div className="mission-subtitle">Misión</div>
+                <div className="mission-subtitle">{t('essence.mission.title')}</div>
                 <p>
-                  Producir café artesanal de excelencia que represente la esencia de
-                  Costa Rica, combinando tradición familiar con innovación en cada grano.
+                  {t('essence.mission.description')}
                 </p>
               </div>
               <div className="mission-item">
-                <div className="mission-subtitle">Visión</div>
+                <div className="mission-subtitle">{t('essence.vision.title')}</div>
                 <p>
-                  Ser reconocidos como la marca de café artesanal familiar más confiable
-                  y de mayor calidad en Centroamérica, despertando pasión por el café en
-                  cada taza.
+                  {t('essence.vision.description')}
                 </p>
               </div>
             </div>
             <div className="values-section">
-              <h3>Nuestros Valores</h3>
+              <h3>{t('essence.valuesTitle')}</h3>
               <div className="values-grid">
                 <div className="value-card">
                   <div className="value-number">01</div>
-                  <div className="value-title">Tradición</div>
-                  <p>Conocimiento y experiencia transmitidos de generación en generación.</p>
+                  <div className="value-title">{t('essence.values.tradition.title')}</div>
+                  <p>{t('essence.values.tradition.description')}</p>
                 </div>
                 <div className="value-card">
                   <div className="value-number">02</div>
-                  <div className="value-title">Calidad</div>
-                  <p>Excelencia en cada detalle, desde el grano hasta el producto final.</p>
+                  <div className="value-title">{t('essence.values.quality.title')}</div>
+                  <p>{t('essence.values.quality.description')}</p>
                 </div>
                 <div className="value-card">
                   <div className="value-number">03</div>
-                  <div className="value-title">Sostenibilidad</div>
-                  <p>Cuidamos nuestras montañas y comunidades para las próximas generaciones.</p>
+                  <div className="value-title">{t('essence.values.sustainability.title')}</div>
+                  <p>{t('essence.values.sustainability.description')}</p>
                 </div>
                 <div className="value-card">
                   <div className="value-number">04</div>
-                  <div className="value-title">Pasión</div>
-                  <p>Amor y entusiasmo reflejados en cada aspecto de Café Sircof.</p>
+                  <div className="value-title">{t('essence.values.passion.title')}</div>
+                  <p>{t('essence.values.passion.description')}</p>
                 </div>
               </div>
             </div>
@@ -137,7 +129,7 @@ function AboutUsPage() {
       <section className="about-section" id="contact">
         <div className="about-content-fit">
           <div className="contact-container">
-            <h2>¿Te gustaría probar nuestro café?</h2>
+            <h2>{t('contact.title')}</h2>
           </div>
         </div>
       </section>

@@ -1,11 +1,14 @@
+import { useTranslation } from 'react-i18next'
+
 function PaymentMethodSelector({ selectedMethod, onSelect }) {
+  const { t } = useTranslation('checkout')
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
       <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
         <svg className="w-5 h-5 text-coffee" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
         </svg>
-        Método de Pago
+        {t('payment.title')}
       </h2>
 
       <div className="space-y-3">
@@ -38,9 +41,9 @@ function PaymentMethodSelector({ selectedMethod, onSelect }) {
           {/* Info */}
           <div className="flex-1 text-left">
             <p className={`font-semibold ${selectedMethod === 'tilopay' ? 'text-gray-800' : 'text-gray-700'}`}>
-              Tarjeta de Crédito / Débito
+              {t('payment.card')}
             </p>
-            <p className="text-xs text-gray-500">Visa, Mastercard, American Express</p>
+            <p className="text-xs text-gray-500">{t('payment.cardBrands')}</p>
           </div>
 
           {/* Card brand logos */}
@@ -79,9 +82,9 @@ function PaymentMethodSelector({ selectedMethod, onSelect }) {
           {/* Info */}
           <div className="flex-1 text-left">
             <p className={`font-semibold ${selectedMethod === 'paypal' ? 'text-gray-800' : 'text-gray-700'}`}>
-              PayPal
+              {t('payment.paypal')}
             </p>
-            <p className="text-xs text-gray-500">Paga con tu cuenta PayPal (USD)</p>
+            <p className="text-xs text-gray-500">{t('payment.paypalDesc')}</p>
           </div>
 
           {/* PayPal logo */}

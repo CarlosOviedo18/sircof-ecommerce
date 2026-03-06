@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from 'react-i18next';
 import { useProductDetail } from "../../hooks/products/useProductDetail";
 import cafeNacional from "../../assets/webp/cafeNacional.webp";
 import cafePremium from "../../assets/webp/cafePremium.webp";
@@ -10,14 +11,15 @@ function CartItem({
   onRemove,
   onQuantityChange,
 }) {
+  const { t } = useTranslation('cart');
   const { producto, loading } = useProductDetail(productId);
 
   if (loading) {
-    return <p className="text-gray-500 py-4">Cargando producto...</p>;
+    return <p className="text-gray-500 py-4">{t('item.loading')}</p>;
   }
 
   if (!producto) {
-    return <p className="text-red-500 py-4">Producto no encontrado</p>;
+    return <p className="text-red-500 py-4">{t('item.notFound')}</p>;
   }
 
   const imagenProducto =
@@ -38,7 +40,7 @@ function CartItem({
       {/* Info del producto */}
       <div className="flex-1">
         <p className="font-semibold text-gray-800">{producto.name}</p>
-        <p className="text-sm text-gray-600">Línea: {producto.line}</p>
+        <p className="text-sm text-gray-600">{t('item.line')}: {producto.line}</p>
       </div>
 
       {/* Cantidad y controles */}
@@ -48,7 +50,7 @@ function CartItem({
           <button
             onClick={() => onQuantityChange(cartItemId, cantidad - 1)}
             className="text-gray-600 hover:text-coffee font-bold"
-            aria-label="Disminuir cantidad"
+            aria-label={t('item.decreaseQty')}
           >
             −
           </button>
@@ -56,7 +58,7 @@ function CartItem({
           <button
             onClick={() => onQuantityChange(cartItemId, cantidad + 1)}
             className="text-gray-600 hover:text-coffee font-bold"
-            aria-label="Aumentar cantidad"
+            aria-label={t('item.increaseQty')}
           >
             +
           </button>
@@ -72,7 +74,7 @@ function CartItem({
           onClick={() => onRemove(cartItemId)}
           className="text-red-500 hover:text-red-700 text-sm font-semibold transition-colors"
         >
-          Remover
+          {t('item.remove')}
         </button>
       </div>
     </div>
