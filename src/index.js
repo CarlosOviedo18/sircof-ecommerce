@@ -6,23 +6,26 @@ import fs from 'fs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const envPath = path.join(__dirname, '..', '.env');
-const envExists = fs.existsSync(envPath);
-console.log('ENV path:', envPath);
-console.log('ENV exists:', envExists);
+// Buscar .env en múltiples ubicaciones
+const envPaths = [
+  path.join(__dirname, '..', '.env'),                                    // Raíz del proyecto
+  path.join(process.cwd(), '.env'),                                      // Directorio de trabajo
+  '/home/u663504527/domains/cafesircof.com/.env',                        // Fuera de nodejs/ (no lo toca Git)
+  path.join(__dirname, '..', '..', '.env'),                              // Un nivel más arriba
+];
 
-if (envExists) {
-  dotenv.config({ path: envPath });
-} else {
-  // Intentar buscar en el directorio de trabajo actual
-  const cwdEnvPath = path.join(process.cwd(), '.env');
-  console.log('Trying CWD path:', cwdEnvPath);
-  console.log('CWD ENV exists:', fs.existsSync(cwdEnvPath));
-  dotenv.config({ path: cwdEnvPath });
+let envLoaded = false;
+for (const ep of envPaths) {
+  if (fs.existsSync(ep)) {
+    dotenv.config({ path: ep });
+    console.log('ENV cargado desde:', ep);
+    envLoaded = true;
+    break;
+  }
 }
-
-console.log('DB_HOST:', process.env.DB_HOST);
-console.log('DB_USER:', process.env.DB_USER);
+if (!envLoaded) {
+  console.log('ADVERTENCIA: No se encontró archivo .env en ninguna ubicación');
+}
 console.log('DB_NAME:', process.env.DB_NAME);
 
 import express from 'express';
