@@ -1,9 +1,14 @@
-import 'dotenv/config.js'
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
+
 import express from 'express';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import pool from './database.js';
 import productsRoutes from './routes/products/products.js';
 import authRoutes from './routes/auth/auth.js';
@@ -54,8 +59,6 @@ app.use('/api/auth', passwordResetRoutes);
 
 
 // Servir archivos estáticos del frontend (dist/)
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, '..', 'dist')));
 
 app.get('/test-db', async (req, res) => {
