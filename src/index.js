@@ -1,10 +1,29 @@
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.join(__dirname, '..', '.env') });
+
+const envPath = path.join(__dirname, '..', '.env');
+const envExists = fs.existsSync(envPath);
+console.log('ENV path:', envPath);
+console.log('ENV exists:', envExists);
+
+if (envExists) {
+  dotenv.config({ path: envPath });
+} else {
+  // Intentar buscar en el directorio de trabajo actual
+  const cwdEnvPath = path.join(process.cwd(), '.env');
+  console.log('Trying CWD path:', cwdEnvPath);
+  console.log('CWD ENV exists:', fs.existsSync(cwdEnvPath));
+  dotenv.config({ path: cwdEnvPath });
+}
+
+console.log('DB_HOST:', process.env.DB_HOST);
+console.log('DB_USER:', process.env.DB_USER);
+console.log('DB_NAME:', process.env.DB_NAME);
 
 import express from 'express';
 import cors from 'cors';
@@ -69,6 +88,20 @@ app.get('/test-db', async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Error de conexión', error: error.message });
     }
+});
+
+// RUTA TEMPORAL DE DEBUG - BORRAR DESPUÉS
+app.get('/debug-env', (req, res) => {
+    res.json({
+        envPath: path.join(__dirname, '..', '.env'),
+        envExists: fs.existsSync(path.join(__dirname, '..', '.env')),
+        cwd: process.cwd(),
+        dirname: __dirname,
+        DB_HOST: process.env.DB_HOST || 'NO DEFINIDO',
+        DB_USER: process.env.DB_USER || 'NO DEFINIDO',
+        DB_NAME: process.env.DB_NAME || 'NO DEFINIDO',
+        HAS_PASSWORD: process.env.DB_PASSWORD ? 'SI' : 'NO'
+    });
 });
 
 // Ruta 404 solo para rutas /api no encontradas
