@@ -1,10 +1,13 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import tazaCafe from '../../assets/webp/taza con cafe.webp'
 import bandolasCafe from '../../assets/webp/bandolasCafe.webp'
 import sobreNosotrosImg from '../../assets/webp/SobreNosotros.webp'
 import iconoExperiencia from '../../assets/webp/iconoExperienciataza.webp'
 
 function CupExperience() {
+const { t } = useTranslation('home')
+
 return (
     <section className="w-full py-20 px-4 md:px-8 bg-cover bg-center relative" style={{ backgroundImage: `url(${sobreNosotrosImg})` }}>
         {/* Overlay café oscuro */}
@@ -28,11 +31,11 @@ return (
                 {/* Columna Derecha - Contenido */}
                 <div className="flex flex-col gap-4 relative z-20">
                     <h2 className="text-white font-serif font-bold text-3xl md:text-4xl leading-tight">
-                        Experiencias únicas en cada taza
+                        {t('cupExperience.title')}
                     </h2>
 
                     <p className="text-gray-300 text-sm md:text-base leading-relaxed">
-                        Descubre el verdadero sabor del café, con aroma intenso y notas únicas que harán disfrutar cada momento.
+                        {t('cupExperience.description')}
                     </p>
 
                     <div className="flex flex-col gap-3">
@@ -41,28 +44,30 @@ return (
                               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                               <path d="M5 12l5 5l10 -10" />
                             </svg>
-                            <p className="text-gray-200 text-sm md:text-base">Cultivado con dedicación y pasión</p>
+                            <p className="text-gray-200 text-sm md:text-base">{t('cupExperience.cultivated')}</p>
                         </div>
                         <div className="flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-coffee flex-shrink-0">
                               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                               <path d="M5 12l5 5l10 -10" />
                             </svg>
-                            <p className="text-gray-200 text-sm md:text-base">Tostado para resaltar su sabor auténtico</p>
+                            <p className="text-gray-200 text-sm md:text-base">{t('cupExperience.roasted')}</p>
                         </div>
                         <div className="flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-coffee flex-shrink-0">
                               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                               <path d="M5 12l5 5l10 -10" />
                             </svg>
-                            <p className="text-gray-200 text-sm md:text-base">Hecho para quienes disfrutan un buen café</p>
+                            <p className="text-gray-200 text-sm md:text-base">{t('cupExperience.madeFor')}</p>
                         </div>
                     </div>
 
                     <div className="pt-2">
-                        <button className="bg-red-400 hover:bg-red-500 text-white font-poppins font-semibold px-6 py-2 text-sm rounded transition-colors duration-300">
-                            Conócenos
-                        </button>
+                       <a href="/sobre-nosotros">
+                            <button className="bg-red-400 hover:bg-red-500 text-white font-poppins font-semibold px-6 py-2 text-sm rounded transition-colors duration-300">
+                                {t('cupExperience.knowUs')}
+                            </button>
+                        </a>
                     </div>
                 </div>
             </div>

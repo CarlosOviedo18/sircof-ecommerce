@@ -1,0 +1,87 @@
+{
+  "title": "Checkout",
+  "subtitle": "Complete your information to finalize your purchase",
+  "back": "Back",
+  "shippingData": {
+    "title": "Shipping Details",
+    "phone": "Phone",
+    "phonePlaceholder": "E.g.: 8765-4321",
+    "phoneError": "Invalid format. Use: 8765-4321 or 87654321",
+    "address": "Address",
+    "addressPlaceholder": "Shipping address",
+    "city": "City",
+    "cityPlaceholder": "City",
+    "postalCode": "Postal Code",
+    "postalCodePlaceholder": "Postal Code",
+    "country": "Country",
+    "selectCountry": "Select a country"
+  },
+  "orderSummary": {
+    "title": "Order Summary",
+    "product": "Product",
+    "qty": "Qty.",
+    "price": "Price",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "line": "Line",
+    "loading": "Loading..."
+  },
+  "payment": {
+    "title": "Payment Method",
+    "card": "Credit / Debit Card",
+    "cardBrands": "Visa, Mastercard, American Express",
+    "paypal": "PayPal",
+    "paypalDesc": "Pay with your PayPal account (USD)",
+    "confirmPay": "Confirm and Pay",
+    "payWithPaypal": "Pay with PayPal",
+    "processing": "Processing...",
+    "securePayment": "Secure payment processed by"
+  },
+  "errors": {
+    "addressRequired": "Address is required",
+    "cityRequired": "City is required",
+    "postalCodeRequired": "Postal code is required",
+    "noPaymentUrl": "Error: Payment URL not received",
+    "noPaypalUrl": "Error: PayPal URL not received",
+    "paymentError": "Error processing payment",
+    "paypalError": "Error processing PayPal payment"
+  },
+  "emptyCart": {
+    "title": "Your cart is empty",
+    "description": "Add products before proceeding to checkout",
+    "goToStore": "Go to Store"
+  },
+  "success": {
+    "title": "Payment Approved!",
+    "subtitle": "Your order has been processed successfully",
+    "orderNumber": "Order Number",
+    "transactionId": "Transaction ID",
+    "paymentMethod": "Payment Method",
+    "card": "Card",
+    "status": "Status",
+    "paid": "Paid",
+    "emailNotice": "You will receive a confirmation email",
+    "emailNoticeDesc": "shortly with your order details and shipping status.",
+    "nextSteps": "Next Steps",
+    "step1Title": "We'll verify your order",
+    "step1Desc": "Our team reviews the details",
+    "step2Title": "Preparation and packaging",
+    "step2Desc": "We'll carefully pack your order",
+    "step3Title": "Shipping and tracking",
+    "step3Desc": "We'll send you the tracking number",
+    "backToHome": "Back to Home",
+    "continueShopping": "Continue Shopping",
+    "loadingConfirmation": "Loading your confirmation..."
+  },
+  "rejected": {
+    "title": "Payment Rejected",
+    "defaultMessage": "There was a problem with your payment",
+    "errorCode": "Error Code",
+    "howToResolve": "How to resolve this:",
+    "tip1": "Verify that your card details are correct",
+    "tip2": "Try with another card if available",
+    "tip3": "Contact your bank if the problem persists",
+    "tryAgain": "Try Again",
+    "backToHome": "Back to Home"
+  }
+}

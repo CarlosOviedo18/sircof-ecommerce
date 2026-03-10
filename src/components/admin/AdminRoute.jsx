@@ -1,4 +1,5 @@
 import { Navigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuthContext } from '../../context/AuthContext'
 
 /**
@@ -7,6 +8,7 @@ import { useAuthContext } from '../../context/AuthContext'
  * Redirige a / si el usuario no tiene rol admin.
  */
 function AdminRoute({ children }) {
+  const { t } = useTranslation('admin')
   const { user, loading } = useAuthContext()
 
   // Mientras carga el estado de autenticación, mostrar loading
@@ -15,7 +17,7 @@ function AdminRoute({ children }) {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="flex flex-col items-center gap-3">
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-600"></div>
-          <p className="text-sm text-gray-500">Verificando permisos...</p>
+          <p className="text-sm text-gray-500">{t('verifyingPermissions')}</p>
         </div>
       </div>
     )

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import cafeNacional from '../../assets/webp/cafeNacional.webp'
 import cafePremium from '../../assets/webp/cafePremium.webp'
 import { useProductDetail } from '../../hooks/products/useProductDetail'
@@ -9,6 +10,7 @@ import { useAuthContext } from '../../context/AuthContext'
 function ProductDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { t } = useTranslation('store')
   const { user } = useAuthContext()
   const { producto, loading, error } = useProductDetail(id)
   const { addToCart, refetchCart } = useCart()
@@ -55,7 +57,7 @@ function ProductDetail() {
   if (loading) {
     return (
       <div className="min-h-screen bg-white pt-20 pb-20 flex items-center justify-center">
-        <p className="text-gray-500 text-lg">Cargando producto...</p>
+        <p className="text-gray-500 text-lg">{t('detail.loadingProduct')}</p>
       </div>
     )
   }
@@ -63,12 +65,12 @@ function ProductDetail() {
   if (error || !producto) {
     return (
       <div className="min-h-screen bg-white pt-20 pb-20 flex items-center justify-center flex-col gap-4">
-        <p className="text-red-500 text-lg">{error ? `Error: ${error}` : 'Producto no encontrado'}</p>
+        <p className="text-red-500 text-lg">{error ? `Error: ${error}` : t('detail.notFound')}</p>
         <button
           onClick={() => navigate('/tienda')}
           className="bg-coffee hover:bg-dark-coffee text-white font-semibold py-2 px-6 rounded transition-colors"
         >
-          Volver a la tienda
+          {t('detail.backToStore')}
         </button>
       </div>
     )
@@ -81,7 +83,7 @@ function ProductDetail() {
           onClick={() => navigate('/tienda')}
           className="mb-8 text-coffee hover:text-dark-coffee font-semibold flex items-center gap-2"
         >
-          ← Volver a la tienda
+          {t('detail.backToStore')}
         </button>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -97,7 +99,7 @@ function ProductDetail() {
 
           <div className="flex flex-col gap-6">
             <p className="text-gray-500 text-sm font-semibold tracking-wider uppercase">
-              Línea {producto.line}
+              {t('detail.lineName')} {producto.line}
             </p>
 
             <h1 className="text-4xl md:text-5xl font-bold text-dark-coffee">
@@ -108,11 +110,11 @@ function ProductDetail() {
               <div className="flex gap-1 text-2xl">
                 <span className="text-yellow-400">★★★★★</span>
               </div>
-              <p className="text-gray-600">(5 reseñas)</p>
+              <p className="text-gray-600">(5 {t('detail.reviews')})</p>
             </div>
 
             <div className="border-t border-b py-6">
-              <p className="text-sm text-gray-600 mb-2">Precio</p>
+              <p className="text-sm text-gray-600 mb-2">{t('detail.price')}</p>
               <p className="text-4xl font-bold text-coffee">
                 ₡{producto.price.toLocaleString('es-CR')}
               </p>
@@ -120,21 +122,19 @@ function ProductDetail() {
 
             <div>
               <p className="text-gray-700 leading-relaxed">
-                Disfruta de nuestro café {producto.name.toLowerCase()} de la línea {producto.line}. 
-                Cuidadosamente seleccionado y tostado para ofrecerte la mejor experiencia de sabor.
-                Cada grano es procesado con dedicación para garantizar la calidad SIRCOF.
+                {t('detail.description', { name: producto.name.toLowerCase(), line: producto.line })}
               </p>
             </div>
 
             <div className="flex flex-col gap-3">
               {/* Selector de cantidad */}
               <div className="flex items-center gap-4 mb-4">
-                <span className="text-sm font-semibold text-gray-700">Cantidad:</span>
+                <span className="text-sm font-semibold text-gray-700">{t('detail.quantity')}</span>
                 <div className="flex items-center gap-3 border rounded-lg px-3 py-2">
                   <button
                     onClick={decrementarCantidad}
                     className="text-coffee hover:text-dark-coffee font-bold text-lg transition-colors"
-                    aria-label="Disminuir cantidad"
+                    aria-label={t('detail.decreaseQuantity')}
                   >
                     −
                   </button>
@@ -142,7 +142,7 @@ function ProductDetail() {
                   <button
                     onClick={incrementarCantidad}
                     className="text-coffee hover:text-dark-coffee font-bold text-lg transition-colors"
-                    aria-label="Aumentar cantidad"
+                    aria-label={t('detail.increaseQuantity')}
                   >
                     +
                   </button>
@@ -152,7 +152,7 @@ function ProductDetail() {
               {/* Mensaje de éxito */}
               {mensajeExito && (
                 <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded animate-pulse">
-                  ✓ Producto agregado al carrito
+                  {t('detail.addedToCart')}
                 </div>
               )}
 
@@ -162,7 +162,7 @@ function ProductDetail() {
                 disabled={agregando}
                 className="w-full bg-coffee hover:bg-dark-coffee disabled:bg-gray-400 text-white font-bold py-3 px-6 rounded text-lg transition-colors duration-300"
               >
-                {agregando ? 'Agregando...' : 'Agregar al carrito'}
+                {agregando ? t('detail.adding') : t('detail.addToCart')}
               </button>
 
               {/* Botón favoritos */}
@@ -174,15 +174,15 @@ function ProductDetail() {
             <div className="bg-gray-50 p-6 rounded-lg mt-6 space-y-3 text-sm text-gray-700">
               <div className="flex gap-3">
                 <span></span>
-                <p><strong>Envío gratis</strong> en compras mayores a ₡10,000</p>
+                <p><strong>{t('detail.freeShipping')}</strong> {t('detail.freeShippingDesc')}</p>
               </div>
               <div className="flex gap-3">
-                <span></span>
-                <p><strong>Devoluciones gratis</strong> en los primeros 30 días</p>
+                <span>🔄</span>
+                <p><strong>{t('detail.freeReturns')}</strong> {t('detail.freeReturnsDesc')}</p>
               </div>
               <div className="flex gap-3">
-                <span></span>
-                <p><strong>Garantía de calidad</strong> SIRCOF</p>
+                <span>✅</span>
+                <p><strong>{t('detail.qualityGuarantee')}</strong> {t('detail.qualityGuaranteeDesc')}</p>
               </div>
             </div>
           </div>

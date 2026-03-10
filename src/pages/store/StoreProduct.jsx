@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useProducts } from '../../hooks/products/useProducts'
 import { useCart } from '../../hooks/cart/useCart'
 import { useAuthContext } from '../../context/AuthContext'
@@ -11,6 +12,7 @@ function StoreProduct() {
   const { addToCart, refetchCart } = useCart()
   const { user } = useAuthContext()
   const navigate = useNavigate()
+  const { t } = useTranslation('store')
   const [searchParams] = useSearchParams()
   const searchQuery = searchParams.get('search') || ''
   const [sortedProductos, setSortedProductos] = useState([])
@@ -95,7 +97,7 @@ function StoreProduct() {
   if (loading) {
     return (
       <div className="min-h-screen bg-white pt-20 pb-20 flex items-center justify-center">
-        <p className="text-gray-500 text-lg">Cargando productos...</p>
+        <p className="text-gray-500 text-lg">{t('loading')}</p>
       </div>
     )
   }
@@ -112,21 +114,21 @@ function StoreProduct() {
     <div className="min-h-screen bg-white pt-20 pb-20">
       <div className="max-w-7xl mx-auto px-4">
         <h1 className="text-4xl font-bold text-center text-dark-coffee mb-4">
-          Tienda SIRCOF
+          {t('title')}
         </h1>
         {searchQuery && (
           <div className="text-center mb-4">
-            <p className="text-gray-600">Resultados para: <strong>"{searchQuery}"</strong></p>
+            <p className="text-gray-600">{t('resultsFor')} <strong>"{searchQuery}"</strong></p>
             <button
               onClick={() => navigate('/tienda')}
               className="text-coffee hover:underline text-sm mt-1"
             >
-              Limpiar búsqueda
+              {t('clearSearch')}
             </button>
           </div>
         )}
         <p className="text-center text-gray-600 mb-12">
-          Mostrando {sortedProductos.length} resultado{sortedProductos.length !== 1 ? 's' : ''}
+          {t('showing')} {sortedProductos.length} {sortedProductos.length !== 1 ? t('results') : t('result')}
         </p>
 
         <div className="flex flex-col lg:flex-row gap-8">
@@ -135,7 +137,7 @@ function StoreProduct() {
             {/* Filter by category */}
             <div className="mb-8">
               <h3 className="text-lg font-bold text-dark-coffee mb-4 flex items-center justify-between cursor-pointer">
-                Filter by category
+                {t('filterByCategory')}
                 <span>−</span>
               </h3>
               <div className="space-y-2">
@@ -159,7 +161,7 @@ function StoreProduct() {
 
             {/* Price range */}
             <div className="mb-8">
-              <h3 className="text-lg font-bold text-dark-coffee mb-4">Precio</h3>
+              <h3 className="text-lg font-bold text-dark-coffee mb-4">{t('price')}</h3>
               <div className="space-y-3">
                 <input
                   type="range"
@@ -171,14 +173,14 @@ function StoreProduct() {
                   className="w-full accent-amber-700"
                 />
                 <p className="text-gray-600 text-sm">
-                  Hasta: <strong>₡{maxPrice.toLocaleString('es-CR')}</strong>
+                  {t('upTo')} <strong>₡{maxPrice.toLocaleString('es-CR')}</strong>
                 </p>
               </div>
             </div>
 
             {/* Rating */}
             <div>
-              <h3 className="text-lg font-bold text-dark-coffee mb-4">Rating</h3>
+              <h3 className="text-lg font-bold text-dark-coffee mb-4">{t('rating')}</h3>
               <div className="space-y-2">
                 {[5, 4, 3, 2, 1].map((stars) => (
                   <label key={stars} className="flex items-center gap-3 cursor-pointer">
@@ -197,11 +199,11 @@ function StoreProduct() {
             {/* Header con ordenamiento */}
             <div className="flex items-center justify-between mb-8 pb-4 border-b">
               <p className="text-gray-600 text-sm">
-                Mostrando {sortedProductos.length} resultado{sortedProductos.length !== 1 ? 's' : ''}
+                {t('showing')} {sortedProductos.length} {sortedProductos.length !== 1 ? t('results') : t('result')}
               </p>
               <div className="flex items-center gap-2">
                 <label htmlFor="sort" className="text-gray-600 font-semibold">
-                  Ordenar por los últimos
+                  {t('sortByLatest')}
                 </label>
                 <select
                   id="sort"
@@ -209,10 +211,10 @@ function StoreProduct() {
                   onChange={(e) => setSortOrder(e.target.value)}
                   className="px-3 py-2 border border-gray-300 rounded text-gray-700 text-sm focus:outline-none focus:border-coffee"
                 >
-                  <option value="latest">Últimos</option>
-                  <option value="price-asc">Precio: Menor a Mayor</option>
-                  <option value="price-desc">Precio: Mayor a Menor</option>
-                  <option value="name">Nombre A-Z</option>
+                  <option value="latest">{t('sortLatest')}</option>
+                  <option value="price-asc">{t('sortPriceAsc')}</option>
+                  <option value="price-desc">{t('sortPriceDesc')}</option>
+                  <option value="name">{t('sortName')}</option>
                 </select>
               </div>
             </div>
@@ -236,7 +238,7 @@ function StoreProduct() {
                   <div className="p-4 flex flex-col gap-2">
                     {/* Categoría */}
                     <p className="text-gray-500 text-xs font-semibold tracking-wider">
-                      LÍNEA {producto.line?.toUpperCase()}
+                      {t('line')} {producto.line?.toUpperCase()}
                     </p>
 
                     {/* Nombre */}
@@ -257,7 +259,7 @@ function StoreProduct() {
                     {/* Botón agregar */}
                     {mensajosExito[producto.id] ? (
                       <div className="mt-4 w-full bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded text-center font-semibold animate-pulse">
-                        ✓ Agregado al carrito
+                        {t('addedToCart')}
                       </div>
                     ) : (
                       <button
@@ -265,7 +267,7 @@ function StoreProduct() {
                         disabled={agrandoProductos[producto.id]}
                         className="mt-4 w-full bg-coffee hover:bg-dark-coffee disabled:bg-gray-400 text-white font-semibold py-2 px-4 rounded transition-colors duration-300"
                       >
-                        {agrandoProductos[producto.id] ? 'Agregando...' : 'Agregar al carrito'}
+                        {agrandoProductos[producto.id] ? t('adding') : t('addToCart')}
                       </button>
                     )}
                   </div>
@@ -275,7 +277,7 @@ function StoreProduct() {
 
             {sortedProductos.length === 0 && (
               <div className="text-center py-12">
-                <p className="text-gray-500 text-lg">No se encontraron productos</p>
+                <p className="text-gray-500 text-lg">{t('noProducts')}</p>
               </div>
             )}
           </div>

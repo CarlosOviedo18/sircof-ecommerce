@@ -1,0 +1,32 @@
+{
+  "title": "Shopping Cart",
+  "closeCart": "Close cart",
+  "empty": "Your cart is empty",
+  "item": {
+    "line": "Line",
+    "remove": "Remove",
+    "loading": "Loading product...",
+    "notFound": "Product not found",
+    "decreaseQty": "Decrease quantity",
+    "increaseQty": "Increase quantity"
+  },
+  "footer": {
+    "total": "Total:",
+    "checkout": "Go to Checkout",
+    "continueShopping": "Continue Shopping"
+  },
+  "shipping": {
+    "title": "Shipping Details",
+    "phone": "Phone",
+    "phonePlaceholder": "Phone (e.g.: 8765-4321)",
+    "phoneError": "Invalid format. Use: 8765-4321 or 87654321",
+    "address": "Address",
+    "addressPlaceholder": "Address",
+    "city": "City",
+    "cityPlaceholder": "City",
+    "postalCode": "Postal Code",
+    "postalCodePlaceholder": "Postal Code",
+    "country": "Country",
+    "selectCountry": "Select a country"
+  }
+}
