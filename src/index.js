@@ -2,6 +2,8 @@ import 'dotenv/config.js'
 import express from 'express';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import pool from './database.js';
 import productsRoutes from './routes/products/products.js';
 import authRoutes from './routes/auth/auth.js';
@@ -51,9 +53,10 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/auth', passwordResetRoutes);
 
 
-app.get('/', (req, res) => {
-    res.json({ message: 'Sircof Backend-Servidor funcionando' });
-});
+// Servir archivos estáticos del frontend (dist/)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use(express.static(path.join(__dirname, '..', 'dist')));
 
 app.get('/test-db', async (req, res) => {
     try {
@@ -65,14 +68,19 @@ app.get('/test-db', async (req, res) => {
     }
 });
 
-app.use((req, res) => {
-    console.error(`Ruta no encontrada: ${req.method} ${req.path}`);
+// Ruta 404 solo para rutas /api no encontradas
+app.all('/api/*', (req, res) => {
     res.status(404).json({
         success: false,
         message: 'Ruta no encontrada',
         path: req.path,
         method: req.method
     });
+});
+
+// Todas las demás rutas devuelven index.html (SPA)
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'dist', 'index.html'));
 });
 
 const PORT = process.env.PORT || 3000;
