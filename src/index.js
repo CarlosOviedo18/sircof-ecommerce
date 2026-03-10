@@ -92,11 +92,14 @@ app.get('/test-db', async (req, res) => {
 
 // RUTA TEMPORAL DE DEBUG - BORRAR DESPUÉS
 app.get('/debug-env', (req, res) => {
+    const envFilePath = path.join(__dirname, '..', '.env');
+    let envContent = '';
+    try { envContent = fs.readFileSync(envFilePath, 'utf8'); } catch(e) { envContent = 'ERROR: ' + e.message; }
+    const result = dotenv.config({ path: envFilePath, override: true });
     res.json({
-        envPath: path.join(__dirname, '..', '.env'),
-        envExists: fs.existsSync(path.join(__dirname, '..', '.env')),
-        cwd: process.cwd(),
-        dirname: __dirname,
+        envFirst200Chars: envContent.substring(0, 200),
+        envCharCodes: Array.from(envContent.substring(0, 30)).map(c => c.charCodeAt(0)),
+        dotenvError: result.error ? result.error.message : 'ninguno',
         DB_HOST: process.env.DB_HOST || 'NO DEFINIDO',
         DB_USER: process.env.DB_USER || 'NO DEFINIDO',
         DB_NAME: process.env.DB_NAME || 'NO DEFINIDO',
