@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 function CheckoutShippingForm({ data, setData, formError }) {
+  const { t } = useTranslation('checkout')
   const [phoneError, setPhoneError] = useState('')
   const [countries, setCountries] = useState([])
 
@@ -22,7 +24,7 @@ function CheckoutShippingForm({ data, setData, formError }) {
   const handlePhoneChange = (value) => {
     setData({ ...data, phone: value })
     if (value.trim() && !validatePhone(value)) {
-      setPhoneError('Formato inválido. Usa: 8765-4321 o 87654321')
+      setPhoneError(t('shippingData.phoneError'))
     } else {
       setPhoneError('')
     }
@@ -37,16 +39,16 @@ function CheckoutShippingForm({ data, setData, formError }) {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
         </svg>
-        Datos de Envío
+        {t('shippingData.title')}
       </h2>
 
       <div className="space-y-4">
         {/* Teléfono */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('shippingData.phone')}</label>
           <input
             type="tel"
-            placeholder="Ej: 8765-4321"
+            placeholder={t('shippingData.phonePlaceholder')}
             value={data.phone}
             onChange={(e) => handlePhoneChange(e.target.value)}
             className={`${inputClasses} ${phoneError ? '!border-red-500 !focus:ring-red-300' : ''}`}
@@ -56,10 +58,10 @@ function CheckoutShippingForm({ data, setData, formError }) {
 
         {/* Dirección */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Dirección <span className="text-red-500">*</span></label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('shippingData.address')} <span className="text-red-500">*</span></label>
           <input
             type="text"
-            placeholder="Dirección de envío"
+            placeholder={t('shippingData.addressPlaceholder')}
             value={data.address}
             onChange={(e) => setData({ ...data, address: e.target.value })}
             className={inputClasses}
@@ -69,20 +71,20 @@ function CheckoutShippingForm({ data, setData, formError }) {
         {/* Ciudad y Código Postal en una fila */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Ciudad <span className="text-red-500">*</span></label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('shippingData.city')} <span className="text-red-500">*</span></label>
             <input
               type="text"
-              placeholder="Ciudad"
+              placeholder={t('shippingData.cityPlaceholder')}
               value={data.city}
               onChange={(e) => setData({ ...data, city: e.target.value })}
               className={inputClasses}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Código Postal <span className="text-red-500">*</span></label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('shippingData.postalCode')} <span className="text-red-500">*</span></label>
             <input
               type="text"
-              placeholder="Código Postal"
+              placeholder={t('shippingData.postalCodePlaceholder')}
               value={data.postalCode}
               onChange={(e) => setData({ ...data, postalCode: e.target.value })}
               className={inputClasses}
@@ -92,13 +94,13 @@ function CheckoutShippingForm({ data, setData, formError }) {
 
         {/* País */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">País</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('shippingData.country')}</label>
           <select
             value={data.country}
             onChange={(e) => setData({ ...data, country: e.target.value })}
             className={inputClasses}
           >
-            <option value="">Selecciona un país</option>
+            <option value="">{t('shippingData.selectCountry')}</option>
             {countries.map(c => (
               <option key={c} value={c}>{c}</option>
             ))}

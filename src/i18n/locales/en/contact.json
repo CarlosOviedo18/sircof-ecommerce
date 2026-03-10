@@ -1,0 +1,28 @@
+{
+  "title": "Get in Touch",
+  "subtitle": "We'd love to hear from you. Fill out the form and we'll get back to you soon.",
+  "form": {
+    "name": "Name",
+    "namePlaceholder": "Your full name",
+    "email": "Email",
+    "emailPlaceholder": "you@email.com",
+    "subject": "Subject",
+    "subjectOptional": "(optional)",
+    "subjectPlaceholder": "What is it about?",
+    "message": "Message",
+    "messagePlaceholder": "Tell us what's on your mind...",
+    "send": "Send Message",
+    "sending": "Sending..."
+  },
+  "validation": {
+    "requiredFields": "Please fill in the required fields",
+    "invalidEmail": "Please enter a valid email",
+    "requiredNote": "Fields marked with <1>*</1> are required",
+    "sendError": "Error sending the message"
+  },
+  "success": {
+    "title": "Message Sent",
+    "description": "Thank you for your message. We'll get back to you soon.",
+    "redirecting": "Redirecting to form..."
+  }
+}

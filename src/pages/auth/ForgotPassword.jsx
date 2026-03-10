@@ -1,10 +1,12 @@
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { useForgotPassword } from '../../hooks/auth/useForgotPassword.js'
 import '../../styles/LoginUsers.css'
 
 function ForgotPassword() {
   const navigate = useNavigate()
+  const { t } = useTranslation('auth')
   const {
     step,
     email, setEmail,
@@ -24,12 +26,12 @@ function ForgotPassword() {
       <motion.button
         onClick={() => navigate('/login')}
         className="absolute top-4 left-4 p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all duration-200 z-50"
-        title="Volver al inicio de sesión"
+        title={t('forgotPassword.backToLogin')}
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.3 }}
       >
-        ← Atrás
+        {t('forgotPassword.back')}
       </motion.button>
 
       <motion.div
@@ -112,19 +114,19 @@ function ForgotPassword() {
           {/* ========== PASO 1: Ingresar correo ========== */}
           {step === 1 && (
             <form onSubmit={sendResetCode}>
-              <h1 style={{ fontSize: '22px', marginBottom: '8px' }}>¿Olvidaste tu contraseña?</h1>
+              <h1 style={{ fontSize: '22px', marginBottom: '8px' }}>{t('forgotPassword.step1Title')}</h1>
               <span style={{ color: '#666', display: 'block', marginBottom: '20px' }}>
-                Ingresa tu correo y te enviaremos un código de verificación
+                {t('forgotPassword.step1Subtitle')}
               </span>
               <input
                 type="email"
-                placeholder="Correo electrónico"
+                placeholder={t('forgotPassword.emailPlaceholder')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
               <button type="submit" disabled={loading} style={{ marginTop: '16px' }}>
-                {loading ? 'Enviando...' : 'Enviar Código'}
+                {loading ? t('forgotPassword.sending') : t('forgotPassword.sendCode')}
               </button>
             </form>
           )}
@@ -132,13 +134,13 @@ function ForgotPassword() {
           {/* ========== PASO 2: Verificar código ========== */}
           {step === 2 && (
             <form onSubmit={verifyCode}>
-              <h1 style={{ fontSize: '22px', marginBottom: '8px' }}>Verificar Código</h1>
+              <h1 style={{ fontSize: '22px', marginBottom: '8px' }}>{t('forgotPassword.step2Title')}</h1>
               <span style={{ color: '#666', display: 'block', marginBottom: '20px' }}>
-                Ingresa el código de 6 dígitos enviado a <strong>{email}</strong>
+                {t('forgotPassword.step2Subtitle')} <strong>{email}</strong>
               </span>
               <input
                 type="text"
-                placeholder="Código de 6 dígitos"
+                placeholder={t('forgotPassword.codePlaceholder')}
                 value={code}
                 onChange={(e) => {
                   // Solo permitir números, máximo 6 dígitos
@@ -155,14 +157,14 @@ function ForgotPassword() {
                 }}
               />
               <button type="submit" disabled={loading} style={{ marginTop: '16px' }}>
-                {loading ? 'Verificando...' : 'Verificar Código'}
+                {loading ? t('forgotPassword.verifying') : t('forgotPassword.verifyCode')}
               </button>
               <a
                 href="#"
                 onClick={(e) => { e.preventDefault(); resendCode(); }}
                 style={{ marginTop: '12px', display: 'block' }}
               >
-                Reenviar código
+                {t('forgotPassword.resendCode')}
               </a>
             </form>
           )}
@@ -170,26 +172,26 @@ function ForgotPassword() {
           {/* ========== PASO 3: Nueva contraseña ========== */}
           {step === 3 && (
             <form onSubmit={resetPassword}>
-              <h1 style={{ fontSize: '22px', marginBottom: '8px' }}>Nueva Contraseña</h1>
+              <h1 style={{ fontSize: '22px', marginBottom: '8px' }}>{t('forgotPassword.step3Title')}</h1>
               <span style={{ color: '#666', display: 'block', marginBottom: '20px' }}>
-                Establece tu nueva contraseña
+                {t('forgotPassword.step3Subtitle')}
               </span>
               <input
                 type="password"
-                placeholder="Nueva contraseña"
+                placeholder={t('forgotPassword.newPassword')}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
               />
               <input
                 type="password"
-                placeholder="Confirmar contraseña"
+                placeholder={t('forgotPassword.confirmPassword')}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
               />
               <button type="submit" disabled={loading} style={{ marginTop: '16px' }}>
-                {loading ? 'Cambiando...' : 'Cambiar Contraseña'}
+                {loading ? t('forgotPassword.changing') : t('forgotPassword.changePassword')}
               </button>
             </form>
           )}
@@ -210,12 +212,12 @@ function ForgotPassword() {
               }}>
                 ✓
               </div>
-              <h1 style={{ fontSize: '22px', marginBottom: '8px' }}>¡Contraseña Actualizada!</h1>
+              <h1 style={{ fontSize: '22px', marginBottom: '8px' }}>{t('forgotPassword.step4Title')}</h1>
               <span style={{ color: '#666', display: 'block', marginBottom: '24px' }}>
-                Tu contraseña ha sido cambiada exitosamente. Ya puedes iniciar sesión.
+                {t('forgotPassword.step4Subtitle')}
               </span>
               <button onClick={() => navigate('/login')}>
-                Ir a Iniciar Sesión
+                {t('forgotPassword.goToLogin')}
               </button>
             </div>
           )}
@@ -227,7 +229,7 @@ function ForgotPassword() {
               onClick={(e) => { e.preventDefault(); navigate('/login'); }}
               style={{ marginTop: '16px', display: 'block', textAlign: 'center' }}
             >
-              Volver a Iniciar Sesión
+              {t('forgotPassword.backToLoginLink')}
             </a>
           )}
         </div>

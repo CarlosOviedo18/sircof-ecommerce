@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useCart } from '../../hooks/cart/useCart'
 import { usePayment } from '../../hooks/payment/usePayment'
 import { usePayPalPayment } from '../../hooks/payment/usePayPalPayment'
@@ -14,6 +15,7 @@ function CheckoutPage() {
   const { createPayPalOrder, loading: paypalLoading, error: paypalError } = usePayPalPayment()
   const { user } = useAuthContext()
   const navigate = useNavigate()
+  const { t } = useTranslation('checkout')
 
   const [shippingData, setShippingData] = useState({
     phone: '',
@@ -45,15 +47,15 @@ function CheckoutPage() {
   const handleConfirmPayment = async () => {
     // Validar campos requeridos
     if (!shippingData.address.trim()) {
-      setFormError('La dirección es requerida')
+      setFormError(t('errors.addressRequired'))
       return
     }
     if (!shippingData.city.trim()) {
-      setFormError('La ciudad es requerida')
+      setFormError(t('errors.cityRequired'))
       return
     }
     if (!shippingData.postalCode.trim()) {
-      setFormError('El código postal es requerido')
+      setFormError(t('errors.postalCodeRequired'))
       return
     }
 
@@ -74,11 +76,11 @@ function CheckoutPage() {
         if (result.paymentUrl) {
           window.location.href = result.paymentUrl
         } else {
-          setFormError('Error: No se recibió URL de pago')
+          setFormError(t('errors.noPaymentUrl'))
         }
       } catch (error) {
         console.error('Error al procesar pago:', error.message)
-        setFormError(error.message || 'Error al procesar el pago')
+        setFormError(error.message || t('errors.paymentError'))
       }
     } else if (paymentMethod === 'paypal') {
       try {
@@ -95,11 +97,11 @@ function CheckoutPage() {
         if (result.paymentUrl) {
           window.location.href = result.paymentUrl
         } else {
-          setFormError('Error: No se recibió URL de PayPal')
+          setFormError(t('errors.noPaypalUrl'))
         }
       } catch (error) {
         console.error('Error al procesar pago PayPal:', error.message)
-        setFormError(error.message || 'Error al procesar el pago con PayPal')
+        setFormError(error.message || t('errors.paypalError'))
       }
     }
   }
@@ -125,13 +127,13 @@ function CheckoutPage() {
             <svg className="w-20 h-20 text-gray-300 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
             </svg>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Tu carrito está vacío</h2>
-            <p className="text-gray-500 mb-8">Agrega productos antes de continuar al checkout</p>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">{t('emptyCart.title')}</h2>
+            <p className="text-gray-500 mb-8">{t('emptyCart.description')}</p>
             <button
               onClick={() => navigate('/tienda')}
               className="bg-coffee hover:bg-dark-coffee text-white font-bold py-3 px-8 rounded-lg transition-colors"
             >
-              Ir a la Tienda
+              {t('emptyCart.goToStore')}
             </button>
           </div>
         </div>
@@ -151,10 +153,10 @@ function CheckoutPage() {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            <span className="text-sm font-medium">Volver</span>
+            <span className="text-sm font-medium">{t('back')}</span>
           </button>
-          <h1 className="text-3xl font-bold text-gray-800">Checkout</h1>
-          <p className="text-gray-500 mt-1">Completa tu información para finalizar la compra</p>
+          <h1 className="text-3xl font-bold text-gray-800">{t('title')}</h1>
+          <p className="text-gray-500 mt-1">{t('subtitle')}</p>
         </div>
 
         {/* Layout 2 columnas */}
@@ -195,21 +197,21 @@ function CheckoutPage() {
               {isProcessing ? (
                 <>
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Procesando...
+                  {t('payment.processing')}
                 </>
               ) : paymentMethod === 'paypal' ? (
                 <>
                   <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M7.076 21.337H2.47a.641.641 0 01-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 00-.607-.541c-.013.076-.026.175-.041.254-.93 4.778-4.005 7.201-9.138 7.201h-2.19a.563.563 0 00-.556.479l-1.187 7.527h-.506l-.24 1.516a.56.56 0 00.554.647h3.882c.46 0 .85-.334.922-.788.06-.26.76-4.852.816-5.09a.932.932 0 01.923-.788h.58c3.76 0 6.705-1.528 7.565-5.946.36-1.847.174-3.388-.777-4.471z" />
                   </svg>
-                  Pagar con PayPal — ₡{total.toLocaleString('es-CR')}
+                  {t('payment.payWithPaypal')} — ₡{total.toLocaleString('es-CR')}
                 </>
               ) : (
                 <>
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
-                  Confirmar y Pagar — ₡{total.toLocaleString('es-CR')}
+                  {t('payment.confirmPay')} — ₡{total.toLocaleString('es-CR')}
                 </>
               )}
             </button>
@@ -219,7 +221,7 @@ function CheckoutPage() {
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
-              Pago seguro procesado por {paymentMethod === 'paypal' ? 'PayPal' : 'Tilopay'}
+              {t('payment.securePayment')} {paymentMethod === 'paypal' ? 'PayPal' : 'Tilopay'}
             </p>
           </div>
         </div>

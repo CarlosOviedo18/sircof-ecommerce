@@ -1,0 +1,49 @@
+{
+  "title": "My Account",
+  "welcome": "Welcome",
+  "back": "← Back",
+  "backTitle": "Back",
+  "user": "User",
+  "tabs": {
+    "profile": "Profile",
+    "purchases": "My Purchases"
+  },
+  "email": {
+    "title": "Change Email",
+    "currentEmail": "Current Email",
+    "newEmail": "New Email",
+    "placeholder": "example@email.com",
+    "submit": "Update Email",
+    "updating": "Updating...",
+    "emptyError": "Please enter an email"
+  },
+  "password": {
+    "title": "Change Password",
+    "current": "Current Password",
+    "new": "New Password",
+    "confirm": "Confirm New Password",
+    "placeholder": "••••••••",
+    "submit": "Update Password",
+    "updating": "Updating...",
+    "emptyError": "Please fill in all fields",
+    "mismatchError": "Passwords do not match"
+  },
+  "logout": {
+    "title": "Log Out",
+    "description": "Log out of your account securely",
+    "submit": "Log Out"
+  },
+  "purchases": {
+    "title": "My Purchases",
+    "loading": "Loading purchases...",
+    "empty": "You haven't made any purchases yet",
+    "order": "Order",
+    "products": "Products",
+    "viewInvoice": "View Invoice",
+    "status": {
+      "completed": "Delivered",
+      "pending": "Pending",
+      "inTransit": "In Transit"
+    }
+  }
+}

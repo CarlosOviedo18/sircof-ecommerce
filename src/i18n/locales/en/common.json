@@ -1,0 +1,27 @@
+{
+  "loading": "Loading...",
+  "error": "Error",
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "edit": "Edit",
+  "close": "Close",
+  "back": "Back",
+  "search": "Search",
+  "noResults": "No results",
+  "scrollToTop": "Back to top",
+  "language": {
+    "title": "Language",
+    "es": "Español",
+    "en": "English"
+  },
+  "searchBox": {
+    "searchCoffee": "Search Coffee",
+    "findFavorite": "Find your favorite coffee",
+    "placeholder": "What coffee are you looking for?",
+    "desktopPlaceholder": "Type here...",
+    "popular": "Popular:",
+    "popularSearches": "Popular Searches:",
+    "pressEnter": "Press Enter to search"
+  }
+}

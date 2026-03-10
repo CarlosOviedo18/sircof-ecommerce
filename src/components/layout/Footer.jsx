@@ -1,7 +1,10 @@
+import { useTranslation } from 'react-i18next'
 import footerImg from '../../assets/webp/footer.webp'
 import logoImg from '../../assets/webp/logo.webp'
 
 function Footer() {
+  const { t } = useTranslation('footer')
+
   return (
     <footer className="relative w-full py-16 md:py-20 bg-cover bg-center overflow-hidden" style={{ backgroundImage: `url(${footerImg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
       {/* Overlay oscuro */}
@@ -15,25 +18,25 @@ function Footer() {
           <div className="flex flex-col items-center">
             <p className="text-coffee font-poppins font-semibold text-base">@cafeSircof</p>
             <img src={logoImg} alt="logo" loading="lazy" decoding="async" className="m-2 w-12 h-13 object-contain" />
-            <p className="text-gray-300 text-sm mt-1">Síguenos en Instagram</p>
+            <p className="text-gray-300 text-sm mt-1">{t('followInstagram')}</p>
           </div>
 
           {/* Navegación - Vertical */}
           <div className="flex flex-col items-center">
             <nav>
               <ul className="flex flex-row gap-2 text-center font-poppins">
-                <li><a href="/inicio" className="text-gray-100 text-base hover:text-coffee transition-colors">Inicio</a></li>
-                <li><a href="/SobreNosotros" className="text-gray-100 text-base hover:text-coffee transition-colors">Sobre Nosotros</a></li>
-                <li><a href="/contactenos" className="text-gray-100 text-base hover:text-coffee transition-colors">Contacto</a></li>
-                <li><a href="/galeria" className="text-gray-100 text-base hover:text-coffee transition-colors">Galeria</a></li>
-                <li><a href="/tienda" className="text-gray-100 text-base hover:text-coffee transition-colors">Tienda</a></li>
+                <li><a href="/inicio" className="text-gray-100 text-base hover:text-coffee transition-colors">{t('home')}</a></li>
+                <li><a href="/SobreNosotros" className="text-gray-100 text-base hover:text-coffee transition-colors">{t('aboutUs')}</a></li>
+                <li><a href="/contactenos" className="text-gray-100 text-base hover:text-coffee transition-colors">{t('contact')}</a></li>
+                <li><a href="/galeria" className="text-gray-100 text-base hover:text-coffee transition-colors">{t('gallery')}</a></li>
+                <li><a href="/tienda" className="text-gray-100 text-base hover:text-coffee transition-colors">{t('store')}</a></li>
               </ul>
             </nav>
           </div>
 
           {/* Redes Sociales - Vertical */}
           <div className="flex flex-col items-center gap-3">
-            <p className="text-coffee font-poppins font-semibold text-base">Síguenos</p>
+            <p className="text-coffee font-poppins font-semibold text-base">{t('followUs')}</p>
             <div className="flex gap-4">
               <a href="https://www.instagram.com/cafe_sircof" className="text-gray-100 hover:text-coffee transition-colors text-lg" aria-label="Instagram">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 8a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4l0 -8" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /><path d="M16.5 7.5v.01" /></svg>
@@ -54,7 +57,7 @@ function Footer() {
         {/* Copyright */}
         <div className="text-center">
             <p className="text-gray-300 text-base font-poppins">
-            CafeSircof © 2026. Todos los derechos reservados
+            CafeSircof © 2026. {t('copyright')}
           </p>
         </div>
       </div>

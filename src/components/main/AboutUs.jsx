@@ -1,7 +1,10 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import sobreNosotrosImg from '../../assets/webp/SobreNosotros.webp'
 
 function AboutUs() {
+  const { t } = useTranslation('home')
+
   const features = [
     {
       icon: (
@@ -11,7 +14,7 @@ function AboutUs() {
           <path d="M4.073 21c4.286 -2.756 5.9 -5.254 7.927 -9" />
         </svg>
       ),
-      title: "Calidad de ingredientes",
+      title: t('aboutUs.ingredientQuality'),
       description: ""
     },
     {
@@ -26,7 +29,7 @@ function AboutUs() {
           <path d="M3 13v-1a2 2 0 0 1 2 -2h2" />
         </svg>
       ),
-      title: "Familia Amor",
+      title: t('aboutUs.familyLove'),
       description: ""
     },
     {
@@ -40,7 +43,7 @@ function AboutUs() {
           <path d="M16.746 16.726a3 3 0 1 0 .252 -5.555" />
         </svg>
       ),
-      title: "Café Fresco",
+      title: t('aboutUs.freshCoffee'),
       description: ""
     },
     {
@@ -50,7 +53,7 @@ function AboutUs() {
           <path d="M16.5 15a4.5 4.5 0 0 0 -4.5 4.5m4.5 -8.5a4.5 4.5 0 0 0 -4.5 4.5m4.5 -8.5a4.5 4.5 0 0 0 -4.5 4.5m-4 3.5c2.21 0 4 2.015 4 4.5m-4 -8.5c2.21 0 4 2.015 4 4.5m-4 -8.5c2.21 0 4 2.015 4 4.5m0 -7.5v6" />
         </svg>
       ),
-      title: "Variedad de grano",
+      title: t('aboutUs.beanVariety'),
       description: ""
     }
   ]
@@ -65,16 +68,16 @@ function AboutUs() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 mb-16">
           {/* Izquierda */}
           <div>
-            <p className="text-coffee font-serif text-xs tracking-wider mb-4">NUESTRO CAFE</p>
+            <p className="text-coffee font-serif text-xs tracking-wider mb-4">{t('aboutUs.ourCoffee')}</p>
             <h2 className="text-white font-serif  font-bold text-4xl md:text-5xl leading-tight">
-              Saborea la mezcla de sabores clásicos
+              {t('aboutUs.title')}
             </h2>
           </div>
           
           {/* Derecha */}
           <div>
             <p className="text-gray-200 font-sans text-sm md:text-base leading-relaxed">
-              Café Sircof es un lugar que combina tradición, sabor y hospitalidad familiar. Ofrece un café de alta calidad cultivado en sus propias tierras, donde cada grano es cosechado con esmero para brindar una experiencia auténtica en cada taza.
+              {t('aboutUs.description')}
             </p>
           </div>
         </div>
