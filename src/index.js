@@ -1,32 +1,8 @@
-import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// Buscar .env en múltiples ubicaciones
-const envPaths = [
-  path.join(__dirname, '..', '.env'),                                    // Raíz del proyecto
-  path.join(process.cwd(), '.env'),                                      // Directorio de trabajo
-  '/home/u663504527/domains/cafesircof.com/.env',                        // Fuera de nodejs/ (no lo toca Git)
-  path.join(__dirname, '..', '..', '.env'),                              // Un nivel más arriba
-];
-
-let envLoaded = false;
-for (const ep of envPaths) {
-  if (fs.existsSync(ep)) {
-    dotenv.config({ path: ep });
-    console.log('ENV cargado desde:', ep);
-    envLoaded = true;
-    break;
-  }
-}
-if (!envLoaded) {
-  console.log('ADVERTENCIA: No se encontró archivo .env en ninguna ubicación');
-}
-console.log('DB_NAME:', process.env.DB_NAME);
 
 import express from 'express';
 import cors from 'cors';
@@ -52,6 +28,70 @@ app.use(cors({
   origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
   credentials: true
 }));
+
+// ============================================
+// MODO MANTENIMIENTO - Cambiar a false para activar el sitio
+const MAINTENANCE_MODE = true;
+// ============================================
+
+if (MAINTENANCE_MODE) {
+  app.use((req, res) => {
+    res.send(`
+      <!DOCTYPE html>
+      <html lang="es">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Café Sircof - Próximamente</title>
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a0e05 0%, #3c1a00 50%, #1a0e05 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #f5e6d3;
+            text-align: center;
+            padding: 20px;
+          }
+          .container {
+            max-width: 600px;
+          }
+          .icon { font-size: 80px; margin-bottom: 20px; }
+          h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #d4a574;
+          }
+          p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            opacity: 0.85;
+          }
+          .divider {
+            width: 60px;
+            height: 3px;
+            background: #d4a574;
+            margin: 25px auto;
+            border-radius: 2px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="icon">☕</div>
+          <h1>Café Sircof</h1>
+          <div class="divider"></div>
+          <p>🚧 Estamos preparando algo especial para vos.</p>
+          <p>Nuestro sitio estará disponible muy pronto.</p>
+        </div>
+      </body>
+      </html>
+    `);
+  });
+}
 
 // Rate limit general: 100 peticiones por minuto por IP
 const generalLimiter = rateLimit({
@@ -91,23 +131,6 @@ app.get('/test-db', async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Error de conexión', error: error.message });
     }
-});
-
-// RUTA TEMPORAL DE DEBUG - BORRAR DESPUÉS
-app.get('/debug-env', (req, res) => {
-    const envFilePath = path.join(__dirname, '..', '.env');
-    let envContent = '';
-    try { envContent = fs.readFileSync(envFilePath, 'utf8'); } catch(e) { envContent = 'ERROR: ' + e.message; }
-    const result = dotenv.config({ path: envFilePath, override: true });
-    res.json({
-        envFirst200Chars: envContent.substring(0, 200),
-        envCharCodes: Array.from(envContent.substring(0, 30)).map(c => c.charCodeAt(0)),
-        dotenvError: result.error ? result.error.message : 'ninguno',
-        DB_HOST: process.env.DB_HOST || 'NO DEFINIDO',
-        DB_USER: process.env.DB_USER || 'NO DEFINIDO',
-        DB_NAME: process.env.DB_NAME || 'NO DEFINIDO',
-        HAS_PASSWORD: process.env.DB_PASSWORD ? 'SI' : 'NO'
-    });
 });
 
 // Ruta 404 solo para rutas /api no encontradas
