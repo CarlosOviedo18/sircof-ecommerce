@@ -1,16 +1,19 @@
-CREATE DATABASE database_sircof;
-USE database_sircof;
 
-CREATE TABLE users (
+
+SET FOREIGN_KEY_CHECKS = 0;
+
+
+CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   email VARCHAR(100) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
   role ENUM('user','admin') DEFAULT 'user',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE products (
+
+CREATE TABLE IF NOT EXISTS products (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(150) NOT NULL,
   description TEXT,
@@ -19,9 +22,10 @@ CREATE TABLE products (
   line VARCHAR(50),
   stock INT DEFAULT 0,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE carts (
+
+CREATE TABLE IF NOT EXISTS carts (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -29,9 +33,10 @@ CREATE TABLE carts (
     FOREIGN KEY (user_id)
     REFERENCES users(id)
     ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE cart_items (
+
+CREATE TABLE IF NOT EXISTS cart_items (
   id INT AUTO_INCREMENT PRIMARY KEY,
   cart_id INT NOT NULL,
   product_id INT NOT NULL,
@@ -44,9 +49,10 @@ CREATE TABLE cart_items (
     FOREIGN KEY (product_id)
     REFERENCES products(id)
     ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE orders (
+
+CREATE TABLE IF NOT EXISTS orders (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   total DECIMAL(10,2) NOT NULL,
@@ -64,9 +70,10 @@ CREATE TABLE orders (
     FOREIGN KEY (user_id)
     REFERENCES users(id)
     ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE order_items (
+
+CREATE TABLE IF NOT EXISTS order_items (
   id INT AUTO_INCREMENT PRIMARY KEY,
   order_id INT NOT NULL,
   product_id INT NOT NULL,
@@ -80,9 +87,25 @@ CREATE TABLE order_items (
     FOREIGN KEY (product_id)
     REFERENCES products(id)
     ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE password_resets (
+
+CREATE TABLE IF NOT EXISTS contacts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  subject VARCHAR(255),
+  message LONGTEXT NOT NULL,
+  status VARCHAR(50) DEFAULT 'unread',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_email (email),
+  INDEX idx_status (status),
+  INDEX idx_created_at (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE IF NOT EXISTS password_resets (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   code VARCHAR(6) NOT NULL,
@@ -93,24 +116,11 @@ CREATE TABLE password_resets (
     FOREIGN KEY (user_id)
     REFERENCES users(id)
     ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-ALTER TABLE products ADD COLUMN line VARCHAR(50);
-
--- Tabla de contactos (mensajes del formulario de contacto)
-CREATE TABLE IF NOT EXISTS contacts (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  email VARCHAR(100) NOT NULL,
-  subject VARCHAR(200),
-  message TEXT NOT NULL,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
+SET FOREIGN_KEY_CHECKS = 1;
 
 
-
-
--- Insertar productos
 INSERT INTO products (name, description, price, line, stock) VALUES
 ('Café Nacional - Tueste Medio Molido 500g', 'El Café Nacional es una exquisita mezcla que reúne todas nuestras variedades exclusivas, cuidadosamente seleccionadas para ofrecer una experiencia única. Este café 100% puro se distingue por su aroma intenso, cuerpo balanceado y sabor auténtico, reflejando la esencia del café costarricense. Al no estar sujeto a requisitos de venta ni exportación, garantiza frescura, pureza y calidad superior en cada taza.', 3300.00, 'Nacional', 50),
 ('Café Nacional - Tueste Medio Molido 350g', 'El Café Nacional es una exquisita mezcla que reúne todas nuestras variedades exclusivas, cuidadosamente seleccionadas para ofrecer una experiencia única. Este café 100% puro se distingue por su aroma intenso, cuerpo balanceado y sabor auténtico, reflejando la esencia del café costarricense. Al no estar sujeto a requisitos de venta ni exportación, garantiza frescura, pureza y calidad superior en cada taza.', 2400.00, 'Nacional', 50),
