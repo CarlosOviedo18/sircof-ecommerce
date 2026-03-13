@@ -10,6 +10,7 @@ import rateLimit from 'express-rate-limit';
 import pool from './database.js';
 import productsRoutes from './routes/products/products.js';
 import authRoutes from './routes/auth/auth.js';
+import googleAuthRoutes from './routes/auth/googleAuth.js';
 import passwordResetRoutes from './routes/auth/passwordReset.js';
 import usersRoutes from './routes/user/users.js';
 import userSettingsRoutes from './routes/user/userSettings.js';
@@ -23,6 +24,12 @@ import adminRoutes from './routes/admin.js';
 
 const app = express();
 
+app.use((req, res, next) => {
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+  res.setHeader('Referrer-Policy', 'no-referrer-when-downgrade');
+  next();
+});
+
 // CORS restringido al origen del frontend
 app.use(cors({
   origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
@@ -31,7 +38,7 @@ app.use(cors({
 
 // ============================================
 // MODO MANTENIMIENTO - Cambiar a false para activar el sitio
-const MAINTENANCE_MODE = true;
+const MAINTENANCE_MODE = false;
 // ============================================
 
 if (MAINTENANCE_MODE) {
@@ -81,10 +88,10 @@ if (MAINTENANCE_MODE) {
       </head>
       <body>
         <div class="container">
-          <div class="icon">☕</div>
+          <div class="icon"></div>
           <h1>Café Sircof</h1>
           <div class="divider"></div>
-          <p>🚧 Estamos preparando algo especial para vos.</p>
+          <p>Estamos preparando algo especial para vos.</p>
           <p>Nuestro sitio estará disponible muy pronto.</p>
         </div>
       </body>
@@ -108,6 +115,7 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 app.use('/api', productsRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/auth', googleAuthRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/payment', paymentRoutes);

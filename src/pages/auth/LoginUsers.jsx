@@ -35,10 +35,13 @@ function LoginUsers() {
         </motion.button>
       <div className={containerClass} id="container">
         <div className="form-container sign-up-container">
-          <SignUp onSignUpSuccess={() => setType("signIn")} />
+          <SignUp
+            onSignUpSuccess={() => setType("signIn")}
+            isActive={type === "signUp"}
+          />
         </div>
         <div className="form-container sign-in-container">
-          <SignIn />
+          <SignIn isActive={type === "signIn"} />
         </div>
 
         <div className="overlay-container">

@@ -110,6 +110,13 @@ router.post('/login', authLimiter, async (req, res) => {
 
     const user = users[0]
 
+    if (!user.password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Esta cuenta fue creada con Google. Iniciá sesión con Google.'
+      })
+    }
+
     const validPassword = await comparePassword(password, user.password)
 
     if (!validPassword) {
