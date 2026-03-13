@@ -2,12 +2,12 @@ import InfiniteMenu from "../../components/ui/InfiniteMenu.jsx";
 import Footer from "../../components/layout/Footer.jsx";
 import TransparentNavigation from "../../components/layout/TransparentNavigation.jsx";
 import { useTranslation } from "react-i18next";
-import galeria1 from "../../assets/img/galeria1.png";
-import galeria2 from "../../assets/img/galeria2.png";
-import galeria3 from "../../assets/img/galeria3.png";
-import galeria4 from "../../assets/img/galeria4.png";
-import galeria5 from "../../assets/img/galeria5.jpg";
-import galeria6 from "../../assets/img/galeria6.jpg";
+import galeria1 from "../../assets/webp/galeria1.webp";
+import galeria2 from "../../assets/webp/galeria2.webp";
+import galeria3 from "../../assets/webp/galeria3.webp";
+import galeria4 from "../../assets/webp/galeria4.webp";
+import galeria5 from "../../assets/webp/galeria5.webp";
+import galeria6 from "../../assets/webp/galeria6.webp";
 
 
 function Galery() {
