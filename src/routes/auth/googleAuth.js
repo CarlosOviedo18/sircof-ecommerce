@@ -6,6 +6,51 @@ import { generateToken } from '../../lib/jwt.js'
 
 const router = Router()
 
+const isAuthDebugEnabled =
+	process.env.NODE_ENV !== 'production' || process.env.AUTH_DEBUG === 'true'
+
+const getFriendlyGoogleError = (error) => {
+	const rawMessage = error?.message || ''
+	const message = rawMessage.toLowerCase()
+
+	if (message.includes('secretorprivatekey')) {
+		return {
+			status: 500,
+			message: 'JWT_SECRET no está configurado en el servidor'
+		}
+	}
+
+	if (error?.code === 'ER_BAD_FIELD_ERROR' && message.includes('google_id')) {
+		return {
+			status: 500,
+			message: 'La base de datos no tiene la columna google_id en users. Ejecutá la migración de Google Auth.'
+		}
+	}
+
+	if (error?.code === 'ER_BAD_NULL_ERROR' && message.includes('password')) {
+		return {
+			status: 500,
+			message: 'La columna users.password no permite NULL. Ejecutá la migración de Google Auth.'
+		}
+	}
+
+	if (
+		message.includes('invalid token') ||
+		message.includes('wrong recipient') ||
+		message.includes('token used too late')
+	) {
+		return {
+			status: 401,
+			message: 'Token de Google inválido o expirado'
+		}
+	}
+
+	return {
+		status: 500,
+		message: 'Error en autenticación de Google'
+	}
+}
+
 const googleAuthLimiter = rateLimit({
 	windowMs: 15 * 60 * 1000,
 	max: 10,
@@ -127,10 +172,18 @@ router.post('/google', googleAuthLimiter, async (req, res) => {
 			}
 		})
 	} catch (error) {
-		console.error('Error en /google:', error.message)
-		res.status(500).json({
+		console.error('Error en /google:', error)
+
+		const friendlyError = getFriendlyGoogleError(error)
+		res.status(friendlyError.status).json({
 			success: false,
-			message: 'Error en autenticación de Google'
+			message: friendlyError.message,
+			...(isAuthDebugEnabled
+				? {
+					errorCode: error?.code || null,
+					errorDetail: error?.message || null
+				}
+				: {})
 		})
 	}
 })

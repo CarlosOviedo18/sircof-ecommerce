@@ -17,18 +17,6 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  server: {
-    headers: {
-      'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
-      'Referrer-Policy': 'no-referrer-when-downgrade',
-    },
-  },
-  preview: {
-    headers: {
-      'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
-      'Referrer-Policy': 'no-referrer-when-downgrade',
-    },
-  },
   build: {
     rollupOptions: {
       output: {

@@ -24,20 +24,14 @@ import adminRoutes from './routes/admin.js';
 
 const app = express();
 
-app.use((req, res, next) => {
-  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
-  res.setHeader('Referrer-Policy', 'no-referrer-when-downgrade');
-  next();
-});
-
 // CORS restringido al origen del frontend
 app.use(cors({
   origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
   credentials: true
 }));
 
-// ============================================
-// MODO MANTENIMIENTO - Cambiar a false para activar el sitio
+
+
 const MAINTENANCE_MODE = false;
 // ============================================
 
