@@ -11,7 +11,7 @@ router.get('/', protectAdmin, async (req, res) => {
     const [[{ totalProducts }]] = await pool.query('SELECT COUNT(*) as totalProducts FROM products')
     const [[{ totalOrders }]] = await pool.query('SELECT COUNT(*) as totalOrders FROM orders')
     const [[{ totalRevenue }]] = await pool.query(
-      "SELECT COALESCE(SUM(total), 0) as totalRevenue FROM orders WHERE status = 'paid'"
+      "SELECT COALESCE(SUM(total), 0) as totalRevenue FROM orders WHERE status = 'cancelled'"
     )
     const [[{ pendingOrders }]] = await pool.query(
       "SELECT COUNT(*) as pendingOrders FROM orders WHERE status = 'pending'"
@@ -57,7 +57,7 @@ router.get('/', protectAdmin, async (req, res) => {
 router.get('/notifications', protectAdmin, async (req, res) => {
   try {
     const [[{ pendingOrders }]] = await pool.query(
-      "SELECT COUNT(*) as pendingOrders FROM orders WHERE status = 'pending'"
+      "SELECT COUNT(*) as pendingOrders FROM orders WHERE status = 'paid'"
     )
     const [[{ unreadContacts }]] = await pool.query(
       'SELECT COUNT(*) as unreadContacts FROM contacts'
