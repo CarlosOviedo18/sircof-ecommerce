@@ -30,7 +30,7 @@ const getPositions = () => {
       {
         id: 'banner',
         position: { x: 0, y: -0.3, z: 1 },
-        rotation: { x: 0.1, y: 1.5, z: 0.2 },
+        rotation: { x: 0.1, y: 0, z: 0 },
         scale: 0.75,
       },
       { id: 'intro', ...hidden },
@@ -40,7 +40,7 @@ const getPositions = () => {
       {
         id: 'contact',
         position: { x: 0, y: -0.2, z: 1 },
-        rotation: { x: 0.1, y: 1.5, z: 0.15 },
+        rotation: { x: 0.1, y: 0, z: 0 },
         scale: 0.75,
       },
     ]
@@ -54,7 +54,7 @@ const getPositions = () => {
       {
         id: 'banner',
         position: { x: 0, y: -0.3, z: 0.5 },
-        rotation: { x: 0.1, y: 1.5, z: 0.2 },
+        rotation: { x: 0.1, y: 0, z: 0 },
         scale: 0.85,
       },
       { id: 'intro', ...hidden },
@@ -64,7 +64,7 @@ const getPositions = () => {
       {
         id: 'contact',
         position: { x: 0, y: -0.2, z: 0.5 },
-        rotation: { x: 0.1, y: 1.5, z: 0.15 },
+        rotation: { x: 0.1, y: 0, z: 0 },
         scale: 0.85,
       },
     ]
@@ -75,7 +75,7 @@ const getPositions = () => {
     {
       id: 'banner',
       position: { x: 0, y: -0.5 * f, z: 0 },
-      rotation: { x: 0.1, y: 1.5, z: 0.2 },
+      rotation: { x: 0.1, y: 0, z: 0 },
       scale: f * 1.1,
     },
     {
@@ -105,7 +105,7 @@ const getPositions = () => {
     {
       id: 'contact',
       position: { x: 0, y: -0.4 * f, z: 0 },
-      rotation: { x: 0.1, y: 1.5, z: 0.15 },
+      rotation: { x: 0.1, y: 0, z: 0 },
       scale: f * 1.1,
     },
   ]
