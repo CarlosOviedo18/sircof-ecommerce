@@ -5,6 +5,7 @@ import gsap from 'gsap'
 
 // ===== Responsive helpers =====
 const isMobile = () => window.innerWidth < 768
+const isTablet = () => window.innerWidth >= 768 && window.innerWidth < 1024
 const isSmallMobile = () => window.innerWidth < 480
 
 const getResponsiveFactor = () => {
@@ -70,6 +71,30 @@ const getPositions = () => {
     ]
   }
 
+  if (isTablet()) {
+    // ── iPad / Tablet (768-1023px) ──
+    // Igual que móvil: visible en banner, oculto en el resto y visible en contacto.
+    const hidden = { position: { x: 0, y: 5, z: -10 }, rotation: { x: 0, y: 0, z: 0 }, scale: 0 }
+    return [
+      {
+        id: 'banner',
+        position: { x: 0, y: -0.3, z: 0.3 },
+        rotation: { x: 0.1, y: 0, z: 0 },
+        scale: 0.9,
+      },
+      { id: 'intro', ...hidden },
+      { id: 'description', ...hidden },
+      { id: 'global', ...hidden },
+      { id: 'mission', ...hidden },
+      {
+        id: 'contact',
+        position: { x: 0, y: -0.2, z: 0.3 },
+        rotation: { x: 0.1, y: 0, z: 0 },
+        scale: 0.9,
+      },
+    ]
+  }
+
   // ── Desktop / Tablet grande ──
   return [
     {
@@ -130,6 +155,8 @@ function CoffeeCup3D({ modelPath = '/models/sample.glb', sectionSelector = '.abo
   const lastSectionRef = useRef('')
   // RAF-based scroll throttle
   const scrollRafRef = useRef(null)
+  const lastScrollYRef = useRef(0)
+  const forcedTabletHideRef = useRef(false)
 
   useEffect(() => {
     const container = containerRef.current
@@ -137,6 +164,8 @@ function CoffeeCup3D({ modelPath = '/models/sample.glb', sectionSelector = '.abo
 
     mountedRef.current = true
     lastSectionRef.current = ''
+    lastScrollYRef.current = window.scrollY || 0
+    forcedTabletHideRef.current = false
 
     // ─── Detectar sección actual y mover modelo ───
     const modelMove = () => {
@@ -153,6 +182,37 @@ function CoffeeCup3D({ modelPath = '/models/sample.glb', sectionSelector = '.abo
         }
       })
 
+      // En iPad: ocultar apenas empieza el scroll hacia abajo (más rápido).
+      const currentScrollY = window.scrollY || 0
+      const isScrollingDown = currentScrollY > lastScrollYRef.current
+      lastScrollYRef.current = currentScrollY
+      if (isTablet() && isScrollingDown && currentScrollY > 6 && currentSection !== 'contact') {
+        if (!forcedTabletHideRef.current) {
+          const model = modelRef.current
+          forcedTabletHideRef.current = true
+          gsap.killTweensOf(model.position)
+          gsap.killTweensOf(model.rotation)
+          gsap.killTweensOf(model.scale)
+          gsap.to(model.position, {
+            x: 0,
+            y: 5,
+            z: -10,
+            duration: 0.22,
+            ease: 'power2.out',
+            overwrite: true,
+          })
+          gsap.to(model.scale, {
+            x: 0,
+            y: 0,
+            z: 0,
+            duration: 0.22,
+            ease: 'power2.out',
+            overwrite: true,
+          })
+        }
+        return
+      }
+
       // Si no cambió la sección, no hacer nada (evita animaciones redundantes)
       if (!currentSection || currentSection === lastSectionRef.current) return
       lastSectionRef.current = currentSection
@@ -163,6 +223,7 @@ function CoffeeCup3D({ modelPath = '/models/sample.glb', sectionSelector = '.abo
 
       const coords = positions[posIndex]
       const model = modelRef.current
+      if (currentSection === 'contact') forcedTabletHideRef.current = false
 
       // Matar cualquier animación anterior en este objeto antes de crear nuevas
       gsap.killTweensOf(model.position)

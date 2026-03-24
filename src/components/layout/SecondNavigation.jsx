@@ -136,7 +136,7 @@ function SecondNavigation() {
                 ) : (
                   <li><a href="/login" className="text-white font-medium text-lg hover:text-coffee transition-colors block py-3 px-4 rounded-lg hover:bg-white/10" onClick={() => setMobileMenuOpen(false)}>{t('signIn.submit', { ns: 'auth' })}</a></li>
                 )}
-                <li className="mt-4 px-4"><LanguageSelector /></li>
+                
               </ul>
             </nav>
           </div>
