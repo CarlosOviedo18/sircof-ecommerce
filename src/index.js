@@ -94,15 +94,28 @@ if (MAINTENANCE_MODE) {
   });
 }
 
-// Rate limit general: 100 peticiones por minuto por IP
+
+
+
 const generalLimiter = rateLimit({
-  windowMs: 1 * 60 * 1000,
-  max: 100,
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 1000, 
   message: { success: false, message: 'Demasiadas peticiones, por favor espera un momento' },
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
 });
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 500, 
+  message: { success: false, message: 'Demasiados intentos de login/registro, por favor espera un momento' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 app.use('/api', generalLimiter);
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/signup', authLimiter);
 
 app.use(express.json({ limit: '10mb', strict: false }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));

@@ -173,6 +173,7 @@ router.post("/create-order", protectRoute, async (req, res) => {
     }
 
     const paypalData = await paypalResponse.json();
+    
 
     // Encontrar la URL de aprobación
     const approveLink = paypalData.links.find(
