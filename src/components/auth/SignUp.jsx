@@ -93,6 +93,13 @@ function SignUp({ onSignUpSuccess, isActive = true }) {
       </div>
       {/* <span>{t('signIn.orUseAccount')}</span> */}
       <input
+        type="text"
+        placeholder={t("signUp.name")}
+        name="name"
+        value={state.name}
+        onChange={handleChange}
+      />
+      <input
         type="email"
         placeholder={t("signUp.email")}
         name="email"
