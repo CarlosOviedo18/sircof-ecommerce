@@ -1,6 +1,7 @@
 {
   "title": "Gallery",
   "subtitle": "Our coffee in images",
+  "instruction": "Press and drag to explore",
   "items": {
     "bandolas": {
       "title": "Coffee Bandolas",

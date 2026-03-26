@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 
 const AuthContext = createContext()
+const SESSION_TIMEOUT_MINUTES = 30 
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
@@ -8,12 +9,30 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user')
-    if (storedUser) {
+    const lastActivityTime = localStorage.getItem('lastActivityTime')
+    
+    if (storedUser && lastActivityTime) {
       try {
-        setUser(JSON.parse(storedUser))
+        // Verificar si la sesión ha expirado
+        const timeSinceLastActivity = Date.now() - parseInt(lastActivityTime)
+        const timeoutMs = SESSION_TIMEOUT_MINUTES * 60 * 1000
+        
+        if (timeSinceLastActivity > timeoutMs) {
+          // Sesión expirada, limpiar datos
+          console.log('Sesión expirada por inactividad')
+          localStorage.removeItem('user')
+          localStorage.removeItem('lastActivityTime')
+          setUser(null)
+        } else {
+          // Sesión válida, restaurar usuario
+          setUser(JSON.parse(storedUser))
+          // Actualizar timestamp de actividad
+          localStorage.setItem('lastActivityTime', Date.now().toString())
+        }
       } catch (err) {
         console.error('Error al parsear usuario guardado:', err)
         localStorage.removeItem('user')
+        localStorage.removeItem('lastActivityTime')
       }
     }
     setLoading(false)
@@ -23,8 +42,10 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (user) {
       localStorage.setItem('user', JSON.stringify(user))
+      localStorage.setItem('lastActivityTime', Date.now().toString())
     } else {
       localStorage.removeItem('user')
+      localStorage.removeItem('lastActivityTime')
     }
   }, [user])
 
