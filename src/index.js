@@ -8,6 +8,7 @@ import express from 'express';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import pool from './database.js';
+import { securityHeaders } from './middleware/securityHeaders.js';
 import productsRoutes from './routes/products/products.js';
 import authRoutes from './routes/auth/auth.js';
 import googleAuthRoutes from './routes/auth/googleAuth.js';
@@ -20,6 +21,7 @@ import paypalRoutes from './routes/payment/paypal.js';
 import ordersRoutes from './routes/orders/orders.js';
 import contactFormRoutes from './routes/contact/contactForm.js';
 import adminRoutes from './routes/admin.js';
+import { maintenance } from './middleware/maintenanceMode.js';
 
 
 const app = express();
@@ -30,70 +32,10 @@ app.use(cors({
   credentials: true
 }));
 
+// Middleware de seguridad (headers HTTP)
+app.use(securityHeaders);
 
-
-const MAINTENANCE_MODE = false;
-// ============================================
-
-if (MAINTENANCE_MODE) {
-  app.use((req, res) => {
-    res.send(`
-      <!DOCTYPE html>
-      <html lang="es">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Café Sircof - Próximamente</title>
-        <style>
-          * { margin: 0; padding: 0; box-sizing: border-box; }
-          body {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #1a0e05 0%, #3c1a00 50%, #1a0e05 100%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #f5e6d3;
-            text-align: center;
-            padding: 20px;
-          }
-          .container {
-            max-width: 600px;
-          }
-          .icon { font-size: 80px; margin-bottom: 20px; }
-          h1 {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            color: #d4a574;
-          }
-          p {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            opacity: 0.85;
-          }
-          .divider {
-            width: 60px;
-            height: 3px;
-            background: #d4a574;
-            margin: 25px auto;
-            border-radius: 2px;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="icon"></div>
-          <h1>Café Sircof</h1>
-          <div class="divider"></div>
-          <p>Estamos preparando algo especial para vos.</p>
-          <p>Nuestro sitio estará disponible muy pronto.</p>
-        </div>
-      </body>
-      </html>
-    `);
-  });
-}
-
+app.use(maintenance); 
 
 
 

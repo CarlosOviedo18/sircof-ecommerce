@@ -20,7 +20,10 @@ export const useSessionTimeout = (timeoutMinutes = 30) => {
 
       isWarningShownRef.current = false
 
-      // Establecer nuevo timeout
+   
+      localStorage.setItem('lastActivityTime', Date.now().toString())
+
+     
       timeoutRef.current = setTimeout(async () => {
     
         await logout()
@@ -29,10 +32,10 @@ export const useSessionTimeout = (timeoutMinutes = 30) => {
       }, timeoutMinutes * 60 * 1000) 
     }
 
-    // Iniciar timeout al montar o cuando cambia el usuario
+   
     resetTimeout()
 
-    // Eventos de actividad del usuario
+ 
     const events = ['mousemove', 'keypress', 'click', 'scroll', 'touchstart']
 
     const handleActivity = () => {
