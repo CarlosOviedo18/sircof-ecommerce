@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { mat4, quat, vec2, vec3 } from 'gl-matrix';
+import { useTranslation } from 'react-i18next';
 
 const discVertShaderSource = `#version 300 es
 uniform mat4 uWorldMatrix;
@@ -909,6 +910,9 @@ const defaultItems = [
 ];
 
 export default function InfiniteMenu({ items = [], scale = 1.0 }) {
+
+    const {t} = useTranslation('gallery');
+  
   const canvasRef = useRef(null);
   const [activeItem, setActiveItem] = useState(null);
   const [isMoving, setIsMoving] = useState(false);
@@ -1107,7 +1111,7 @@ export default function InfiniteMenu({ items = [], scale = 1.0 }) {
                
               </svg>
               <span className="text-xs sm:text-sm text-white/70 font-light tracking-widest uppercase">
-                Deja presionado y desliza para explorar
+                    {t('instruction')}
               </span>
             </div>
           </div>
