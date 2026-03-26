@@ -1,6 +1,7 @@
 {
   "title": "Galería",
   "subtitle": "Nuestro café en imágenes",
+  "instruction": " Deja presionado y desliza para explorar",
   "items": {
     "bandolas": {
       "title": "Bandolas de Café",
