@@ -149,8 +149,8 @@ router.post("/create-order", protectRoute, async (req, res) => {
         payment_method: {
           payee_preferred: "IMMEDIATE_PAYMENT_REQUIRED",
         },
-        return_url: `${process.env.CALLBACK_URL || "http://localhost:5173/checkout/success"}?method=paypal`,
-        cancel_url: `${process.env.CORS_ORIGIN || "http://localhost:5173"}/checkout?cancelled=true`,
+        return_url: `${process.env.CALLBACK_URL || process.env.PUBLIC_URL}/checkout/success?method=paypal`,
+        cancel_url: `${process.env.PUBLIC_URL || "http://localhost:3000"}/checkout?cancelled=true`,
       },
     };
 
