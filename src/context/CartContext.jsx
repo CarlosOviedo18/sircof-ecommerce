@@ -15,11 +15,13 @@ export const CartProvider = ({ children }) => {
       setLoading(true)
       setError(null)
 
+      const token = localStorage.getItem('token')
+
       const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.CART_GET), {
         method: 'GET',
-        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` })
         }
       })
 
@@ -41,11 +43,13 @@ export const CartProvider = ({ children }) => {
     try {
       setError(null)
 
+      const token = localStorage.getItem('token')
+
       const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.CART_ADD), {
         method: 'POST',
-        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` })
         },
         body: JSON.stringify({ productId, cantidad })
       })
@@ -66,11 +70,13 @@ export const CartProvider = ({ children }) => {
     try {
       setError(null)
 
+      const token = localStorage.getItem('token')
+
       const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.CART_DELETE, { id: cartItemId }), {
         method: 'DELETE',
-        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` })
         }
       })
 
@@ -99,11 +105,13 @@ export const CartProvider = ({ children }) => {
     try {
       setError(null)
 
+      const token = localStorage.getItem('token')
+
       const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.CART_UPDATE), {
         method: 'PATCH',
-        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` })
         },
         body: JSON.stringify({ cartItemId, cantidad: newQuantity })
       })
@@ -122,11 +130,13 @@ export const CartProvider = ({ children }) => {
   // Función para limpiar el carrito
   const clearCart = useCallback(async () => {
     try {
+      const token = localStorage.getItem('token')
+      
       const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.CART_GET), {
         method: 'DELETE',
-        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` })
         }
       })
 
