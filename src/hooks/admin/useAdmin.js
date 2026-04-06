@@ -4,15 +4,12 @@ import { API_CONFIG, buildFullUrl } from '../../config/api'
 /**
  * Hook para manejar todas las operaciones del panel de administración.
  * Centraliza las llamadas a la API de admin con autenticación JWT.
+ * 
+ * El token JWT se obtiene de localStorage y se envía en el header Authorization.
  */
 export const useAdmin = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-
-  const getHeaders = () => ({
-    'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    'Content-Type': 'application/json'
-  })
 
   /**
    * Función genérica para realizar peticiones al API de admin
@@ -21,11 +18,19 @@ export const useAdmin = () => {
     setLoading(true)
     setError(null)
     try {
+      const token = localStorage.getItem('token')
+      
       const options = { 
         method, 
-        credentials: 'include',
-        headers: getHeaders()
+        headers: {
+          'Content-Type': 'application/json'
+        }
       }
+      
+      if (token) {
+        options.headers['Authorization'] = `Bearer ${token}`
+      }
+      
       if (body) options.body = JSON.stringify(body)
 
       const response = await fetch(`${API_CONFIG.BASE_URL}/api/admin${endpoint}`, options)

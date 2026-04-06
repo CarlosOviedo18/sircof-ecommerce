@@ -17,9 +17,9 @@ export const usePayPalPayment = () => {
 
       const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.PAYPAL_CREATE_ORDER), {
         method: 'POST',
-        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(paymentData)
       })
@@ -51,9 +51,9 @@ export const usePayPalPayment = () => {
 
       const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.PAYPAL_CAPTURE_ORDER), {
         method: 'POST',
-        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ paypalOrderId })
       })

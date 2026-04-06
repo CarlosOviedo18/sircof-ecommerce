@@ -14,9 +14,9 @@ export const useConfirmPayment = () => {
 
       const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.PAYMENT_CONFIRM), {
         method: 'POST',
-        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ orderNumber, code })
       })
@@ -40,9 +40,9 @@ export const useConfirmPayment = () => {
 
       await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.CART_CLEAR), {
         method: 'DELETE',
-        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         }
       })
 

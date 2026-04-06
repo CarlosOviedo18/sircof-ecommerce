@@ -7,11 +7,12 @@ export const securityHeaders = (req, res, next) => {
   res.setHeader(
     'Content-Security-Policy',
     "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline'; " +
-    "style-src 'self' 'unsafe-inline' https:; " +
+    "script-src 'self' 'unsafe-inline' https://accounts.google.com https://apis.google.com; " +
+    "style-src 'self' 'unsafe-inline' https: data:; " +
     "font-src 'self' https: data:; " +
     "img-src 'self' https: data: blob:; " +
-    "connect-src 'self' https:; " +
+    "connect-src 'self' https: wss:; " +
+    "frame-src https://accounts.google.com; " +
     "frame-ancestors 'none'; " +
     "base-uri 'self'; " +
     "form-action 'self'"
@@ -27,10 +28,11 @@ export const securityHeaders = (req, res, next) => {
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   
   // Cross-Origin-Resource-Policy
-  res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
+  // Permitir cross-origin para Google OAuth y otros CDNs
+  res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
   
   // Cross-Origin-Opener-Policy
-  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
   
   // Permissions-Policy
   res.setHeader(

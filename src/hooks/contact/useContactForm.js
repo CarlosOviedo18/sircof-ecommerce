@@ -18,7 +18,6 @@ export const useContactForm = () => {
       // Hacer petición al backend
       const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.CONTACT_SUBMIT), {
         method: 'POST',
-        credentials: 'include',
         headers: {
           'Content-Type': 'application/json'
         },
