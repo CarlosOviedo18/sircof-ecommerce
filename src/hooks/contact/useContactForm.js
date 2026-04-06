@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { API_CONFIG, buildFullUrl } from '../../config/api'
 
 export const useContactForm = () => {
   const [loading, setLoading] = useState(false)
@@ -15,8 +16,9 @@ export const useContactForm = () => {
       }
 
       // Hacer petición al backend
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/contact`, {
+      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.CONTACT_SUBMIT), {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json'
         },
@@ -38,7 +40,6 @@ export const useContactForm = () => {
 
     } catch (err) {
       setError(err.message)
-      console.error('Error sending message:', err)
       return { success: false, message: err.message }
     } finally {
       setLoading(false)

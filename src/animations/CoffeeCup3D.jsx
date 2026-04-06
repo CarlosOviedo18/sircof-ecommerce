@@ -347,7 +347,7 @@ function CoffeeCup3D({ modelPath = '/models/sample.glb', sectionSelector = '.abo
       },
       undefined,
       (error) => {
-        console.error('[CoffeeCup3D] Error cargando modelo 3D:', error)
+        // Silenciar error de carga para no saturar consola
       }
     )
 

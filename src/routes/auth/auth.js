@@ -66,6 +66,16 @@ router.post('/register', authLimiter, async (req, res) => {
       [name, email, hashedPassword]
     )
 
+    const token = generateToken(result.insertId, email)
+    
+    // Setear httpOnly cookie en lugar de devolver token en JSON
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 24 * 60 * 60 * 1000 // 24 horas
+    })
+
     res.status(201).json({
       success: true,
       message: 'Usuario registrado exitosamente',
@@ -129,10 +139,18 @@ router.post('/login', authLimiter, async (req, res) => {
     const token = generateToken(user.id, user.email)
 
     console.log(`Usuario login exitoso: ${user.email} (ID: ${user.id}, Role: ${user.role})`)
+    
+    // Setear httpOnly cookie en lugar de devolver token en JSON
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 24 * 60 * 60 * 1000 // 24 horas
+    })
+    
     res.json({
       success: true,
       message: 'Login exitoso',
-      token,
       user: {
         id: user.id,
         name: user.name,
@@ -151,12 +169,18 @@ router.post('/login', authLimiter, async (req, res) => {
 
 router.post('/logout', (req, res) => {
   try {
+    // Limpiar la cookie de token
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict'
+    })
+    
     res.json({
       success: true,
       message: 'Logout exitoso'
     })
   } catch (error) {
-    console.error('Error en /logout:', error.message)
     res.status(500).json({
       success: false,
       message: 'Error en el servidor'

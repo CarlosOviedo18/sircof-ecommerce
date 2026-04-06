@@ -1,6 +1,5 @@
 import { useState } from "react";
-
-const API_URL = `${import.meta.env.VITE_API_URL}/api/auth`;
+import { API_CONFIG, buildFullUrl } from "../../config/api";
 
 export const useForgotPassword = () => {
   const [step, setStep] = useState(1);
@@ -20,7 +19,7 @@ export const useForgotPassword = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/forgot-password`, {
+      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.FORGOT_PASSWORD), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -49,7 +48,7 @@ export const useForgotPassword = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/verify-reset-code`, {
+      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.VERIFY_RESET_CODE), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, code }),
@@ -89,7 +88,7 @@ export const useForgotPassword = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/reset-password`, {
+      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.RESET_PASSWORD), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, code, newPassword }),

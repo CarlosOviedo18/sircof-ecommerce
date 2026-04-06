@@ -1,6 +1,5 @@
 import React, { createContext, useState, useCallback, useEffect } from 'react'
-
-const API_URL = import.meta.env.VITE_API_URL
+import { API_CONFIG, buildFullUrl } from '../config/api'
 
 export const CartContext = createContext()
 
@@ -10,17 +9,16 @@ export const CartProvider = ({ children }) => {
   const [error, setError] = useState(null)
 
   // Obtener el carrito del usuario logueado
-  const fetchCart = useCallback(async (token) => {
-    if (!token) return
+  const fetchCart = useCallback(async () => {
 
     try {
       setLoading(true)
       setError(null)
 
-      const response = await fetch(`${API_URL}/api/cart`, {
+      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.CART_GET), {
         method: 'GET',
+        credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       })
@@ -32,7 +30,6 @@ export const CartProvider = ({ children }) => {
       const data = await response.json()
       setCartItems(data.items || [])
     } catch (err) {
-      console.error('Error fetching cart:', err)
       setError(err.message)
     } finally {
       setLoading(false)
@@ -44,11 +41,10 @@ export const CartProvider = ({ children }) => {
     try {
       setError(null)
 
-      const token = localStorage.getItem('token')
-      const response = await fetch(`${API_URL}/api/cart/add`, {
+      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.CART_ADD), {
         method: 'POST',
+        credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ productId, cantidad })
@@ -59,9 +55,8 @@ export const CartProvider = ({ children }) => {
       }
 
       // Recarga el carrito después de agregar
-      await fetchCart(token)
+      await fetchCart()
     } catch (err) {
-      console.error('Error adding to cart:', err)
       setError(err.message)
     }
   }, [fetchCart])
@@ -71,11 +66,10 @@ export const CartProvider = ({ children }) => {
     try {
       setError(null)
 
-      const token = localStorage.getItem('token')
-      const response = await fetch(`${API_URL}/api/cart/${cartItemId}`, {
+      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.CART_DELETE, { id: cartItemId }), {
         method: 'DELETE',
+        credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       })
@@ -88,9 +82,8 @@ export const CartProvider = ({ children }) => {
       setCartItems(prev => prev.filter(item => item.id !== cartItemId))
 
       // Luego recarga el carrito desde el servidor
-      await fetchCart(token)
+      await fetchCart()
     } catch (err) {
-      console.error('Error removing from cart:', err)
       setError(err.message)
     }
   }, [fetchCart])
@@ -106,14 +99,13 @@ export const CartProvider = ({ children }) => {
     try {
       setError(null)
 
-      const token = localStorage.getItem('token')
-      const response = await fetch(`${API_URL}/api/cart/${cartItemId}`, {
+      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.CART_UPDATE), {
         method: 'PATCH',
+        credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ cantidad: newQuantity })
+        body: JSON.stringify({ cartItemId, cantidad: newQuantity })
       })
 
       if (!response.ok) {
@@ -121,20 +113,19 @@ export const CartProvider = ({ children }) => {
       }
 
       // Recarga el carrito después de actualizar
-      await fetchCart(token)
+      await fetchCart()
     } catch (err) {
-      console.error('Error updating quantity:', err)
       setError(err.message)
     }
   }, [fetchCart, removeFromCart])
 
   // Función para limpiar el carrito
-  const clearCart = useCallback(async (token) => {
+  const clearCart = useCallback(async () => {
     try {
-      const response = await fetch(`${API_URL}/api/cart/clear`, {
+      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.CART_GET), {
         method: 'DELETE',
+        credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       })
@@ -143,7 +134,6 @@ export const CartProvider = ({ children }) => {
         setCartItems([])
       }
     } catch (err) {
-      console.error('Error clearing cart:', err)
     }
   }, [])
 

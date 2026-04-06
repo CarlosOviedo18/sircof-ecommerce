@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { API_CONFIG, buildFullUrl } from '../../config/api'
 
 export const useConfirmPayment = () => {
   const [emailSent, setEmailSent] = useState(false)
@@ -11,10 +12,10 @@ export const useConfirmPayment = () => {
 
       setConfirming(true)
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/payment/confirm`, {
+      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.PAYMENT_CONFIRM), {
         method: 'POST',
+        credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ orderNumber, code })
@@ -27,7 +28,6 @@ export const useConfirmPayment = () => {
         }
       }
     } catch (error) {
-      console.error('Error confirmando pago:', error)
     } finally {
       setConfirming(false)
     }
@@ -38,10 +38,10 @@ export const useConfirmPayment = () => {
       const token = localStorage.getItem('token')
       if (!token) return
 
-      await fetch(`${import.meta.env.VITE_API_URL}/api/cart/clear`, {
+      await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.CART_CLEAR), {
         method: 'DELETE',
+        credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       })
@@ -49,7 +49,6 @@ export const useConfirmPayment = () => {
       localStorage.removeItem('anonCart')
       localStorage.setItem('cartCleared', Date.now().toString())
     } catch (error) {
-      console.error('Error limpiando carrito:', error)
     }
   }
 
