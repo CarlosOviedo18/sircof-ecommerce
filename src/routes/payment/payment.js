@@ -62,9 +62,9 @@ router.post("/process", protectRoute, async (req, res) => {
     const tilopayToken = await loginTilopay();
 
     const webhookUrl =
-      process.env.WEBHOOK_URL || "http://localhost:3000/api/payment/webhook";
+      process.env.WEBHOOK_URL || `${process.env.BACKEND_URL || "http://localhost:3000"}/api/payment/webhook`;
     const callbackUrl =
-      process.env.CALLBACK_URL || "http://localhost:5173/checkout/success";
+      process.env.CALLBACK_URL || `${process.env.PUBLIC_URL || "http://localhost:3000"}/checkout/success`;
 
    
     const processPaymentPayload = {

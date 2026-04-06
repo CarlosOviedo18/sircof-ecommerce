@@ -160,10 +160,17 @@ router.post('/google', googleAuthLimiter, async (req, res) => {
 
 		const token = generateToken(user.id, user.email)
 
+		// Setear cookie httpOnly (igual que en login/register)
+		res.cookie('token', token, {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === 'production',
+			sameSite: 'strict',
+			maxAge: 24 * 60 * 60 * 1000 // 24 horas
+		})
+
 		res.json({
 			success: true,
 			message: 'Login con Google exitoso',
-			token,
 			user: {
 				id: user.id,
 				name: user.name,
@@ -172,8 +179,6 @@ router.post('/google', googleAuthLimiter, async (req, res) => {
 			}
 		})
 	} catch (error) {
-		console.error('Error en /google:', error)
-
 		const friendlyError = getFriendlyGoogleError(error)
 		res.status(friendlyError.status).json({
 			success: false,
