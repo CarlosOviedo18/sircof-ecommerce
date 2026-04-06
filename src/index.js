@@ -28,7 +28,19 @@ const app = express();
 
 // CORS restringido al origen del frontend
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      'http://localhost:5173',  // Desarrollo (Vite)
+      'http://localhost:3000',  // Producción local (Express)
+      process.env.CORS_ORIGIN   // Variable de ambiente si existe
+    ].filter(Boolean)
+    
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('No permitido por CORS'))
+    }
+  },
   credentials: true
 }));
 
@@ -79,6 +91,9 @@ app.use('/api/auth', passwordResetRoutes);
 
 // Servir archivos estáticos del frontend (dist/)
 app.use(express.static(path.join(__dirname, '..', 'dist')));
+
+// Servir archivos de modelos 3D explícitamente para evitar que app.get('*') los capture
+app.use('/models', express.static(path.join(__dirname, '..', 'public', 'models')));
 
 app.get('/test-db', async (req, res) => {
     try {

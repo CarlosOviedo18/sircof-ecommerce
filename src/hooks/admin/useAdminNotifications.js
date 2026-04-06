@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
+import { API_CONFIG, buildFullUrl } from '../../config/api'
 
-const API_URL = `${import.meta.env.VITE_API_URL}/api/admin/stats/notifications`
 const POLL_INTERVAL = 30000 // 30 segundos
 
 
@@ -15,9 +15,9 @@ export const useAdminNotifications = () => {
       const token = localStorage.getItem('token')
       if (!token) return
 
-      const res = await fetch(API_URL, {
+      const res = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.ADMIN_NOTIFICATIONS), {
+        credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       })

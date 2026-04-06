@@ -55,7 +55,6 @@ function SignUp({ onSignUpSuccess, isActive = true }) {
         onSignUpSuccess();
       }
     } catch (err) {
-      console.error("Error en registro:", err.message);
     }
   };
 
@@ -70,7 +69,6 @@ function SignUp({ onSignUpSuccess, isActive = true }) {
       const returnTo = location.state?.returnTo;
       setTimeout(() => navigate(returnTo || "/"), 500);
     } catch (err) {
-      console.error("Error en login con Google:", err.message);
     }
   };
 
@@ -81,7 +79,7 @@ function SignUp({ onSignUpSuccess, isActive = true }) {
         {googleClientId && isActive ? (
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
-            onError={() => console.error("Google Login falló en el cliente")}
+            onError={() => {}}
             useOneTap={false}
             theme="outline"
             size="large"

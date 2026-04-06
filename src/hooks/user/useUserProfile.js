@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { API_CONFIG, buildFullUrl } from '../../config/api'
 
 export const useUserProfile = () => {
   const [loading, setLoading] = useState(false)
@@ -14,10 +15,10 @@ export const useUserProfile = () => {
         throw new Error('No hay sesión activa')
       }
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-settings/email`, {
+      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.USER_SETTINGS_EMAIL), {
         method: 'PUT',
+        credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ email: newEmail })
@@ -49,10 +50,10 @@ export const useUserProfile = () => {
         throw new Error('No hay sesión activa')
       }
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-settings/password`, {
+      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.USER_SETTINGS_PASSWORD), {
         method: 'PUT',
+        credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { API_CONFIG, buildFullUrl } from '../../config/api'
 
 export const useFeaturedProducts = () => {
   const [productos, setProductos] = useState([])
@@ -9,7 +10,7 @@ export const useFeaturedProducts = () => {
     const fetchProductos = async () => {
       try {
         setLoading(true)
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/productos-destacados`)
+        const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.PRODUCTS_FEATURED))
         
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: Error al obtener productos destacados`)
@@ -19,7 +20,6 @@ export const useFeaturedProducts = () => {
         setProductos(data)
         setError(null)
       } catch (err) {
-        console.error('❌ Error en useProductosDestacados:', err.message)
         setError(err.message)
       } finally {
         setLoading(false)
