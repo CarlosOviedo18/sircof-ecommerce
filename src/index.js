@@ -30,9 +30,9 @@ const app = express();
 app.use(cors({
   origin: (origin, callback) => {
     const allowedOrigins = [
-      'http://localhost:5173',  // Desarrollo (Vite)
-      'http://localhost:3000',  // Producción local (Express)
-      process.env.CORS_ORIGIN   // Variable de ambiente si existe
+      'http://localhost:5173',  
+      'http://localhost:3000',  
+      process.env.CORS_ORIGIN   
     ].filter(Boolean)
     
     if (!origin || allowedOrigins.includes(origin)) {

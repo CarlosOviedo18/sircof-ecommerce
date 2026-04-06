@@ -27,7 +27,6 @@ export const useGoogle = () => {
 
 			const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.GOOGLE), {
 				method: 'POST',
-				credentials: 'include',
 				headers: {
 					'Content-Type': 'application/json'
 				},
@@ -44,7 +43,11 @@ export const useGoogle = () => {
 				throw new Error('Respuesta inválida del servidor en login con Google')
 			}
 
-			// El token ya está en httpOnly cookie, solo guardamos el user
+			// Guardar token en localStorage
+			if (responseData.token) {
+				localStorage.setItem('token', responseData.token)
+			}
+
 			setAuthUser(responseData.user)
 			return responseData
 		} catch (err) {

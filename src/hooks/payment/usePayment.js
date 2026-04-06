@@ -16,9 +16,9 @@ export const usePayment = () => {
       // Enviar los datos del pago al backend
       const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.PAYMENT_PROCESS), {
         method: 'POST',
-        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` })
         },
         body: JSON.stringify(paymentData)
       })
