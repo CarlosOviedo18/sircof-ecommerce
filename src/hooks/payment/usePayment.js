@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { API_CONFIG, buildFullUrl } from '../../config/api'
 
 export const usePayment = () => {
   const [loading, setLoading] = useState(false)
@@ -13,11 +14,11 @@ export const usePayment = () => {
       const token = localStorage.getItem('token')
 
       // Enviar los datos del pago al backend
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/payment/process`, {
+      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.PAYMENT_PROCESS), {
         method: 'POST',
+        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(paymentData)
       })
@@ -32,7 +33,6 @@ export const usePayment = () => {
       const data = await response.json()
       return data
     } catch (err) {
-      console.error('Error en pago:', err)
       setError(err.message)
       throw err
     } finally {

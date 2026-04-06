@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { API_CONFIG, buildFullUrl } from '../../config/api'
 
 export const usePayPalPayment = () => {
   const [loading, setLoading] = useState(false)
@@ -14,11 +15,11 @@ export const usePayPalPayment = () => {
 
       const token = localStorage.getItem('token')
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/paypal/create-order`, {
+      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.PAYPAL_CREATE_ORDER), {
         method: 'POST',
+        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(paymentData)
       })
@@ -31,7 +32,6 @@ export const usePayPalPayment = () => {
       const data = await response.json()
       return data
     } catch (err) {
-      console.error('Error en pago PayPal:', err)
       setError(err.message)
       throw err
     } finally {
@@ -49,11 +49,11 @@ export const usePayPalPayment = () => {
 
       const token = localStorage.getItem('token')
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/paypal/capture-order`, {
+      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.PAYPAL_CAPTURE_ORDER), {
         method: 'POST',
+        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ paypalOrderId })
       })
@@ -66,7 +66,6 @@ export const usePayPalPayment = () => {
       const data = await response.json()
       return data
     } catch (err) {
-      console.error('Error capturando pago PayPal:', err)
       setError(err.message)
       throw err
     } finally {

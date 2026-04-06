@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useAuthContext } from '../../context/AuthContext'
-
-const API_URL = `${import.meta.env.VITE_API_URL}/api/auth`
+import { API_CONFIG, buildFullUrl } from '../../config/api'
 
 export const useAuth = () => {
   const [loading, setLoading] = useState(false)
@@ -14,8 +13,9 @@ export const useAuth = () => {
       setLoading(true)
       setError(null)
       
-      const response = await fetch(`${API_URL}/register`, {
+      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.REGISTER), {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -32,7 +32,6 @@ export const useAuth = () => {
       return data
     } catch (err) {
       const errorMsg = err.message || 'Error en el registro'
-      console.error('Error en registro:', errorMsg)
       setError(errorMsg)
       throw err
     } finally {
@@ -46,8 +45,9 @@ export const useAuth = () => {
       setLoading(true)
       setError(null)
       
-      const response = await fetch(`${API_URL}/login`, {
+      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.LOGIN), {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -60,12 +60,10 @@ export const useAuth = () => {
       }
 
       const data = await response.json()
-      localStorage.setItem('token', data.token)
       setAuthUser(data.user)
       return data
     } catch (err) {
       const errorMsg = err.message || 'Error en el login'
-      console.error('Error en login:', errorMsg)
       setError(errorMsg)
       throw err
     } finally {
@@ -78,8 +76,9 @@ export const useAuth = () => {
     try {
       setLoading(true)
       
-      const response = await fetch(`${API_URL}/logout`, {
+      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.LOGOUT), {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -91,9 +90,7 @@ export const useAuth = () => {
 
       localStorage.removeItem('token')
       setAuthUser(null)
-      setError(null)
     } catch (err) {
-      console.error('Error en logout:', err.message)
       setError(err.message)
     } finally {
       setLoading(false)

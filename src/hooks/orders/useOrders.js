@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { API_CONFIG, buildFullUrl } from '../../config/api'
 
 export const usePurchases = () => {
   const [purchases, setPurchases] = useState([])
@@ -14,10 +15,10 @@ export const usePurchases = () => {
         throw new Error('No hay token disponible')
       }
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/orders/orders`, {
+      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.ORDERS_LIST), {
         headers: { 
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          credentials: 'include'
         }
       })
 
@@ -29,7 +30,6 @@ export const usePurchases = () => {
       setPurchases(data.orders || [])
     } catch (err) {
       setError(err.message)
-      console.error('Error fetching purchases:', err)
     } finally {
       setLoading(false)
     }

@@ -13,7 +13,7 @@ function CheckoutShippingForm({ data, setData, formError }) {
         const countryNames = data.map(c => c.name.common).sort()
         setCountries(countryNames)
       })
-      .catch(err => console.error('Error cargando países:', err))
+      .catch(err => {})
   }, [])
 
   const validatePhone = (phoneValue) => {

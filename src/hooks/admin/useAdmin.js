@@ -1,6 +1,5 @@
 import { useState } from 'react'
-
-const API_URL = `${import.meta.env.VITE_API_URL}/api/admin`
+import { API_CONFIG, buildFullUrl } from '../../config/api'
 
 /**
  * Hook para manejar todas las operaciones del panel de administración.
@@ -22,10 +21,14 @@ export const useAdmin = () => {
     setLoading(true)
     setError(null)
     try {
-      const options = { method, headers: getHeaders() }
+      const options = { 
+        method, 
+        credentials: 'include',
+        headers: getHeaders()
+      }
       if (body) options.body = JSON.stringify(body)
 
-      const response = await fetch(`${API_URL}${endpoint}`, options)
+      const response = await fetch(`${API_CONFIG.BASE_URL}/api/admin${endpoint}`, options)
       const data = await response.json()
 
       if (!response.ok) {

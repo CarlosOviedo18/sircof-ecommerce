@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useAuthContext } from '../../context/AuthContext'
-
-const API_URL = `${import.meta.env.VITE_API_URL}/api/auth`
+import { API_CONFIG, buildFullUrl } from '../../config/api'
 
 const parseJsonSafely = async (response) => {
 	const raw = await response.text()
@@ -26,7 +25,7 @@ export const useGoogle = () => {
 			setLoading(true)
 			setError(null)
 
-			const response = await fetch(`${API_URL}/google`, {
+			const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.GOOGLE), {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -50,7 +49,6 @@ export const useGoogle = () => {
 			return data
 		} catch (err) {
 			const errorMsg = err.message || 'Error al iniciar sesión con Google'
-			console.error('Error en Google login:', errorMsg)
 			setError(errorMsg)
 			throw err
 		} finally {
