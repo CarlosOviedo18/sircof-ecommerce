@@ -19,7 +19,6 @@ export const AuthProvider = ({ children }) => {
         
         if (timeSinceLastActivity > timeoutMs) {
           // Sesión expirada, limpiar datos
-          console.log('Sesión expirada por inactividad')
           localStorage.removeItem('user')
           localStorage.removeItem('lastActivityTime')
           setUser(null)
@@ -30,7 +29,6 @@ export const AuthProvider = ({ children }) => {
           localStorage.setItem('lastActivityTime', Date.now().toString())
         }
       } catch (err) {
-        console.error('Error al parsear usuario guardado:', err)
         localStorage.removeItem('user')
         localStorage.removeItem('lastActivityTime')
       }

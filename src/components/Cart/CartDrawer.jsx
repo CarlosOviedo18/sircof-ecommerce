@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCart } from '../../hooks/cart/useCart'
 import { useAuthContext } from '../../context/AuthContext'
+import { API_CONFIG, buildFullUrl } from '../../config/api'
 import CartHeader from './CartHeader'
 import CartItems from './CartItems'
 import CartFooter from './CartFooter'
@@ -24,22 +25,20 @@ function CartDrawer({ isOpen, onClose }) {
   useEffect(() => {
     const cleared = localStorage.getItem('cartCleared')
     if (cleared) {
-      console.log('Carrito detectó pago completado, limpiando...')
       localStorage.removeItem('cartCleared')
       const token = localStorage.getItem('token')
       if (token && user?.id) {
-        fetch(`${import.meta.env.VITE_API_URL}/api/cart/clear`, {
+        fetch(buildFullUrl(API_CONFIG.ENDPOINTS.CART_CLEAR), {
           method: 'DELETE',
+          credentials: 'include',
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         })
         .then(() => {
-          console.log('Carrito limpiado en BD')
           refetchCart()
         })
-        .catch(err => console.error('Error limpiando carrito:', err))
+        .catch(err => {})
       }
     }
   }, [])
