@@ -30,9 +30,9 @@ function CartDrawer({ isOpen, onClose }) {
       if (token && user?.id) {
         fetch(buildFullUrl(API_CONFIG.ENDPOINTS.CART_CLEAR), {
           method: 'DELETE',
-          credentials: 'include',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           }
         })
         .then(() => {

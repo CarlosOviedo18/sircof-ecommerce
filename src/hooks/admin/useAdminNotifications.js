@@ -16,9 +16,9 @@ export const useAdminNotifications = () => {
       if (!token) return
 
       const res = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.ADMIN_NOTIFICATIONS), {
-        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         }
       })
 

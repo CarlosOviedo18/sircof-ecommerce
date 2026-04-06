@@ -17,9 +17,9 @@ export const useUserProfile = () => {
 
       const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.USER_SETTINGS_EMAIL), {
         method: 'PUT',
-        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ email: newEmail })
       })
@@ -52,9 +52,9 @@ export const useUserProfile = () => {
 
       const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.USER_SETTINGS_PASSWORD), {
         method: 'PUT',
-        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ 
           currentPassword, 

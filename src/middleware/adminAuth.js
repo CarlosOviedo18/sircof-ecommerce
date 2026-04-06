@@ -13,15 +13,15 @@ export const protectAdmin = async (req, res, next) => {
       })
     }
 
-    const token = authHeader.split(' ')[1]
-
-    if (!token) {
+    const parts = authHeader.split(' ')
+    if (parts.length !== 2 || parts[0] !== 'Bearer') {
       return res.status(401).json({
         success: false,
         message: 'Formato de token inválido'
       })
     }
 
+    const token = parts[1]
     const decoded = verifyToken(token)
 
     // Verificar directamente en BD que el usuario existe y es admin

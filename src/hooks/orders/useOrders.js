@@ -16,9 +16,10 @@ export const usePurchases = () => {
       }
 
       const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.ORDERS_LIST), {
+        method: 'GET',
         headers: { 
           'Content-Type': 'application/json',
-          credentials: 'include'
+          'Authorization': `Bearer ${token}`
         }
       })
 

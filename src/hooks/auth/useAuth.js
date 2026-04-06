@@ -15,7 +15,6 @@ export const useAuth = () => {
       
       const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.REGISTER), {
         method: 'POST',
-        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -28,6 +27,12 @@ export const useAuth = () => {
       }
 
       const data = await response.json()
+      
+      // Guardar token en localStorage
+      if (data.token) {
+        localStorage.setItem('token', data.token)
+      }
+      
       setAuthUser(data.user)
       return data
     } catch (err) {
@@ -47,7 +52,6 @@ export const useAuth = () => {
       
       const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.LOGIN), {
         method: 'POST',
-        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -60,6 +64,12 @@ export const useAuth = () => {
       }
 
       const data = await response.json()
+      
+      // Guardar token en localStorage
+      if (data.token) {
+        localStorage.setItem('token', data.token)
+      }
+      
       setAuthUser(data.user)
       return data
     } catch (err) {
@@ -76,11 +86,12 @@ export const useAuth = () => {
     try {
       setLoading(true)
       
+      const token = localStorage.getItem('token')
       const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.LOGOUT), {
         method: 'POST',
-        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` })
         },
       })
 
