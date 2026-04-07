@@ -6,7 +6,7 @@ import { generateToken } from '../../lib/jwt.js'
 
 const router = Router()
 
-// Rate limit estricto para login/register: 5 intentos cada 15 minutos por IP
+
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 5,
