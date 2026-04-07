@@ -361,7 +361,7 @@ function SearchBox() {
               >
                 <p className="text-sm font-bold text-gray-700 mb-3">{t('searchBox.popularSearches')}</p>
                 <div className="flex flex-wrap gap-2">
-                  {['Espresso', 'Cappuccino', 'Premium', 'Nacional'].map((term, idx) => (
+                  {['Premium', 'Nacional'].map((term, idx) => (
                     <motion.button
                       key={term}
                       onClick={() => handleSuggestionClick(term)}

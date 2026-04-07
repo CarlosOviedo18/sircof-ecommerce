@@ -49,6 +49,7 @@ function ProductDetail() {
   }
 
   // Cambiar cantidad
+  
   const incrementarCantidad = () => setCantidad(prev => prev + 1)
   const decrementarCantidad = () => {
     if (cantidad > 1) setCantidad(prev => prev - 1)
@@ -165,10 +166,6 @@ function ProductDetail() {
                 {agregando ? t('detail.adding') : t('detail.addToCart')}
               </button>
 
-              {/* Botón favoritos */}
-              {/* <button className="w-full border-2 border-coffee text-coffee hover:bg-coffee hover:text-white font-bold py-3 px-6 rounded text-lg transition-colors duration-300">
-                ❤ Agregar a favoritos
-              </button> */}
             </div>
 
             <div className="bg-gray-50 p-6 rounded-lg mt-6 space-y-3 text-sm text-gray-700">
@@ -177,11 +174,11 @@ function ProductDetail() {
                 <p><strong>{t('detail.freeShipping')}</strong> {t('detail.freeShippingDesc')}</p>
               </div>
               <div className="flex gap-3">
-                <span>🔄</span>
+                <span></span>
                 <p><strong>{t('detail.freeReturns')}</strong> {t('detail.freeReturnsDesc')}</p>
               </div>
               <div className="flex gap-3">
-                <span>✅</span>
+                <span></span>
                 <p><strong>{t('detail.qualityGuarantee')}</strong> {t('detail.qualityGuaranteeDesc')}</p>
               </div>
             </div>

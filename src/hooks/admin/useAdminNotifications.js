@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { API_CONFIG, buildFullUrl } from '../../config/api'
 
-const POLL_INTERVAL = 30000 // 30 segundos
+const POLL_INTERVAL = 30000 
 
 
 export const useAdminNotifications = () => {
@@ -29,7 +29,7 @@ export const useAdminNotifications = () => {
         setNotifications(data.notifications)
       }
     } catch {
-      // Silenciar errores de polling para no saturar la consola
+     
     }
   }, [])
 
