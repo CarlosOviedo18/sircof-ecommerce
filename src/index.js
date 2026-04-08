@@ -61,8 +61,16 @@ const generalLimiter = rateLimit({
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 500, 
+  max: 20, 
   message: { success: false, message: 'Demasiados intentos de login/registro, por favor espera un momento' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const contactLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5, 
+  message: { success: false, message: 'Demasiados intentos, por favor espera un momento' },
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -84,7 +92,7 @@ app.use('/api/paypal', paypalRoutes);
 app.use('/api/logout', usersRoutes);
 app.use('/api/orders', ordersRoutes);
 app.use('/api/user-settings', userSettingsRoutes);
-app.use('/api/contact', contactFormRoutes);
+app.use('/api/contact', contactLimiter, contactFormRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/auth', passwordResetRoutes);
 

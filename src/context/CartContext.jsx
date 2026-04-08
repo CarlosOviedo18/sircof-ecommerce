@@ -72,7 +72,10 @@ export const CartProvider = ({ children }) => {
 
       const token = localStorage.getItem('token')
 
-      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.CART_DELETE, { id: cartItemId }), {
+      // Reemplaza :id con el cartItemId real
+      const url = buildFullUrl(API_CONFIG.ENDPOINTS.CART_DELETE, { id: cartItemId })
+
+      const response = await fetch(url, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -107,13 +110,16 @@ export const CartProvider = ({ children }) => {
 
       const token = localStorage.getItem('token')
 
-      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.CART_UPDATE), {
+      // Reemplaza :id con el cartItemId real
+      const url = buildFullUrl(API_CONFIG.ENDPOINTS.CART_UPDATE, { id: cartItemId })
+
+      const response = await fetch(url, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           ...(token && { 'Authorization': `Bearer ${token}` })
         },
-        body: JSON.stringify({ cartItemId, cantidad: newQuantity })
+        body: JSON.stringify({ cantidad: newQuantity })
       })
 
       if (!response.ok) {
