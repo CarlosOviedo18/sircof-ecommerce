@@ -26,7 +26,7 @@ function Footer() {
             <nav>
               <ul className="flex flex-row gap-2 text-center font-poppins">
                 <li><a href="/inicio" className="text-gray-100 text-base hover:text-coffee transition-colors">{t('home')}</a></li>
-                <li><a href="/SobreNosotros" className="text-gray-100 text-base hover:text-coffee transition-colors">{t('aboutUs')}</a></li>
+                <li><a href="/sobre-nosotros" className="text-gray-100 text-base hover:text-coffee transition-colors">{t('aboutUs')}</a></li>
                 <li><a href="/contactenos" className="text-gray-100 text-base hover:text-coffee transition-colors">{t('contact')}</a></li>
                 <li><a href="/galeria" className="text-gray-100 text-base hover:text-coffee transition-colors">{t('gallery')}</a></li>
                 <li><a href="/tienda" className="text-gray-100 text-base hover:text-coffee transition-colors">{t('store')}</a></li>
