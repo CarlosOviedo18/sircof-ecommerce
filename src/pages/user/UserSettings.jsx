@@ -296,9 +296,7 @@ function UserSettings() {
                       </div>
                       <div className="flex justify-between items-center">
                         <p className="text-2xl font-bold text-coffee">₡{parseFloat(purchase.total).toFixed(2)}</p>
-                        <button className="px-4 py-2 bg-gray-200 text-gray-900 font-semibold rounded-lg hover:bg-gray-300 transition-colors">
-                          {t('purchases.viewInvoice')}
-                        </button>
+                      
                       </div>
                     </div>
                   ))}
