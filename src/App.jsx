@@ -20,6 +20,7 @@ import TransparentNavigation from "./components/layout/TransparentNavigation.jsx
 const LoginUsers = lazy(() => import("./pages/auth/LoginUsers.jsx"));
 const StoreProduct = lazy(() => import("./pages/store/StoreProduct.jsx"));
 const ProductDetail = lazy(() => import("./pages/store/ProductDetail.jsx"));
+const CoffeeDetail = lazy(() => import("./pages/store/CoffeeDetail.jsx"));
 const CheckoutPage = lazy(
   () => import("./pages/checkout/CheckoutPage.jsx"),
 );
@@ -39,6 +40,7 @@ const AdminRoute = lazy(() => import("./components/admin/AdminRoute.jsx"));
 const AdminLayout = lazy(() => import("./components/admin/AdminLayout.jsx"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard.jsx"));
 const AdminProducts = lazy(() => import("./pages/admin/AdminProducts.jsx"));
+const AdminCoffees = lazy(() => import("./pages/admin/AdminCoffees.jsx"));
 const AdminOrders = lazy(() => import("./pages/admin/AdminOrders.jsx"));
 const AdminUsers = lazy(() => import("./pages/admin/AdminUsers.jsx"));
 const AdminContacts = lazy(() => import("./pages/admin/AdminContacts.jsx"));
@@ -110,7 +112,23 @@ function App() {
             }
           />
 
-          {/* Página de Detalle del Producto */}
+          {/* Página de Detalle del Café (con selector de presentación) */}
+          <Route
+            path="/cafe/:slug"
+            element={
+              <PageAnimated>
+                <>
+                  <SecondNavigation />
+                  <CoffeeDetail />
+                  <Footer />
+                </>
+              </PageAnimated>
+            }
+          />
+
+          {/* URLs viejas por id de producto. Sigue montada a propósito:
+              redirige a /cafe/:slug, y para el Pack (que no tiene café padre)
+              renderiza la página de siempre sin cambios. */}
           <Route
             path="/producto/:id"
             element={
@@ -217,6 +235,7 @@ function App() {
             }
           >
             <Route index element={<AdminDashboard />} />
+            <Route path="coffees" element={<AdminCoffees />} />
             <Route path="products" element={<AdminProducts />} />
             <Route path="orders" element={<AdminOrders />} />
             <Route path="users" element={<AdminUsers />} />

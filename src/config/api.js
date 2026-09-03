@@ -22,9 +22,12 @@ export const API_CONFIG = {
     
     // ====== PRODUCTS ======
     PRODUCTS_LIST: '/api/productos',
-    PRODUCTS_SEARCH: '/api/products/search',
     PRODUCTS_DETAIL: '/api/products/:id',
     PRODUCTS_FEATURED: '/api/productos-destacados',
+
+    // ====== CATALOGO (cafés con sus variantes) ======
+    CATALOG_LIST: '/api/catalogo',
+    CATALOG_DETAIL: '/api/catalogo/:slug',
     
     // ====== ORDERS ======
     ORDERS_LIST: '/api/orders/orders',
@@ -59,7 +62,12 @@ export const API_CONFIG = {
     PAYMENT_PROCESS: '/api/payment/process',
     PAYMENT_CONFIRM: '/api/payment/confirm',
     PAYPAL_CREATE_ORDER: '/api/paypal/create-order',
-    PAYPAL_CAPTURE_ORDER: '/api/paypal/capture-order'
+    PAYPAL_CAPTURE_ORDER: '/api/paypal/capture-order',
+
+    // ====== SETTINGS ======
+    SETTINGS_SHIPPING: '/api/settings/shipping',
+    SETTINGS_COUNTRIES: '/api/settings/countries',
+    SETTINGS_PACK: '/api/settings/pack'
   }
 }
 

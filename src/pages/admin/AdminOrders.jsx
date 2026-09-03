@@ -25,6 +25,49 @@ function StatusBadge({ status, t }) {
   )
 }
 
+// Detalle expandido de una orden. Estaba duplicado en la vista móvil y la de
+// escritorio, así que el desglose del pack y la dirección se agregan una vez.
+function OrderDetails({ order, t }) {
+  const direccion = [
+    order.address,
+    [order.city, order.state].filter(Boolean).join(', '),
+    order.postal_code,
+    order.country
+  ].filter(Boolean)
+
+  return (
+    <div className="space-y-3">
+      <div className="space-y-1.5">
+        {order.items?.map((item, i) => (
+          <div key={i} className="text-xs text-gray-500 py-1">
+            <div className="flex items-center justify-between">
+              <span>{item.product_name} (x{item.quantity})</span>
+              <span className="font-medium">₡{parseFloat(item.price).toLocaleString('es-CR')}</span>
+            </div>
+
+            {item.packSelections?.length > 0 && (
+              <ul className="mt-1 ml-3 text-[11px] text-gray-400 space-y-0.5">
+                {item.packSelections.map((sel, j) => (
+                  <li key={j}>{sel.quantity} × {sel.roast} · {sel.grind}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Sin esto no se puede despachar el pedido */}
+      {direccion.length > 0 && (
+        <div className="text-xs text-gray-500 border-t border-gray-200 pt-2">
+          <p className="font-semibold text-gray-600 mb-0.5">{t('orders.shippingAddress')}</p>
+          {direccion.map((linea, i) => <p key={i}>{linea}</p>)}
+          {order.phone && <p>Tel: {order.phone}</p>}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function AdminOrders() {
   const { t, i18n } = useTranslation('admin')
   const { getOrders, updateOrderStatus, loading } = useAdmin()
@@ -145,13 +188,8 @@ function AdminOrders() {
                 <StatusBadge status={order.status} t={t} />
               </div>
               {expandedOrder === order.id && order.items && (
-                <div className="bg-gray-50 rounded-lg p-3 space-y-1.5">
-                  {order.items.map((item, i) => (
-                    <div key={i} className="flex items-center justify-between text-xs text-gray-500">
-                      <span>{item.product_name} (x{item.quantity})</span>
-                      <span className="font-medium">₡{parseFloat(item.price).toLocaleString('es-CR')}</span>
-                    </div>
-                  ))}
+                <div className="bg-gray-50 rounded-lg p-3">
+                  <OrderDetails order={order} t={t} />
                 </div>
               )}
               <div className="flex items-center justify-between pt-1">
@@ -209,13 +247,8 @@ function AdminOrders() {
                     </button>
                     {/* Expanded items */}
                     {expandedOrder === order.id && order.items && (
-                      <div className="mt-3 pl-5 space-y-1.5">
-                        {order.items.map((item, i) => (
-                          <div key={i} className="flex items-center justify-between text-xs text-gray-500 py-1">
-                            <span>{item.product_name} (x{item.quantity})</span>
-                            <span className="font-medium">₡{parseFloat(item.price).toLocaleString('es-CR')}</span>
-                          </div>
-                        ))}
+                      <div className="mt-3 pl-5">
+                        <OrderDetails order={order} t={t} />
                       </div>
                     )}
                   </td>

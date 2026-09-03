@@ -1,14 +1,58 @@
+// Formatea un monto en colones. Number() porque el valor puede llegar como
+// string desde la BD, y en ese caso .toFixed() reventaría.
+const formatCRC = (amount) => `₡${Number(amount).toFixed(2)}`;
+
+const ROAST_LABEL = { medio: 'Tueste Medio', oscuro: 'Tueste Oscuro' };
+const GRIND_LABEL = { grano: 'Grano', molido: 'Molido' };
+
+// Desglose del pack bajo el nombre del producto. Vacío si el item no es un pack,
+// así los productos normales se ven exactamente igual que antes.
+const packBreakdownHTML = (packSelections) => {
+  if (!packSelections?.length) return '';
+
+  const filas = packSelections
+    .map(
+      (s) =>
+        `<li>${s.quantity} × ${ROAST_LABEL[s.roast] || s.roast} · ${GRIND_LABEL[s.grind] || s.grind}</li>`,
+    )
+    .join('');
+
+  return `<ul style="margin: 6px 0 0 0; padding-left: 18px; font-size: 12px; color: #666;">${filas}</ul>`;
+};
+
+// Bloque de dirección para el email de la empresa: sin esto no se puede despachar.
+const shippingAddressHTML = ({ address, city, state, postalCode, country, clientPhone }) => {
+  const partes = [
+    address,
+    [city, state].filter(Boolean).join(', '),
+    postalCode,
+    country,
+  ].filter(Boolean);
+
+  if (partes.length === 0) return '';
+
+  return `
+    <div style="margin-top: 20px; padding: 12px; background: #f7f7f7; border-left: 3px solid #6f4e37;">
+      <p style="margin: 0 0 6px 0;"><strong>Dirección de envío</strong></p>
+      ${partes.map((p) => `<p style="margin: 2px 0;">${p}</p>`).join('')}
+      ${clientPhone ? `<p style="margin: 6px 0 0 0;">Tel: ${clientPhone}</p>` : ''}
+    </div>
+  `;
+};
+
 export const clientEmailTemplate = (orderData) => {
-  const { orderId, products, total, clientName } = orderData;
+  // subtotal/shippingCost con default: las órdenes de la ruta legacy
+  // (routes/orders/orders.js) no los pasan y deben seguir renderizando igual.
+  const { orderId, products, total, subtotal = null, shippingCost = 0, clientName } = orderData;
 
   const productsHTML = products
     .map(
       (p) => `
     <tr style="border-bottom: 1px solid #ddd;">
-      <td style="padding: 8px;">${p.name}</td>
+      <td style="padding: 8px;">${p.name}${packBreakdownHTML(p.packSelections)}</td>
       <td style="padding: 8px; text-align: center;">${p.quantity}</td>
-      <td style="padding: 8px; text-align: right;">$${p.price}</td>
-      <td style="padding: 8px; text-align: right;">$${(p.price * p.quantity).toFixed(2)}</td>
+      <td style="padding: 8px; text-align: right;">${formatCRC(p.price)}</td>
+      <td style="padding: 8px; text-align: right;">${formatCRC(Number(p.price) * p.quantity)}</td>
     </tr>
   `
     )
@@ -61,8 +105,17 @@ export const clientEmailTemplate = (orderData) => {
             </tbody>
           </table>
           
+          ${
+            shippingCost > 0
+              ? `<div style="margin-top: 20px; text-align: right; color: #555;">
+                   <p style="margin: 4px 0;">Subtotal: ${formatCRC(subtotal ?? total - shippingCost)}</p>
+                   <p style="margin: 4px 0;">Envío: ${formatCRC(shippingCost)}</p>
+                 </div>`
+              : ''
+          }
+
           <div class="total">
-            Total: $${total.toFixed(2)}
+            Total: ${formatCRC(total)}
           </div>
           
           <p>Pronto recibirás información de tu envío. Si tienes alguna pregunta, no dudes en contactarnos.</p>
@@ -80,16 +133,16 @@ export const clientEmailTemplate = (orderData) => {
 };
 
 export const companyEmailTemplate = (orderData) => {
-  const { orderId, products, total, clientName, clientEmail, clientPhone } = orderData;
+  const { orderId, products, total, subtotal = null, shippingCost = 0, clientName, clientEmail, clientPhone } = orderData;
 
   const productsHTML = products
     .map(
       (p) => `
     <tr style="border-bottom: 1px solid #ddd;">
-      <td style="padding: 8px;">${p.name}</td>
+      <td style="padding: 8px;">${p.name}${packBreakdownHTML(p.packSelections)}</td>
       <td style="padding: 8px; text-align: center;">${p.quantity}</td>
-      <td style="padding: 8px; text-align: right;">$${p.price}</td>
-      <td style="padding: 8px; text-align: right;">$${(p.price * p.quantity).toFixed(2)}</td>
+      <td style="padding: 8px; text-align: right;">${formatCRC(p.price)}</td>
+      <td style="padding: 8px; text-align: right;">${formatCRC(Number(p.price) * p.quantity)}</td>
     </tr>
   `
     )
@@ -125,7 +178,9 @@ export const companyEmailTemplate = (orderData) => {
             <p><strong>Email:</strong> ${clientEmail}</p>
             <p><strong>Teléfono:</strong> ${clientPhone || 'No proporcionado'}</p>
           </div>
-          
+
+          ${shippingAddressHTML(orderData)}
+
           <h3>Productos Pedidos:</h3>
           <table>
             <thead>
@@ -141,8 +196,17 @@ export const companyEmailTemplate = (orderData) => {
             </tbody>
           </table>
           
+          ${
+            shippingCost > 0
+              ? `<div style="margin-top: 20px; text-align: right; color: #555;">
+                   <p style="margin: 4px 0;">Subtotal: ${formatCRC(subtotal ?? total - shippingCost)}</p>
+                   <p style="margin: 4px 0;">Envío: ${formatCRC(shippingCost)}</p>
+                 </div>`
+              : ''
+          }
+
           <div class="total">
-            TOTAL: $${total.toFixed(2)}
+            TOTAL: ${formatCRC(total)}
           </div>
           
           <p style="color: #666; font-size: 12px;">Pedido recibido: ${new Date().toLocaleString('es-ES')}</p>

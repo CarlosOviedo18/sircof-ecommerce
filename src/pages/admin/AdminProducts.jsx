@@ -1,13 +1,20 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAdmin } from '../../hooks/admin/useAdmin'
+import { GRINDS, ROASTS } from '../../shared/variants'
 
-const EMPTY_FORM = { name: '', price: '', line: '', description: '', stock: '', image_url: '' }
+// Un producto es una PRESENTACIÓN de un café: tamaño + molienda + tueste.
+// Los cuatro campos van juntos o ninguno (un producto suelto, como el Pack).
+const EMPTY_FORM = {
+  name: '', price: '', line: '', description: '', stock: '', image_url: '',
+  coffee_id: '', size_g: '', grind: '', roast: '',
+}
 
 function AdminProducts() {
   const { t } = useTranslation('admin')
-  const { getProducts, createProduct, updateProduct, deleteProduct, loading } = useAdmin()
+  const { getProducts, createProduct, updateProduct, deleteProduct, getCoffees, loading } = useAdmin()
   const [products, setProducts] = useState([])
+  const [coffees, setCoffees] = useState([])
   const [showModal, setShowModal] = useState(false)
   const [editingProduct, setEditingProduct] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
@@ -16,6 +23,9 @@ function AdminProducts() {
 
   useEffect(() => {
     loadProducts()
+    getCoffees()
+      .then((d) => setCoffees(d.coffees || []))
+      .catch(() => setCoffees([]))
   }, [])
 
   // Auto-limpiar feedback después de 3 segundos
@@ -61,6 +71,10 @@ function AdminProducts() {
       description: product.description || '',
       stock: product.stock || 0,
       image_url: product.image_url || '',
+      coffee_id: product.coffee_id ?? '',
+      size_g: product.size_g ?? '',
+      grind: product.grind || '',
+      roast: product.roast || '',
     })
     setShowModal(true)
   }
@@ -198,7 +212,7 @@ function AdminProducts() {
               <tr className="bg-gray-50">
                 <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">{t('products.tableId')}</th>
                 <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">{t('products.tableProduct')}</th>
-                <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">{t('products.tableLine')}</th>
+                <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">{t('products.tableCoffee')}</th>
                 <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">{t('products.tablePrice')}</th>
                 <th className="text-center text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">{t('products.tableStock')}</th>
                 <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">{t('products.tableActions')}</th>
@@ -215,9 +229,24 @@ function AdminProducts() {
                     )}
                   </td>
                   <td className="px-6 py-4">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
-                      {product.line || t('products.noLine')}
-                    </span>
+                    {product.coffee_name ? (
+                      <>
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                          {product.coffee_name}
+                        </span>
+                        {product.size_g && (
+                          <p className="text-xs text-gray-400 mt-1">
+                            {product.size_g} g · {product.grind} · {product.roast}
+                          </p>
+                        )}
+                      </>
+                    ) : (
+                      // Un producto sin café padre no aparece en la tienda.
+                      // El pack es el único caso legítimo.
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                        {t('products.noCoffeeBadge')}
+                      </span>
+                    )}
                   </td>
                   <td className="px-6 py-4 text-sm text-right font-semibold text-gray-900">
                     ₡{parseFloat(product.price).toLocaleString('es-CR')}
@@ -333,8 +362,73 @@ function AdminProducts() {
                   <option value="">{t('products.modal.selectLine')}</option>
                   <option value="Nacional">{t('products.modal.national')}</option>
                   <option value="Premium">{t('products.modal.premium')}</option>
+                  {/* 'Pack' no está: si un admin la escribe, la detección del
+                      pack apuntaría al producto equivocado. El backend la rechaza. */}
                 </select>
               </div>
+
+              {/* Café al que pertenece esta presentación */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('products.modal.coffee')}</label>
+                <select
+                  value={form.coffee_id}
+                  onChange={(e) => {
+                    const v = e.target.value
+                    // Sin café es un producto suelto: las tres dimensiones se limpian
+                    // juntas, porque van todas o ninguna.
+                    setForm((p) =>
+                      v
+                        ? { ...p, coffee_id: v }
+                        : { ...p, coffee_id: '', size_g: '', grind: '', roast: '' },
+                    )
+                  }}
+                  className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                >
+                  <option value="">{t('products.modal.noCoffee')}</option>
+                  {coffees.map((c) => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-500 mt-1">{t('products.modal.coffeeHint')}</p>
+              </div>
+
+              {/* Las tres dimensiones van juntas o ninguna */}
+              {form.coffee_id && (
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t('products.modal.size')} *</label>
+                    <input
+                      type="number" min="1" required
+                      value={form.size_g}
+                      onChange={(e) => updateField('size_g', e.target.value)}
+                      placeholder="500"
+                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t('products.modal.grind')} *</label>
+                    <select
+                      required value={form.grind}
+                      onChange={(e) => updateField('grind', e.target.value)}
+                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    >
+                      <option value=""></option>
+                      {GRINDS.map((g) => <option key={g} value={g}>{g}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t('products.modal.roast')} *</label>
+                    <select
+                      required value={form.roast}
+                      onChange={(e) => updateField('roast', e.target.value)}
+                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    >
+                      <option value=""></option>
+                      {ROASTS.map((r) => <option key={r} value={r}>{r}</option>)}
+                    </select>
+                  </div>
+                </div>
+              )}
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">{t('products.modal.imageUrl')}</label>

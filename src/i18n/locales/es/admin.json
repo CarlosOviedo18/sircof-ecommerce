@@ -8,7 +8,8 @@
     "users": "Usuarios",
     "contacts": "Contactos",
     "viewStore": "Ver tienda",
-    "logout": "Cerrar sesión"
+    "logout": "Cerrar sesión",
+    "coffees": "Cafés"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -74,8 +75,17 @@
       "saving": "Guardando...",
       "update": "Actualizar producto",
       "create": "Crear producto",
-      "cancel": "Cancelar"
-    }
+      "cancel": "Cancelar",
+      "coffee": "Café",
+      "noCoffee": "— Producto suelto (sin café) —",
+      "coffeeHint": "Si pertenece a un café, la descripción se edita en el café.",
+      "size": "Tamaño (g)",
+      "grind": "Molienda",
+      "roast": "Tueste"
+    },
+    "tableCoffee": "Café",
+    "noCoffeeBadge": "sin café",
+    "variant": "Presentación"
   },
   "orders": {
     "title": "Órdenes",
@@ -95,7 +105,8 @@
     "statusCancelled": "Cancelado",
     "noOrders": "No hay órdenes",
     "noOrdersWithStatus": "No hay órdenes con estado \"{{status}}\"",
-    "statusUpdated": "Orden #{{id}} actualizada a \"{{status}}\""
+    "statusUpdated": "Orden #{{id}} actualizada a \"{{status}}\"",
+    "shippingAddress": "Dirección de envío"
   },
   "users": {
     "title": "Usuarios",
@@ -134,5 +145,40 @@
     "deleted": "Mensaje eliminado exitosamente",
     "noContacts": "No hay mensajes de contacto"
   },
-  "verifyingPermissions": "Verificando permisos..."
+  "verifyingPermissions": "Verificando permisos...",
+  "coffees": {
+    "title": "Cafés",
+    "subtitle": "Cada café agrupa sus presentaciones. La descripción y la imagen se editan acá.",
+    "newCoffee": "Nuevo café",
+    "tableName": "Café",
+    "tableCategory": "Categoría",
+    "tableVariants": "Presentaciones",
+    "tableActions": "Acciones",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "empty": "No hay cafés todavía",
+    "archived": "Archivado",
+    "editTitle": "Editar café",
+    "createTitle": "Nuevo café",
+    "name": "Nombre",
+    "slug": "Slug (URL)",
+    "slugPlaceholder": "se genera solo si lo dejás vacío",
+    "slugHint": "Es la URL pública: /cafe/geisha. No lo cambies si ya se compartió el link.",
+    "category": "Categoría",
+    "selectCategory": "Seleccioná una categoría",
+    "category_nacional": "Cafés Nacionales",
+    "category_premium": "Línea Premium",
+    "category_variedades": "Variedades",
+    "description": "Descripción",
+    "descriptionHint": "Es la que se muestra en la página del café.",
+    "descriptionEn": "Descripción en inglés (opcional)",
+    "imageUrl": "URL de imagen",
+    "sortOrder": "Orden",
+    "activeLabel": "Visible en la tienda",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "saved": "Café guardado",
+    "deleted": "Café eliminado",
+    "confirmDelete": "¿Eliminar el café \"{{name}}\"?"
+  }
 }

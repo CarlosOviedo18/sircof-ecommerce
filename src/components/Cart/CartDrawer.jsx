@@ -43,7 +43,8 @@ function CartDrawer({ isOpen, onClose }) {
     }
   }, [])
 
-  const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+  // Solo productos: el envío se suma en el checkout, no acá.
+  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
   const estaVacio = cartItems.length === 0
 
   // Navegar a la página de checkout
@@ -84,8 +85,8 @@ function CartDrawer({ isOpen, onClose }) {
               onQuantityChange={updateQuantity} 
               isEmpty={estaVacio} 
             />
-            <CartFooter 
-              total={total}
+            <CartFooter
+              subtotal={subtotal}
               isEmpty={estaVacio}
               onGoToCheckout={handleGoToCheckout}
               onClose={onClose}

@@ -58,6 +58,14 @@ export const useAdmin = () => {
   const createProduct = (product) => request('/products', 'POST', product)
   const updateProduct = (id, product) => request(`/products/${id}`, 'PUT', product)
   const deleteProduct = (id) => request(`/products/${id}`, 'DELETE')
+  const archiveProduct = (id, active) => request(`/products/${id}/archive`, 'PATCH', { active })
+
+  // ---- Cafés (el producto que ve el cliente; products son sus presentaciones) ----
+  const getCoffees = () => request('/coffees')
+  const getCoffee = (id) => request(`/coffees/${id}`)
+  const createCoffee = (coffee) => request('/coffees', 'POST', coffee)
+  const updateCoffee = (id, coffee) => request(`/coffees/${id}`, 'PUT', coffee)
+  const deleteCoffee = (id) => request(`/coffees/${id}`, 'DELETE')
 
   // ---- Órdenes ----
   const getOrders = () => request('/orders')
@@ -81,6 +89,12 @@ export const useAdmin = () => {
     createProduct,
     updateProduct,
     deleteProduct,
+    archiveProduct,
+    getCoffees,
+    getCoffee,
+    createCoffee,
+    updateCoffee,
+    deleteCoffee,
     getOrders,
     updateOrderStatus,
     getUsers,

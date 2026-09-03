@@ -8,10 +8,13 @@
     "loading": "Loading product...",
     "notFound": "Product not found",
     "decreaseQty": "Decrease quantity",
-    "increaseQty": "Increase quantity"
+    "increaseQty": "Increase quantity",
+    "packBreakdown": "Pack contents:",
+    "packFixedQty": "1 pack ({{size}} packages)"
   },
   "footer": {
-    "total": "Total:",
+    "subtotal": "Subtotal:",
+    "shippingNote": "Shipping calculated at checkout",
     "checkout": "Go to Checkout",
     "continueShopping": "Continue Shopping"
   },
