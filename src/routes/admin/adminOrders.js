@@ -14,6 +14,23 @@ router.get('/', protectAdmin, async (req, res) => {
        ORDER BY o.created_at DESC`
     )
 
+    // Todo el desglose de packs en una sola consulta, no una por orden.
+    const [selections] = await pool.query(
+      `SELECT s.order_item_id, s.roast, s.grind, s.quantity
+       FROM order_item_selections s
+       ORDER BY s.id`
+    )
+
+    const porItem = new Map()
+    for (const s of selections) {
+      if (!porItem.has(s.order_item_id)) porItem.set(s.order_item_id, [])
+      porItem.get(s.order_item_id).push({
+        roast: s.roast,
+        grind: s.grind,
+        quantity: Number(s.quantity)
+      })
+    }
+
     const ordersWithItems = await Promise.all(
       orders.map(async (order) => {
         const [items] = await pool.query(
@@ -23,7 +40,13 @@ router.get('/', protectAdmin, async (req, res) => {
            WHERE oi.order_id = ?`,
           [order.id]
         )
-        return { ...order, items }
+        return {
+          ...order,
+          items: items.map(item => ({
+            ...item,
+            packSelections: porItem.get(item.id) || []
+          }))
+        }
       })
     )
 

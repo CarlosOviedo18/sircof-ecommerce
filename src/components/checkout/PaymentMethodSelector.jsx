@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-function PaymentMethodSelector({ selectedMethod, onSelect }) {
+function PaymentMethodSelector({ selectedMethod, onSelect, paypalOnly = false, paypalOnlyReason = '' }) {
   const { t } = useTranslation('checkout')
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
@@ -11,8 +11,17 @@ function PaymentMethodSelector({ selectedMethod, onSelect }) {
         {t('payment.title')}
       </h2>
 
+      {/* Con el pack en el carrito solo se ofrece PayPal: Tilopay cobra en
+          colones y tiene el país fijo en Costa Rica. */}
+      {paypalOnly && paypalOnlyReason && (
+        <p className="mb-4 text-sm text-gray-600 bg-blue-50 border border-blue-100 rounded-lg px-4 py-3">
+          {paypalOnlyReason}
+        </p>
+      )}
+
       <div className="space-y-3">
         {/* Opción Tarjeta - Tilopay */}
+        {!paypalOnly && (
         <button
           type="button"
           onClick={() => onSelect('tilopay')}
@@ -52,6 +61,7 @@ function PaymentMethodSelector({ selectedMethod, onSelect }) {
             <div className="w-8 h-5 bg-red-500 rounded text-white text-[8px] font-bold flex items-center justify-center">MC</div>
           </div>
         </button>
+        )}
 
         {/* Opción PayPal */}
         <button

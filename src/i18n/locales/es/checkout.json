@@ -14,17 +14,23 @@
     "postalCode": "Código Postal",
     "postalCodePlaceholder": "Código Postal",
     "country": "País",
-    "selectCountry": "Selecciona un país"
+    "selectCountry": "Selecciona un país",
+    "state": "Estado / Provincia",
+    "statePlaceholder": "Estado o provincia",
+    "stateHintUS": "Para Estados Unidos usá el código de 2 letras (ej: FL, NY, CA)"
   },
   "orderSummary": {
     "title": "Resumen del Pedido",
     "product": "Producto",
     "qty": "Cant.",
     "price": "Precio",
+    "lineTotal": "Importe",
     "subtotal": "Subtotal",
+    "shipping": "Envío",
     "total": "Total",
     "line": "Línea",
-    "loading": "Cargando..."
+    "loading": "Cargando...",
+    "shippingIncluded": "Incluido"
   },
   "payment": {
     "title": "Método de Pago",
@@ -44,7 +50,11 @@
     "noPaymentUrl": "Error: No se recibió URL de pago",
     "noPaypalUrl": "Error: No se recibió URL de PayPal",
     "paymentError": "Error al procesar el pago",
-    "paypalError": "Error al procesar el pago con PayPal"
+    "paypalError": "Error al procesar el pago con PayPal",
+    "countryRequired": "Seleccioná el país de envío",
+    "packNotForCR": "Este pack está disponible únicamente para envíos internacionales. Para pedidos dentro del país, revisá nuestros paquetes individuales.",
+    "packRequiresPaypal": "Este pedido incluye el pack internacional, que solo se puede pagar con PayPal.",
+    "stateRequiredUS": "Ingresá el estado con 2 letras (ej: FL)"
   },
   "emptyCart": {
     "title": "Tu carrito está vacío",

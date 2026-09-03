@@ -38,8 +38,16 @@ export const CartProvider = ({ children }) => {
     }
   }, [])
 
-  // Función para agregar producto al carrito
-  const addToCart = useCallback(async (productId, cantidad = 1) => {
+  // Función para agregar producto al carrito.
+  //
+  // Devuelve { ok, code } en vez de tragarse el error: antes cualquier fallo
+  // se guardaba en el estado y el llamador seguía como si nada, así que un
+  // rechazo del servidor (carrito mixto, pack inválido) mostraba
+  // "✓ Agregado al carrito".
+  //
+  // `code` es el código del backend (ver src/shared/pack.js); el llamador lo
+  // traduce. El `message` del servidor está en español y no se muestra.
+  const addToCart = useCallback(async (productId, cantidad = 1, options = {}) => {
     try {
       setError(null)
 
@@ -51,17 +59,26 @@ export const CartProvider = ({ children }) => {
           'Content-Type': 'application/json',
           ...(token && { 'Authorization': `Bearer ${token}` })
         },
-        body: JSON.stringify({ productId, cantidad })
+        body: JSON.stringify({
+          productId,
+          cantidad,
+          ...(options.packSelections && { packSelections: options.packSelections })
+        })
       })
 
+      const data = await response.json().catch(() => ({}))
+
       if (!response.ok) {
-        throw new Error('Error al agregar al carrito')
+        setError(data.code || 'CART_ADD_FAILED')
+        return { ok: false, code: data.code || 'CART_ADD_FAILED' }
       }
 
       // Recarga el carrito después de agregar
       await fetchCart()
+      return { ok: true }
     } catch (err) {
       setError(err.message)
+      return { ok: false, code: 'NETWORK_ERROR' }
     }
   }, [fetchCart])
 
@@ -138,7 +155,9 @@ export const CartProvider = ({ children }) => {
     try {
       const token = localStorage.getItem('token')
       
-      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.CART_GET), {
+      // CART_CLEAR, no CART_GET: apuntaba a /api/cart, que no tiene ruta
+      // DELETE y caía en el 404 genérico, así que ni siquiera limpiaba.
+      const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.CART_CLEAR), {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

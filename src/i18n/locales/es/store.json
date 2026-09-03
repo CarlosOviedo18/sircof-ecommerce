@@ -29,8 +29,8 @@
     "addedToCart": "✓ Producto agregado al carrito",
     "addToCart": "Agregar al carrito",
     "adding": "Agregando...",
-    "freeShipping": "Envío gratis",
-    "freeShippingDesc": "en compras mayores a ₡10,000",
+    "shipping": "Envío a todo el país",
+    "shippingDesc": "Tarifa fija de {{cost}}",
     "freeReturns": "Devoluciones gratis",
     "freeReturnsDesc": "en los primeros 30 días",
     "qualityGuarantee": "Garantía de calidad",
@@ -40,5 +40,57 @@
     "loadingProduct": "Cargando producto...",
     "decreaseQuantity": "Disminuir cantidad",
     "increaseQuantity": "Aumentar cantidad"
+  },
+  "pack": {
+    "categoryLabel": "Pack",
+    "badgeCount": "9 paquetes Premium",
+    "badgeShipping": "Envío incluido",
+    "badgeIntl": "Ideal para envíos internacionales",
+    "cta": "Armar mi pack",
+    "modalTitle": "Armá tu pack de 9 paquetes",
+    "modalSubtitle": "Elegí cuántos paquetes querés de cada combinación. Tienen que sumar {{size}}.",
+    "line": "Línea Premium",
+    "shippingIncluded": "Envío incluido en el precio",
+    "notForCR": "Solo para envíos fuera de Costa Rica",
+    "counter": "{{selected}} de {{size}} seleccionados",
+    "remaining_one": "Falta {{count}} paquete",
+    "remaining_other": "Faltan {{count}} paquetes",
+    "needExactly": "Tenés que seleccionar exactamente {{size}} paquetes",
+    "add": "Agregar al carrito",
+    "adding": "Agregando...",
+    "errors": {
+      "generic": "No se pudo agregar al carrito. Intentá de nuevo.",
+      "INVALID_PACK_SELECTION": "El pack tiene que tener exactamente 9 paquetes.",
+      "MIXED_CART_PACK": "El pack no se puede combinar con productos individuales. Vaciá el carrito primero.",
+      "MIXED_CART_PRODUCTS": "Tenés un pack en el carrito. No se pueden agregar productos individuales.",
+      "PACK_ALREADY_IN_CART": "Ya tenés un pack en el carrito.",
+      "PACK_QTY_FIXED": "La cantidad del pack no se puede cambiar.",
+      "NETWORK_ERROR": "No se pudo conectar con el servidor."
+    }
+  },
+  "categories": {
+    "nacional": "Cafés Nacionales",
+    "premium": "Línea Premium",
+    "variedades": "Variedades"
+  },
+  "grind": {
+    "grano": "Grano",
+    "molido": "Molido"
+  },
+  "roast": {
+    "medio": "Tueste Medio",
+    "oscuro": "Tueste Oscuro"
+  },
+  "fromPrice": "desde {{price}}",
+  "viewOptions": "Ver opciones",
+  "allCategories": "Todas las categorías",
+  "variant": {
+    "size": "{{grams}} g",
+    "sizeLabel": "Tamaño",
+    "grindLabel": "Molienda",
+    "roastLabel": "Tueste",
+    "unavailable": "Combinación no disponible",
+    "outOfStock": "Sin stock",
+    "selected": "Seleccionado"
   }
 }

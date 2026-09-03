@@ -14,9 +14,7 @@ function CartItems({ items, onRemove, onQuantityChange, isEmpty }) {
           {items.map(item => (
             <CartItem
               key={item.id}
-              cartItemId={item.id}
-              productId={item.product_id}
-              cantidad={item.quantity}
+              item={item}
               onRemove={onRemove}
               onQuantityChange={onQuantityChange}
             />

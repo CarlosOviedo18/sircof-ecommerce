@@ -20,6 +20,7 @@ import paymentRoutes from './routes/payment/payment.js';
 import paypalRoutes from './routes/payment/paypal.js';
 import ordersRoutes from './routes/orders/orders.js';
 import contactFormRoutes from './routes/contact/contactForm.js';
+import settingsRoutes from './routes/settings/settings.js';
 import adminRoutes from './routes/admin.js';
 import { maintenance } from './middleware/maintenanceMode.js';
 
@@ -48,7 +49,6 @@ app.use(cors({
 app.use(securityHeaders);
 
 app.use(maintenance); 
-
 
 
 const generalLimiter = rateLimit({
@@ -93,6 +93,7 @@ app.use('/api/logout', usersRoutes);
 app.use('/api/orders', ordersRoutes);
 app.use('/api/user-settings', userSettingsRoutes);
 app.use('/api/contact', contactLimiter, contactFormRoutes);
+app.use('/api/settings', settingsRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/auth', passwordResetRoutes);
 
