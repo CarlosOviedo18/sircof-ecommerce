@@ -2,8 +2,7 @@ import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useFeaturedProducts } from '../../hooks/products/useFeaturedProducts'
-import cafeNacional from '../../assets/webp/cafeNacional.webp'
-import cafePremium from '../../assets/webp/cafePremium.webp'
+import { getProductImage } from '../../lib/productImage'
 import sobreNosotrosImg from '../../assets/webp/SobreNosotros.webp'
 
 function FeaturedProducts() {
@@ -14,7 +13,8 @@ function FeaturedProducts() {
   
   }, [productos, loading, error])
 
-  if (loading) {
+  // La rama de carga mostraba el markup de ERROR ("Error: undefined").
+  if (loading || error) {
     return (
       <section className="w-full py-20 px-4 md:px-8 bg-cover bg-center relative" style={{ backgroundImage: `url(${sobreNosotrosImg})` }}>
         <div className="absolute inset-0 bg-black bg-opacity-10"></div>
@@ -22,7 +22,9 @@ function FeaturedProducts() {
           <h2 className="text-white font-serif font-bold text-3xl md:text-4xl text-center mb-16">
             {t('featuredProducts.title')}
           </h2>
-          <p className="text-red-500 text-center">Error: {error}</p>
+          {error
+            ? <p className="text-red-300 text-center">Error: {error}</p>
+            : <p className="text-white/80 text-center">…</p>}
         </div>
       </section>
     )
@@ -40,11 +42,17 @@ function FeaturedProducts() {
         {/* Grid de Productos */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {productos.map((producto) => (
-            <div key={producto.id} className="flex flex-col group">
+            // Las cards ahora son links: antes no se podía entrar al producto
+            // desde el home. Van al café si lo tiene, si no al producto suelto.
+            <Link
+              key={producto.id}
+              to={producto.slug ? `/cafe/${producto.slug}` : `/producto/${producto.id}`}
+              className="flex flex-col group"
+            >
               {/* Imagen con etiqueta de fecha */}
               <div className="relative overflow-hidden rounded-lg mb-4 h-80 md:h-96">
-                <img 
-                  src={producto.line === 'Premium' ? cafePremium : cafeNacional}
+                <img
+                  src={getProductImage(producto)}
                   alt={producto.name}
                   loading="lazy"
                   decoding="async"
@@ -77,10 +85,10 @@ function FeaturedProducts() {
 
                 {/* Precio */}
                 <p className="text-coffee text-sm font-serif font-semibold">
-                  ₡{producto.price.toLocaleString('es-CR')}
+                  ₡{Number(producto.price).toLocaleString('es-CR')}
                 </p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 

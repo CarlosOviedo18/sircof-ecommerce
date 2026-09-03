@@ -8,7 +8,8 @@
     "users": "Users",
     "contacts": "Contacts",
     "viewStore": "View store",
-    "logout": "Log out"
+    "logout": "Log out",
+    "coffees": "Coffees"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -74,8 +75,17 @@
       "saving": "Saving...",
       "update": "Update product",
       "create": "Create product",
-      "cancel": "Cancel"
-    }
+      "cancel": "Cancel",
+      "coffee": "Coffee",
+      "noCoffee": "— Standalone product (no coffee) —",
+      "coffeeHint": "If it belongs to a coffee, the description is edited on the coffee.",
+      "size": "Size (g)",
+      "grind": "Grind",
+      "roast": "Roast"
+    },
+    "tableCoffee": "Coffee",
+    "noCoffeeBadge": "no coffee",
+    "variant": "Presentation"
   },
   "orders": {
     "title": "Orders",
@@ -95,7 +105,8 @@
     "statusCancelled": "Cancelled",
     "noOrders": "No orders",
     "noOrdersWithStatus": "No orders with status \"{{status}}\"",
-    "statusUpdated": "Order #{{id}} updated to \"{{status}}\""
+    "statusUpdated": "Order #{{id}} updated to \"{{status}}\"",
+    "shippingAddress": "Shipping address"
   },
   "users": {
     "title": "Users",
@@ -134,5 +145,40 @@
     "deleted": "Message deleted successfully",
     "noContacts": "No contact messages"
   },
-  "verifyingPermissions": "Verifying permissions..."
+  "verifyingPermissions": "Verifying permissions...",
+  "coffees": {
+    "title": "Coffees",
+    "subtitle": "Each coffee groups its presentations. Description and image are edited here.",
+    "newCoffee": "New coffee",
+    "tableName": "Coffee",
+    "tableCategory": "Category",
+    "tableVariants": "Presentations",
+    "tableActions": "Actions",
+    "edit": "Edit",
+    "delete": "Delete",
+    "empty": "No coffees yet",
+    "archived": "Archived",
+    "editTitle": "Edit coffee",
+    "createTitle": "New coffee",
+    "name": "Name",
+    "slug": "Slug (URL)",
+    "slugPlaceholder": "auto-generated if left blank",
+    "slugHint": "This is the public URL: /cafe/geisha. Do not change it if the link was shared.",
+    "category": "Category",
+    "selectCategory": "Select a category",
+    "category_nacional": "National Coffees",
+    "category_premium": "Premium Line",
+    "category_variedades": "Varieties",
+    "description": "Description",
+    "descriptionHint": "Shown on the coffee page.",
+    "descriptionEn": "English description (optional)",
+    "imageUrl": "Image URL",
+    "sortOrder": "Order",
+    "activeLabel": "Visible in the store",
+    "save": "Save",
+    "cancel": "Cancel",
+    "saved": "Coffee saved",
+    "deleted": "Coffee deleted",
+    "confirmDelete": "Delete the coffee \"{{name}}\"?"
+  }
 }

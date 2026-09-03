@@ -3,6 +3,9 @@ import pool from "../../database.js";
 import { protectRoute } from "../../middleware/auth.js";
 import fetch from "node-fetch";
 import { sendOrderEmails } from "../../services/emailService.js";
+import { getCartTotals } from "../../services/orderTotals.js";
+import { insertOrderItems, getOrderItemsWithSelections } from "../../services/orderItems.js";
+import { rejectPackOnTilopay } from "../../services/packGuards.js";
 
 const router = Router();
 
@@ -34,14 +37,38 @@ const loginTilopay = async () => {
 router.post("/process", protectRoute, async (req, res) => {
   try {
     const userId = req.user.id;
-    const { cartItems, amount, phone, address, city, postal_code, country } =
+    const { amount: clientAmount, phone, address, city, postal_code, country } =
       req.body;
 
-    if (!cartItems || !amount || cartItems.length === 0) {
+    // El monto se calcula en el servidor desde el carrito en BD.
+    // Lo que manda el navegador NO se usa para cobrar.
+    const totals = await getCartTotals(userId);
+
+    if (totals.items.length === 0) {
       return res.status(400).json({
         success: false,
         message: "Carrito vacío o datos incompletos",
       });
+    }
+
+    // El pack va solo por PayPal. Se rechaza ACÁ, antes de loginTilopay(),
+    // para no crear un pago remoto que después haya que abandonar.
+    const packRechazo = rejectPackOnTilopay(totals.hasPack);
+    if (packRechazo) {
+      return res.status(packRechazo.status).json({
+        success: false,
+        code: packRechazo.code,
+        message: packRechazo.message,
+      });
+    }
+
+    // Solo avisamos si el total mostrado al cliente no coincide con el real
+    // (bundle viejo cacheado, o manipulación). No cortamos el cobro: un 400 acá
+    // rompería a cualquier usuario con una pestaña vieja abierta.
+    if (clientAmount != null && Math.abs(Number(clientAmount) - totals.total) > 1) {
+      console.warn(
+        `⚠ Monto del cliente (${clientAmount}) != monto calculado (${totals.total}) para el usuario ${userId}`,
+      );
     }
 
     const [users] = await pool.query(
@@ -69,7 +96,7 @@ router.post("/process", protectRoute, async (req, res) => {
    
     const processPaymentPayload = {
       key: process.env.TILOPAY_API_KEY,
-      amount: amount.toFixed(2),
+      amount: totals.total.toFixed(2),
       currency: "CRC",
       orderNumber: orderReference,
       redirect: callbackUrl,
@@ -123,36 +150,51 @@ router.post("/process", protectRoute, async (req, res) => {
 
     const tilopayData = await tilopayResponse.json();
 
-    const [orderResult] = await pool.query(
-      `INSERT INTO orders (user_id, total, status, tilopay_reference, tilopay_order_number, payment_method, phone, address, city, postal_code, country) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        userId,
-        amount,
-        "pending",
-        orderReference,
-        tilopayData.id || tilopayData.orderNumber,
-        "tilopay",
-        phone,
-        address || null,
-        city || null,
-        postal_code || null,
-        country || null,
-      ],
-    );
+    // Transacción: una orden sin sus items es una venta cobrada que no se
+    // puede despachar. Antes esto eran dos queries sueltas.
+    const conn = await pool.getConnection();
+    let orderId;
 
-    for (const item of cartItems) {
-      await pool.query(
-        `INSERT INTO order_items (order_id, product_id, quantity, price) 
-         VALUES (?, ?, ?, ?)`,
-        [orderResult.insertId, item.product_id, item.quantity, item.price],
+    try {
+      await conn.beginTransaction();
+
+      const [orderResult] = await conn.query(
+        `INSERT INTO orders (user_id, total, subtotal, shipping_cost, status, tilopay_reference, tilopay_order_number, payment_method, phone, address, city, postal_code, country)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          userId,
+          totals.total, // incluye el envío
+          totals.subtotal,
+          totals.shippingCost,
+          "pending",
+          orderReference,
+          tilopayData.id || tilopayData.orderNumber,
+          "tilopay",
+          phone,
+          address || null,
+          city || null,
+          postal_code || null,
+          country || null,
+        ],
       );
+
+      orderId = orderResult.insertId;
+
+      // Precios de la BD, no los del body del cliente.
+      await insertOrderItems(conn, orderId, totals.items);
+
+      await conn.commit();
+    } catch (error) {
+      await conn.rollback();
+      throw error;
+    } finally {
+      conn.release();
     }
 
     res.json({
       success: true,
       paymentUrl: tilopayData.url,
-      orderId: orderResult.insertId,
+      orderId,
       orderReference,
       tilopayLinkId: tilopayData.id,
     });
@@ -188,7 +230,7 @@ router.post("/confirm", protectRoute, async (req, res) => {
 
     // Buscar la orden en la BD
     const [orders] = await pool.query(
-      `SELECT o.id, o.total, o.status, o.tilopay_reference, o.phone, o.address, o.city, o.postal_code, o.country
+      `SELECT o.id, o.total, o.subtotal, o.shipping_cost, o.status, o.tilopay_reference, o.phone, o.address, o.city, o.state, o.postal_code, o.country, o.country_code
        FROM orders o WHERE o.tilopay_reference = ? AND o.user_id = ?`,
       [orderNumber, userId],
     );
@@ -223,14 +265,8 @@ router.post("/confirm", protectRoute, async (req, res) => {
       [userId],
     );
 
-    // Obtener items de la orden
-    const [orderItems] = await pool.query(
-      `SELECT oi.product_id, oi.quantity, oi.price, p.name 
-       FROM order_items oi 
-       JOIN products p ON oi.product_id = p.id 
-       WHERE oi.order_id = ?`,
-      [order.id],
-    );
+    // Obtener items de la orden, con el desglose del pack si lo hay
+    const orderItems = await getOrderItemsWithSelections(order.id);
 
     if (users.length > 0) {
       const user = users[0];
@@ -238,10 +274,16 @@ router.post("/confirm", protectRoute, async (req, res) => {
         orderId: order.tilopay_reference,
         products: orderItems,
         total: parseFloat(order.total),
+        subtotal: parseFloat(order.subtotal),
+        shippingCost: parseFloat(order.shipping_cost),
         clientName: user.name,
         clientEmail: user.email,
         clientPhone: order.phone,
         address: order.address,
+        city: order.city,
+        state: order.state,
+        postalCode: order.postal_code,
+        country: order.country,
       };
 
       try {
