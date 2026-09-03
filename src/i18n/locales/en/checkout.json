@@ -14,17 +14,23 @@
     "postalCode": "Postal Code",
     "postalCodePlaceholder": "Postal Code",
     "country": "Country",
-    "selectCountry": "Select a country"
+    "selectCountry": "Select a country",
+    "state": "State / Province",
+    "statePlaceholder": "State or province",
+    "stateHintUS": "For the United States use the 2-letter code (e.g. FL, NY, CA)"
   },
   "orderSummary": {
     "title": "Order Summary",
     "product": "Product",
     "qty": "Qty.",
     "price": "Price",
+    "lineTotal": "Amount",
     "subtotal": "Subtotal",
+    "shipping": "Shipping",
     "total": "Total",
     "line": "Line",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "shippingIncluded": "Included"
   },
   "payment": {
     "title": "Payment Method",
@@ -44,7 +50,11 @@
     "noPaymentUrl": "Error: Payment URL not received",
     "noPaypalUrl": "Error: PayPal URL not received",
     "paymentError": "Error processing payment",
-    "paypalError": "Error processing PayPal payment"
+    "paypalError": "Error processing PayPal payment",
+    "countryRequired": "Select the shipping country",
+    "packNotForCR": "This pack is available for international shipping only. For orders within Costa Rica, check our individual packages.",
+    "packRequiresPaypal": "This order includes the international pack, which can only be paid with PayPal.",
+    "stateRequiredUS": "Enter the 2-letter state code (e.g. FL)"
   },
   "emptyCart": {
     "title": "Your cart is empty",

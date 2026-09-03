@@ -1,50 +1,44 @@
 import { useTranslation } from 'react-i18next'
-import { useProductDetail } from '../../hooks/products/useProductDetail'
-import cafeNacional from '../../assets/webp/cafeNacional.webp'
-import cafePremium from '../../assets/webp/cafePremium.webp'
+import { getProductImage } from '../../lib/productImage'
+import PackBreakdownList from '../pack/PackBreakdownList'
 
+// El item ya trae name/price/line/packSelections desde GET /api/cart.
+// Antes esto usaba useProductDetail, que bajaba la lista completa de productos
+// por cada fila del resumen.
 function OrderItemRow({ item }) {
   const { t } = useTranslation('checkout')
-  const { producto, loading } = useProductDetail(item.product_id)
 
-  if (loading) {
-    return (
-      <tr className="border-b">
-        <td colSpan={4} className="py-4 text-gray-400 text-sm">{t('orderSummary.loading')}</td>
-      </tr>
-    )
-  }
-
-  if (!producto) return null
-
-  const imagen = producto.line === 'Premium' ? cafePremium : cafeNacional
-  const subtotal = producto.price * item.quantity
+  const precio = Number(item.price)
+  const subtotal = precio * item.quantity
 
   return (
     <tr className="border-b border-gray-100 last:border-b-0">
       <td className="py-4 pr-4">
         <div className="flex items-center gap-3">
           <img
-            src={imagen}
-            alt={producto.name}
+            src={getProductImage(item)}
+            alt={item.name}
             loading="lazy"
             decoding="async"
             className="w-16 h-16 object-cover rounded-lg"
           />
           <div>
-            <p className="font-semibold text-gray-800 text-sm">{producto.name}</p>
-            <p className="text-xs text-gray-500">{t('orderSummary.line')}: {producto.line}</p>
+            <p className="font-semibold text-gray-800 text-sm">{item.name}</p>
+            <p className="text-xs text-gray-500">{t('orderSummary.line')}: {item.line}</p>
+            {item.is_pack && (
+              <PackBreakdownList selections={item.packSelections} className="mt-1" />
+            )}
           </div>
         </div>
       </td>
       <td className="py-4 text-center text-gray-600 text-sm">{item.quantity}</td>
-      <td className="py-4 text-center text-gray-600 text-sm">₡{producto.price.toLocaleString('es-CR')}</td>
+      <td className="py-4 text-center text-gray-600 text-sm">₡{precio.toLocaleString('es-CR')}</td>
       <td className="py-4 text-right font-semibold text-gray-800 text-sm">₡{subtotal.toLocaleString('es-CR')}</td>
     </tr>
   )
 }
 
-function OrderSummary({ cartItems, total }) {
+function OrderSummary({ cartItems, subtotal, shippingCost, total, shippingIncluded = false }) {
   const { t } = useTranslation('checkout')
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
@@ -63,7 +57,7 @@ function OrderSummary({ cartItems, total }) {
               <th className="text-left pb-3">{t('orderSummary.product')}</th>
               <th className="text-center pb-3">{t('orderSummary.qty')}</th>
               <th className="text-center pb-3">{t('orderSummary.price')}</th>
-              <th className="text-right pb-3">{t('orderSummary.subtotal')}</th>
+              <th className="text-right pb-3">{t('orderSummary.lineTotal')}</th>
             </tr>
           </thead>
           <tbody>
@@ -74,9 +68,24 @@ function OrderSummary({ cartItems, total }) {
         </table>
       </div>
 
-      {/* Total */}
-      <div className="mt-6 pt-4 border-t-2 border-gray-200">
-        <div className="flex justify-between items-center">
+      {/* Subtotal, envío y total */}
+      <div className="mt-6 pt-4 border-t-2 border-gray-200 space-y-2">
+        <div className="flex justify-between items-center text-sm">
+          <span className="text-gray-600">{t('orderSummary.subtotal')}</span>
+          <span className="text-gray-800">₡{subtotal.toLocaleString('es-CR')}</span>
+        </div>
+
+        <div className="flex justify-between items-center text-sm">
+          <span className="text-gray-600">{t('orderSummary.shipping')}</span>
+          {/* Un "₡0" al lado de una línea de ₡83.007 se lee como bug */}
+          <span className="text-gray-800">
+            {shippingIncluded
+              ? t('orderSummary.shippingIncluded')
+              : `₡${shippingCost.toLocaleString('es-CR')}`}
+          </span>
+        </div>
+
+        <div className="flex justify-between items-center pt-3 border-t border-gray-200">
           <span className="text-lg font-bold text-gray-800">{t('orderSummary.total')}</span>
           <span className="text-2xl font-bold text-coffee">₡{total.toLocaleString('es-CR')}</span>
         </div>

@@ -29,8 +29,8 @@
     "addedToCart": "✓ Product added to cart",
     "addToCart": "Add to cart",
     "adding": "Adding...",
-    "freeShipping": "Free shipping",
-    "freeShippingDesc": "on purchases over ₡10,000",
+    "shipping": "Nationwide shipping",
+    "shippingDesc": "Flat rate of {{cost}}",
     "freeReturns": "Free returns",
     "freeReturnsDesc": "within the first 30 days",
     "qualityGuarantee": "Quality guarantee",
@@ -40,5 +40,57 @@
     "loadingProduct": "Loading product...",
     "decreaseQuantity": "Decrease quantity",
     "increaseQuantity": "Increase quantity"
+  },
+  "pack": {
+    "categoryLabel": "Pack",
+    "badgeCount": "9 Premium packages",
+    "badgeShipping": "Shipping included",
+    "badgeIntl": "Great for international orders",
+    "cta": "Build my pack",
+    "modalTitle": "Build your 9-package pack",
+    "modalSubtitle": "Choose how many packages you want of each combination. They must add up to {{size}}.",
+    "line": "Premium Line",
+    "shippingIncluded": "Shipping included in the price",
+    "notForCR": "Only for shipping outside Costa Rica",
+    "counter": "{{selected}} of {{size}} selected",
+    "remaining_one": "{{count}} package left",
+    "remaining_other": "{{count}} packages left",
+    "needExactly": "You must select exactly {{size}} packages",
+    "add": "Add to cart",
+    "adding": "Adding...",
+    "errors": {
+      "generic": "Could not add to cart. Please try again.",
+      "INVALID_PACK_SELECTION": "The pack must contain exactly 9 packages.",
+      "MIXED_CART_PACK": "The pack cannot be combined with individual products. Empty your cart first.",
+      "MIXED_CART_PRODUCTS": "You have a pack in your cart. Individual products cannot be added.",
+      "PACK_ALREADY_IN_CART": "You already have a pack in your cart.",
+      "PACK_QTY_FIXED": "The pack quantity cannot be changed.",
+      "NETWORK_ERROR": "Could not reach the server."
+    }
+  },
+  "categories": {
+    "nacional": "National Coffees",
+    "premium": "Premium Line",
+    "variedades": "Varieties"
+  },
+  "grind": {
+    "grano": "Whole Bean",
+    "molido": "Ground"
+  },
+  "roast": {
+    "medio": "Medium Roast",
+    "oscuro": "Dark Roast"
+  },
+  "fromPrice": "from {{price}}",
+  "viewOptions": "View options",
+  "allCategories": "All categories",
+  "variant": {
+    "size": "{{grams}} g",
+    "sizeLabel": "Size",
+    "grindLabel": "Grind",
+    "roastLabel": "Roast",
+    "unavailable": "Combination unavailable",
+    "outOfStock": "Out of stock",
+    "selected": "Selected"
   }
 }

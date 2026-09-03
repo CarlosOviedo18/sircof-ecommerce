@@ -1,22 +1,46 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import cafeNacional from '../../assets/webp/cafeNacional.webp'
-import cafePremium from '../../assets/webp/cafePremium.webp'
+import { getProductImage } from '../../lib/productImage'
 import { useProductDetail } from '../../hooks/products/useProductDetail'
+import { useProductVariant } from '../../hooks/products/useProductVariant'
 import { useCart } from '../../hooks/cart/useCart'
+import { useShippingCost } from '../../hooks/settings/useShippingCost'
+import { usePackConfig } from '../../hooks/settings/usePackConfig'
 import { useAuthContext } from '../../context/AuthContext'
+import PackPickerModal from '../../components/pack/PackPickerModal'
+import QuantityStepper from '../../components/ui/QuantityStepper'
 
+// Esta página quedó como RESOLVER de las URLs viejas por id de producto.
+//
+// Si el producto pertenece a un café, redirige a /cafe/:slug?variant=<id>,
+// así siguen vivos los bookmarks y los links de emails de órdenes viejas.
+// Si no tiene café padre (el Pack, o cualquier producto suelto), renderiza
+// la página de siempre sin ningún cambio.
 function ProductDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { t } = useTranslation('store')
   const { user } = useAuthContext()
   const { producto, loading, error } = useProductDetail(id)
+  const { coffee: cafePadre, loading: resolviendo } = useProductVariant(id)
+
+  // replace: true para que el botón Atrás no rebote contra la redirección.
+  useEffect(() => {
+    if (cafePadre?.slug) {
+      navigate(`/cafe/${cafePadre.slug}?variant=${id}`, { replace: true })
+    }
+  }, [cafePadre, id, navigate])
   const { addToCart, refetchCart } = useCart()
+  const { shippingCost } = useShippingCost()
+  const { packProductId } = usePackConfig()
   const [cantidad, setCantidad] = useState(1)
   const [agregando, setAgregando] = useState(false)
   const [mensajeExito, setMensajeExito] = useState(false)
+  const [packModalAbierto, setPackModalAbierto] = useState(false)
+  const [errorCarrito, setErrorCarrito] = useState('')
+
+  const esPack = packProductId !== null && producto?.id === packProductId
 
   // Función para agregar el producto al carrito
   const handleAddToCart = async () => {
@@ -26,36 +50,51 @@ function ProductDetail() {
       return
     }
 
-    try {
-      setAgregando(true)
-      await addToCart(producto.id, cantidad)
-      
-      // Recargar el carrito para que se vea actualizado
-      await refetchCart()
-      
-      // Mostrar mensaje de éxito
-      setMensajeExito(true)
-      setCantidad(1)
-      
-      // Ocultar mensaje después de 2 segundos
-      setTimeout(() => {
-        setMensajeExito(false)
-      }, 2000)
-    } catch (error) {
-      console.error('Error al agregar al carrito:', error)
-    } finally {
-      setAgregando(false)
+    // El pack se arma primero en el modal
+    if (esPack) {
+      setErrorCarrito('')
+      setPackModalAbierto(true)
+      return
     }
+
+    setAgregando(true)
+    const resultado = await addToCart(producto.id, cantidad)
+    setAgregando(false)
+
+    // Solo se avisa "agregado" si el servidor realmente lo aceptó
+    if (!resultado.ok) {
+      setErrorCarrito(t(`pack.errors.${resultado.code}`, { defaultValue: t('pack.errors.generic') }))
+      return
+    }
+
+    await refetchCart()
+    setMensajeExito(true)
+    setCantidad(1)
+
+    setTimeout(() => setMensajeExito(false), 2000)
   }
 
-  // Cambiar cantidad
-  
-  const incrementarCantidad = () => setCantidad(prev => prev + 1)
-  const decrementarCantidad = () => {
-    if (cantidad > 1) setCantidad(prev => prev - 1)
+  const handleConfirmarPack = async (packSelections) => {
+    setErrorCarrito('')
+    setAgregando(true)
+    const resultado = await addToCart(producto.id, 1, { packSelections })
+    setAgregando(false)
+
+    if (!resultado.ok) {
+      setErrorCarrito(t(`pack.errors.${resultado.code}`, { defaultValue: t('pack.errors.generic') }))
+      return
+    }
+
+    await refetchCart()
+    setPackModalAbierto(false)
+    setMensajeExito(true)
+
+    setTimeout(() => setMensajeExito(false), 2000)
   }
 
-  if (loading) {
+  // `resolviendo` y `cafePadre` evitan que se vea un parpadeo de esta página
+  // antes de saltar a /cafe/:slug.
+  if (loading || resolviendo || cafePadre?.slug) {
     return (
       <div className="min-h-screen bg-white pt-20 pb-20 flex items-center justify-center">
         <p className="text-gray-500 text-lg">{t('detail.loadingProduct')}</p>
@@ -90,7 +129,7 @@ function ProductDetail() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           <div className="flex items-center justify-center bg-gray-50 rounded-lg overflow-hidden h-96 md:h-full">
             <img
-              src={producto.line === 'Premium' ? cafePremium : cafeNacional}
+              src={getProductImage(producto)}
               alt={producto.name}
               loading="lazy"
               decoding="async"
@@ -128,32 +167,31 @@ function ProductDetail() {
             </div>
 
             <div className="flex flex-col gap-3">
-              {/* Selector de cantidad */}
-              <div className="flex items-center gap-4 mb-4">
-                <span className="text-sm font-semibold text-gray-700">{t('detail.quantity')}</span>
-                <div className="flex items-center gap-3 border rounded-lg px-3 py-2">
-                  <button
-                    onClick={decrementarCantidad}
-                    className="text-coffee hover:text-dark-coffee font-bold text-lg transition-colors"
-                    aria-label={t('detail.decreaseQuantity')}
-                  >
-                    −
-                  </button>
-                  <span className="w-8 text-center font-semibold">{cantidad}</span>
-                  <button
-                    onClick={incrementarCantidad}
-                    className="text-coffee hover:text-dark-coffee font-bold text-lg transition-colors"
-                    aria-label={t('detail.increaseQuantity')}
-                  >
-                    +
-                  </button>
+              {/* Selector de cantidad. El pack no lo lleva: se arma en el modal
+                  y va siempre de a 1. */}
+              {!esPack && (
+                <div className="flex items-center gap-4 mb-4">
+                  <span className="text-sm font-semibold text-gray-700">{t('detail.quantity')}</span>
+                  <QuantityStepper
+                    value={cantidad}
+                    onChange={setCantidad}
+                    min={1}
+                    decreaseLabel={t('detail.decreaseQuantity')}
+                    increaseLabel={t('detail.increaseQuantity')}
+                  />
                 </div>
-              </div>
+              )}
 
               {/* Mensaje de éxito */}
               {mensajeExito && (
                 <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded animate-pulse">
                   {t('detail.addedToCart')}
+                </div>
+              )}
+
+              {errorCarrito && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded text-sm">
+                  {errorCarrito}
                 </div>
               )}
 
@@ -163,7 +201,7 @@ function ProductDetail() {
                 disabled={agregando}
                 className="w-full bg-coffee hover:bg-dark-coffee disabled:bg-gray-400 text-white font-bold py-3 px-6 rounded text-lg transition-colors duration-300"
               >
-                {agregando ? t('detail.adding') : t('detail.addToCart')}
+                {agregando ? t('detail.adding') : esPack ? t('pack.cta') : t('detail.addToCart')}
               </button>
 
             </div>
@@ -171,7 +209,13 @@ function ProductDetail() {
             <div className="bg-gray-50 p-6 rounded-lg mt-6 space-y-3 text-sm text-gray-700">
               <div className="flex gap-3">
                 <span></span>
-                <p><strong>{t('detail.freeShipping')}</strong> {t('detail.freeShippingDesc')}</p>
+                {/* El pack ya trae el envío en el precio: mostrar la tarifa
+                    nacional acá sería contradecirlo. */}
+                {esPack ? (
+                  <p><strong>{t('pack.badgeShipping')}</strong> {t('pack.notForCR')}</p>
+                ) : (
+                  <p><strong>{t('detail.shipping')}</strong> {t('detail.shippingDesc', { cost: `₡${shippingCost.toLocaleString('es-CR')}` })}</p>
+                )}
               </div>
               <div className="flex gap-3">
                 <span></span>
@@ -185,6 +229,17 @@ function ProductDetail() {
           </div>
         </div>
       </div>
+
+      {esPack && (
+        <PackPickerModal
+          isOpen={packModalAbierto}
+          onClose={() => setPackModalAbierto(false)}
+          onConfirm={handleConfirmarPack}
+          precio={Number(producto.price)}
+          adding={agregando}
+          error={errorCarrito}
+        />
+      )}
     </div>
   )
 }

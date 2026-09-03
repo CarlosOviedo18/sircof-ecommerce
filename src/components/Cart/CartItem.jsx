@@ -1,37 +1,28 @@
 import React from "react";
 import { useTranslation } from 'react-i18next';
-import { useProductDetail } from "../../hooks/products/useProductDetail";
-import cafeNacional from "../../assets/webp/cafeNacional.webp";
-import cafePremium from "../../assets/webp/cafePremium.webp";
+import { getProductImage } from "../../lib/productImage";
+import QuantityStepper from "../ui/QuantityStepper";
+import PackBreakdownList from "../pack/PackBreakdownList";
+import { PACK_SIZE } from "../../shared/pack";
 
-function CartItem({
-  cartItemId,
-  productId,
-  cantidad,
-  onRemove,
-  onQuantityChange,
-}) {
+// El item ya viene completo desde GET /api/cart (name, price, line, is_pack,
+// packSelections). Antes esto llamaba a useProductDetail, que se bajaba la lista
+// entera de productos POR CADA fila del carrito para obtener datos que ya tenía.
+function CartItem({ item, onRemove, onQuantityChange }) {
   const { t } = useTranslation('cart');
-  const { producto, loading } = useProductDetail(productId);
 
-  if (loading) {
-    return <p className="text-gray-500 py-4">{t('item.loading')}</p>;
-  }
+  if (!item) return null;
 
-  if (!producto) {
-    return <p className="text-red-500 py-4">{t('item.notFound')}</p>;
-  }
-
-  const imagenProducto =
-    producto.line === "Premium" ? cafePremium : cafeNacional;
-  const subtotal = producto.price * cantidad;
+  const cantidad = Number(item.quantity);
+  const precio = Number(item.price);
+  const subtotal = precio * cantidad;
 
   return (
     <div className="flex gap-4 border-b py-4 items-start">
       {/* Imagen */}
       <img
-        src={imagenProducto}
-        alt={producto.name}
+        src={getProductImage(item)}
+        alt={item.name}
         loading="lazy"
         decoding="async"
         className="w-20 h-20 object-cover rounded"
@@ -39,30 +30,34 @@ function CartItem({
 
       {/* Info del producto */}
       <div className="flex-1">
-        <p className="font-semibold text-gray-800">{producto.name}</p>
-        <p className="text-sm text-gray-600">{t('item.line')}: {producto.line}</p>
+        <p className="font-semibold text-gray-800">{item.name}</p>
+        <p className="text-sm text-gray-600">{t('item.line')}: {item.line}</p>
+
+        {item.is_pack && (
+          <div className="mt-1.5">
+            <p className="text-xs font-semibold text-gray-600">{t('item.packBreakdown')}</p>
+            <PackBreakdownList selections={item.packSelections} className="mt-0.5" />
+          </div>
+        )}
       </div>
 
       {/* Cantidad y controles */}
       <div className="flex flex-col items-end gap-2">
-        {/* Selector de cantidad */}
-        <div className="flex items-center gap-2 border rounded px-2 py-1">
-          <button
-            onClick={() => onQuantityChange(cartItemId, cantidad - 1)}
-            className="text-gray-600 hover:text-coffee font-bold"
-            aria-label={t('item.decreaseQty')}
-          >
-            −
-          </button>
-          <span className="w-6 text-center">{cantidad}</span>
-          <button
-            onClick={() => onQuantityChange(cartItemId, cantidad + 1)}
-            className="text-gray-600 hover:text-coffee font-bold"
-            aria-label={t('item.increaseQty')}
-          >
-            +
-          </button>
-        </div>
+        {/* El pack va siempre de a 1: su desglose describe UN pack de 9 */}
+        {item.is_pack ? (
+          <span className="text-xs text-gray-500 whitespace-nowrap">
+            {t('item.packFixedQty', { size: PACK_SIZE })}
+          </span>
+        ) : (
+          <QuantityStepper
+            value={cantidad}
+            onChange={(nueva) => onQuantityChange(item.id, nueva)}
+            min={1}
+            size="sm"
+            decreaseLabel={t('item.decreaseQty')}
+            increaseLabel={t('item.increaseQty')}
+          />
+        )}
 
         {/* Subtotal */}
         <p className="font-bold text-gray-800">
@@ -71,7 +66,7 @@ function CartItem({
 
         {/* Botón remover */}
         <button
-          onClick={() => onRemove(cartItemId)}
+          onClick={() => onRemove(item.id)}
           className="text-red-500 hover:text-red-700 text-sm font-semibold transition-colors"
         >
           {t('item.remove')}

@@ -1,12 +1,15 @@
 import { useTranslation } from 'react-i18next'
 
-function CartFooter({ total, isEmpty, onGoToCheckout, onClose }) {
+function CartFooter({ subtotal, isEmpty, onGoToCheckout, onClose }) {
   const { t } = useTranslation('cart')
   return (
     <div className="border-t p-6 space-y-4">
-      <div className="flex justify-between items-center text-lg font-bold">
-        <span>{t('footer.total')}</span>
-        <span className="text-coffee">₡{total.toLocaleString('es-CR')}</span>
+      <div>
+        <div className="flex justify-between items-center text-lg font-bold">
+          <span>{t('footer.subtotal')}</span>
+          <span className="text-coffee">₡{subtotal.toLocaleString('es-CR')}</span>
+        </div>
+        <p className="text-xs text-gray-500 mt-1">{t('footer.shippingNote')}</p>
       </div>
 
       <button

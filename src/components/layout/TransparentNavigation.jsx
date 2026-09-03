@@ -74,9 +74,8 @@ function TransparentNavigation() {
               <li><a href="/contactenos" className="text-white font-medium hover:text-coffee transition-colors" onClick={() => setMobileMenuOpen(false)}>{t('contact')}</a></li>
               <li><a href="/galeria" className="text-white font-medium hover:text-coffee transition-colors" onClick={() => setMobileMenuOpen(false)}>{t('gallery')}</a></li>
               <li><a href="/tienda" className="text-white font-medium hover:text-coffee transition-colors" onClick={() => setMobileMenuOpen(false)}>{t('store')}</a></li>
-              {user && (
-                <li><button onClick={handleLogout} className="text-white font-medium hover:text-coffee transition-colors">{t('logout')}</button></li>
-              )}
+              
+              
             </ul>
           </nav>
         )}
