@@ -1,5 +1,4 @@
 
-
 SET FOREIGN_KEY_CHECKS = 0;
 
 CREATE TABLE IF NOT EXISTS users (
@@ -9,6 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
   password VARCHAR(255) DEFAULT NULL,
   google_id VARCHAR(255) UNIQUE DEFAULT NULL,
   role ENUM('user','admin') DEFAULT 'user',
+  token_version INT NOT NULL DEFAULT 0,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -85,6 +85,7 @@ CREATE TABLE IF NOT EXISTS cart_items (
   cart_id INT NOT NULL,
   product_id INT NOT NULL,
   quantity INT NOT NULL DEFAULT 1,
+  CONSTRAINT chk_cart_qty CHECK (quantity > 0),
   CONSTRAINT fk_cart_items_cart
     FOREIGN KEY (cart_id)
     REFERENCES carts(id)
@@ -127,6 +128,8 @@ CREATE TABLE IF NOT EXISTS order_items (
   product_id INT NOT NULL,
   quantity INT NOT NULL,
   price DECIMAL(10,2) NOT NULL,
+  CONSTRAINT chk_order_item_qty CHECK (quantity > 0),
+  CONSTRAINT chk_order_item_price CHECK (price >= 0),
   CONSTRAINT fk_order_items_order
     FOREIGN KEY (order_id)
     REFERENCES orders(id)
@@ -189,9 +192,10 @@ CREATE TABLE IF NOT EXISTS contacts (
 CREATE TABLE IF NOT EXISTS password_resets (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
-  code VARCHAR(6) NOT NULL,
+  code VARCHAR(64) NOT NULL,
   expires_at DATETIME NOT NULL,
   used TINYINT(1) DEFAULT 0,
+  attempts TINYINT UNSIGNED NOT NULL DEFAULT 0,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_password_resets_user
     FOREIGN KEY (user_id)

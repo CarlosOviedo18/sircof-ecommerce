@@ -85,7 +85,13 @@
     },
     "tableCoffee": "Coffee",
     "noCoffeeBadge": "no coffee",
-    "variant": "Presentation"
+    "variant": "Presentation",
+    "shippingLabel": "Shipping cost",
+    "shippingHint": "Applies to all national orders. The pack does not use it (already included).",
+    "shippingSave": "Save",
+    "shippingSaving": "Saving...",
+    "shippingSaved": "Shipping cost updated",
+    "shippingInvalid": "Enter a valid number"
   },
   "orders": {
     "title": "Orders",

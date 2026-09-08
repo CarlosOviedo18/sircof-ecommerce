@@ -4,7 +4,7 @@ import { protectRoute } from "../../middleware/auth.js";
 import fetch from "node-fetch";
 import { sendOrderEmails } from "../../services/emailService.js";
 import { getCartTotals } from "../../services/orderTotals.js";
-import { insertOrderItems, getOrderItemsWithSelections } from "../../services/orderItems.js";
+import { insertOrderItems, getOrderItemsWithSelections, decrementStockForOrder } from "../../services/orderItems.js";
 import { checkPackShipping } from "../../services/packGuards.js";
 
 const router = Router();
@@ -316,10 +316,13 @@ router.post("/create-order", protectRoute, async (req, res) => {
       exchangeRate,
     });
   } catch (error) {
+    if (error.code === 'SIN_STOCK') {
+      return res.status(400).json({ success: false, code: 'SIN_STOCK', message: 'Uno o más productos no tienen stock suficiente', items: error.items });
+    }
     console.error("Error creando orden PayPal:", error.message);
     res.status(500).json({
       success: false,
-      message: error.message || "Error al procesar pago con PayPal",
+      message: "Error al procesar el pago con PayPal",
     });
   }
 });
@@ -340,10 +343,34 @@ router.post("/capture-order", protectRoute, async (req, res) => {
       });
     }
 
-    // Obtener access token
+    // PRIMERO validar la propiedad de la orden, ANTES de capturar. Antes se
+    // capturaba y recién después se buscaba la orden: con el paypalOrderId de
+    // otro, PayPal cobraba y la BD nunca lo registraba.
+    const [orders] = await pool.query(
+      `SELECT o.id, o.total, o.subtotal, o.shipping_cost, o.status, o.tilopay_reference, o.phone, o.address, o.city, o.state, o.postal_code, o.country, o.country_code, u.name AS user_name, u.email AS user_email
+       FROM orders o JOIN users u ON o.user_id = u.id
+       WHERE o.tilopay_order_number = ? AND o.user_id = ?`,
+      [paypalOrderId, userId],
+    );
+
+    if (orders.length === 0) {
+      return res.status(404).json({ success: false, message: "Orden no encontrada" });
+    }
+
+    const order = orders[0];
+
+    // Ya confirmada: no volver a capturar.
+    if (order.status === "paid") {
+      return res.json({
+        success: true,
+        message: "La orden ya fue confirmada previamente",
+        alreadyConfirmed: true,
+      });
+    }
+
+    // Obtener access token y capturar el pago
     const accessToken = await getPayPalAccessToken();
 
-    // Capturar el pago
     const captureResponse = await fetch(
       `${PAYPAL_BASE_URL}/v2/checkout/orders/${paypalOrderId}/capture`,
       {
@@ -360,7 +387,7 @@ router.post("/capture-order", protectRoute, async (req, res) => {
     // Manejar INSTRUMENT_DECLINED (tarjeta rechazada por PayPal)
     if (!captureResponse.ok || captureData.details) {
       const errorDetail = captureData.details?.[0];
-      
+
       if (errorDetail?.issue === "INSTRUMENT_DECLINED") {
         console.warn(`⚠ Tarjeta rechazada en PayPal para orden: ${paypalOrderId}`);
         return res.status(422).json({
@@ -379,37 +406,33 @@ router.post("/capture-order", protectRoute, async (req, res) => {
         });
       }
 
-      console.error("Error capturando pago PayPal:", JSON.stringify(captureData));
-      throw new Error(captureData.message || "Error al capturar pago en PayPal");
+      // Solo el issue de PayPal al log, no el payload entero (traía datos del pagador).
+      console.error("Error capturando pago PayPal:", errorDetail?.issue || captureResponse.status);
+      throw new Error("Error al capturar pago en PayPal");
     }
 
-    const isCompleted = captureData.status === "COMPLETED";
-
-    if (!isCompleted) {
+    if (captureData.status !== "COMPLETED") {
       return res.status(400).json({
         success: false,
         message: `Estado del pago: ${captureData.status}. Intente con PayPal balance o contacte soporte.`,
       });
     }
 
-    // Buscar la orden en la BD por el paypal order ID
-    const [orders] = await pool.query(
-      `SELECT o.id, o.total, o.subtotal, o.shipping_cost, o.status, o.tilopay_reference, o.phone, o.address, o.city, o.state, o.postal_code, o.country, o.country_code
-       FROM orders o WHERE o.tilopay_order_number = ? AND o.user_id = ?`,
-      [paypalOrderId, userId],
-    );
-
-    if (orders.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "Orden no encontrada",
-      });
+    // Verificar que PayPal cobró en la moneda esperada (USD).
+    const capturaMonto = captureData.purchase_units?.[0]?.payments?.captures?.[0]?.amount;
+    if (capturaMonto && capturaMonto.currency_code !== "USD") {
+      console.error(`⚠ Moneda inesperada en captura PayPal ${paypalOrderId}: ${capturaMonto.currency_code}`);
+      return res.status(400).json({ success: false, message: "Moneda de pago inválida" });
     }
 
-    const order = orders[0];
+    // Actualización atómica: solo pasa a 'paid' si sigue 'pending'.
+    const [upd] = await pool.query(
+      "UPDATE orders SET status = 'paid' WHERE id = ? AND status = 'pending'",
+      [order.id],
+    );
 
-    // Evitar duplicados
-    if (order.status === "paid") {
+    if (upd.affectedRows === 0) {
+      // Otra petición concurrente ya la confirmó.
       return res.json({
         success: true,
         message: "La orden ya fue confirmada previamente",
@@ -417,16 +440,14 @@ router.post("/capture-order", protectRoute, async (req, res) => {
       });
     }
 
-    // Actualizar estado a paid
-    await pool.query("UPDATE orders SET status = 'paid' WHERE id = ?", [
-      order.id,
-    ]);
+    // Descontar stock ahora que el pago está capturado.
+    const sobreventa = await decrementStockForOrder(pool, order.id);
+    if (sobreventa.length > 0) {
+      console.error(`⚠ SOBREVENTA en la orden ${order.id}:`, JSON.stringify(sobreventa));
+    }
 
-    // Obtener datos del usuario para email
-    const [users] = await pool.query(
-      "SELECT name, email FROM users WHERE id = ?",
-      [userId],
-    );
+    // Datos del usuario (ya vienen del JOIN)
+    const users = [{ name: order.user_name, email: order.user_email }];
 
     // Obtener items de la orden para email, con el desglose del pack si lo hay
     const orderItems = await getOrderItemsWithSelections(order.id);
@@ -474,7 +495,7 @@ router.post("/capture-order", protectRoute, async (req, res) => {
     console.error("Error capturando pago PayPal:", error.message);
     res.status(500).json({
       success: false,
-      message: error.message || "Error al capturar pago PayPal",
+      message: "Error al capturar el pago",
     });
   }
 });

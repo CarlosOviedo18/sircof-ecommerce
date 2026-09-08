@@ -4,8 +4,9 @@ import { protectRoute } from "../../middleware/auth.js";
 import fetch from "node-fetch";
 import { sendOrderEmails } from "../../services/emailService.js";
 import { getCartTotals } from "../../services/orderTotals.js";
-import { insertOrderItems, getOrderItemsWithSelections } from "../../services/orderItems.js";
+import { insertOrderItems, getOrderItemsWithSelections, decrementStockForOrder } from "../../services/orderItems.js";
 import { rejectPackOnTilopay } from "../../services/packGuards.js";
+import { verifyTilopayReturn } from "../../services/tilopayVerify.js";
 
 const router = Router();
 
@@ -88,8 +89,6 @@ router.post("/process", protectRoute, async (req, res) => {
 
     const tilopayToken = await loginTilopay();
 
-    const webhookUrl =
-      process.env.WEBHOOK_URL || `${process.env.BACKEND_URL || "http://localhost:3000"}/api/payment/webhook`;
     const callbackUrl =
       process.env.CALLBACK_URL || `${process.env.PUBLIC_URL || "http://localhost:3000"}/checkout/success`;
 
@@ -199,10 +198,13 @@ router.post("/process", protectRoute, async (req, res) => {
       tilopayLinkId: tilopayData.id,
     });
   } catch (error) {
+    if (error.code === 'SIN_STOCK') {
+      return res.status(400).json({ success: false, code: 'SIN_STOCK', message: 'Uno o más productos no tienen stock suficiente', items: error.items });
+    }
     console.error("Error procesando pago:", error.message);
     res.status(500).json({
       success: false,
-      message: error.message || "Error procesando pago",
+      message: "Error procesando el pago",
     });
   }
 });
@@ -211,7 +213,9 @@ router.post("/process", protectRoute, async (req, res) => {
 router.post("/confirm", protectRoute, async (req, res) => {
   try {
     const userId = req.user.id;
-    const { orderNumber, code } = req.body;
+    // orderHash/auth/tpt vienen de la URL de retorno de Tilopay; son la PRUEBA
+    // del pago. Sin ellos, code="1" no significa nada.
+    const { orderNumber, code, auth, tpt, orderHash } = req.body;
 
     // Solo procesar si el pago fue exitoso (code === '1' en Tilopay)
     if (code !== '1') {
@@ -228,10 +232,11 @@ router.post("/confirm", protectRoute, async (req, res) => {
       });
     }
 
-    // Buscar la orden en la BD
+    // Buscar la orden en la BD (incluye el email del dueño para el hash)
     const [orders] = await pool.query(
-      `SELECT o.id, o.total, o.subtotal, o.shipping_cost, o.status, o.tilopay_reference, o.phone, o.address, o.city, o.state, o.postal_code, o.country, o.country_code
-       FROM orders o WHERE o.tilopay_reference = ? AND o.user_id = ?`,
+      `SELECT o.id, o.total, o.subtotal, o.shipping_cost, o.status, o.tilopay_reference, o.phone, o.address, o.city, o.state, o.postal_code, o.country, o.country_code, u.name AS user_name, u.email AS user_email
+       FROM orders o JOIN users u ON o.user_id = u.id
+       WHERE o.tilopay_reference = ? AND o.user_id = ?`,
       [orderNumber, userId],
     );
 
@@ -244,7 +249,7 @@ router.post("/confirm", protectRoute, async (req, res) => {
 
     const order = orders[0];
 
-    // Evitar enviar emails duplicados si ya fue confirmada
+    // Evitar reprocesar si ya fue confirmada
     if (order.status === 'paid') {
       return res.json({
         success: true,
@@ -253,17 +258,55 @@ router.post("/confirm", protectRoute, async (req, res) => {
       });
     }
 
-    // Actualizar estado de la orden a 'paid'
-    await pool.query(
-      "UPDATE orders SET status = 'paid' WHERE id = ?",
-      [order.id],
+    // === VERIFICACIÓN DE LA FIRMA DE TILOPAY ===
+    // Recalcula el OrderHash con los secretos del servidor y el total GUARDADO
+    // (no el que manda el cliente). Si no coincide, el "pago" es falso.
+    const verificacion = verifyTilopayReturn({
+      orderHash,
+      tpt,
+      orderNumber,
+      amount: parseFloat(order.total),
+      code,
+      auth,
+      email: order.user_email,
+    });
+
+    if (!verificacion.ok) {
+      console.warn(
+        `⚠ Confirmación de Tilopay rechazada (${verificacion.reason}) para la orden ${orderNumber}, usuario ${userId}`,
+      );
+      return res.status(400).json({
+        success: false,
+        message: "No se pudo verificar el pago con Tilopay",
+      });
+    }
+
+    // Actualización atómica: solo pasa a 'paid' si sigue 'pending'.
+    // Dos confirmaciones en paralelo -> solo una gana -> un solo email.
+    const [upd] = await pool.query(
+      "UPDATE orders SET status = 'paid', tilopay_order_number = ? WHERE id = ? AND status = 'pending'",
+      [tpt || order.tilopay_order_number || null, order.id],
     );
 
-    // Obtener datos del usuario
-    const [users] = await pool.query(
-      "SELECT name, email FROM users WHERE id = ?",
-      [userId],
-    );
+    if (upd.affectedRows === 0) {
+      // Otra petición concurrente ya la confirmó.
+      return res.json({
+        success: true,
+        message: "La orden ya fue confirmada previamente",
+        alreadyConfirmed: true,
+      });
+    }
+
+    // Descontar stock ahora que el pago está confirmado. El pago ya se cobró,
+    // así que si algo quedó sin stock (sobreventa) no se rechaza: se loguea
+    // para resolverlo a mano.
+    const sobreventa = await decrementStockForOrder(pool, order.id);
+    if (sobreventa.length > 0) {
+      console.error(`⚠ SOBREVENTA en la orden ${order.id}:`, JSON.stringify(sobreventa));
+    }
+
+    // Datos del usuario (ya cargados en el JOIN de arriba)
+    const users = [{ name: order.user_name, email: order.user_email }];
 
     // Obtener items de la orden, con el desglose del pack si lo hay
     const orderItems = await getOrderItemsWithSelections(order.id);
@@ -302,7 +345,7 @@ router.post("/confirm", protectRoute, async (req, res) => {
     console.error("Error confirmando pago:", error.message);
     res.status(500).json({
       success: false,
-      message: error.message || "Error confirmando pago",
+      message: "Error confirmando el pago",
     });
   }
 });

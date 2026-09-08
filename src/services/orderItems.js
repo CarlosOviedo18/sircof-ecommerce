@@ -32,6 +32,39 @@ export const insertOrderItems = async (conn, orderId, items) => {
 };
 
 /**
+ * Descuenta el stock de los productos de una orden, al confirmarse el pago.
+ *
+ * El descuento es ATÓMICO y condicional (stock >= quantity): si dos órdenes
+ * pelean por la última unidad, solo una la descuenta. Se corre dentro de la
+ * transacción que marca la orden como pagada.
+ *
+ * Devuelve los items que NO se pudieron descontar (sobreventa): el pago ya se
+ * cobró, así que no se puede rechazar; se devuelven para loguearlos y que
+ * alguien los resuelva (reembolso o reposición).
+ *
+ * @param {object} conn conexión dentro de una transacción
+ * @param {number} orderId
+ * @returns {Promise<Array>} items sin stock (vacío si todo bien)
+ */
+export const decrementStockForOrder = async (conn, orderId) => {
+  const [items] = await conn.query(
+    'SELECT product_id, quantity FROM order_items WHERE order_id = ?',
+    [orderId],
+  );
+
+  const sobreventa = [];
+  for (const item of items) {
+    const [res] = await conn.query(
+      'UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?',
+      [item.quantity, item.product_id, item.quantity],
+    );
+    if (res.affectedRows === 0) sobreventa.push(item);
+  }
+
+  return sobreventa;
+};
+
+/**
  * Items de una orden con su desglose de pack, para los emails y el admin.
  * Dos consultas, sin N+1.
  */

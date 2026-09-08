@@ -77,6 +77,13 @@ router.post('/add', protectRoute, async (req, res) => {
       return res.status(400).json({ message: 'Datos incompletos' })
     }
 
+    // La cantidad DEBE ser un entero positivo. Antes bastaba con que fuera
+    // truthy, así que un -18 pasaba y restaba del total (se podía pagar de menos).
+    const cant = Number(cantidad)
+    if (!Number.isInteger(cant) || cant < 1 || cant > 99) {
+      return res.status(400).json({ success: false, message: 'Cantidad inválida' })
+    }
+
     // Obtener carrito del usuario
     let [carts] = await pool.query('SELECT id FROM carts WHERE user_id = ?', [userId])
     let cartId = carts[0]?.id
@@ -171,16 +178,17 @@ router.post('/add', protectRoute, async (req, res) => {
     )
 
     if (existingItem.length > 0) {
-      // Actualizar cantidad
+      // Actualizar cantidad, con tope para que sumar no supere el máximo
+      const nueva = Math.min(existingItem[0].quantity + cant, 99)
       await pool.query(
-        'UPDATE cart_items SET quantity = quantity + ? WHERE id = ?',
-        [cantidad, existingItem[0].id]
+        'UPDATE cart_items SET quantity = ? WHERE id = ?',
+        [nueva, existingItem[0].id]
       )
     } else {
       // Insertar nuevo item
       await pool.query(
         'INSERT INTO cart_items (cart_id, product_id, quantity) VALUES (?, ?, ?)',
-        [cartId, productId, cantidad]
+        [cartId, productId, cant]
       )
     }
 
@@ -248,7 +256,8 @@ router.patch('/:cartItemId', protectRoute, async (req, res) => {
     const { cantidad } = req.body
     const userId = req.user.id
 
-    if (!cantidad || cantidad < 1) {
+    const cant = Number(cantidad)
+    if (!Number.isInteger(cant) || cant < 1 || cant > 99) {
       return res.status(400).json({ message: 'Cantidad inválida' })
     }
 
@@ -268,7 +277,7 @@ router.patch('/:cartItemId', protectRoute, async (req, res) => {
     // Sin este guard, los botones +/- darían 2 packs con un solo desglose.
     const packProductId = await getPackProductId()
 
-    if (packProductId !== null && Number(items[0].product_id) === packProductId && Number(cantidad) !== 1) {
+    if (packProductId !== null && Number(items[0].product_id) === packProductId && cant !== 1) {
       return res.status(400).json({
         success: false,
         code: PACK_ERRORS.PACK_QTY_FIXED,
@@ -276,7 +285,7 @@ router.patch('/:cartItemId', protectRoute, async (req, res) => {
       })
     }
 
-    await pool.query('UPDATE cart_items SET quantity = ? WHERE id = ?', [cantidad, cartItemId])
+    await pool.query('UPDATE cart_items SET quantity = ? WHERE id = ?', [cant, cartItemId])
     res.json({ success: true, message: 'Cantidad actualizada' })
   } catch (error) {
     console.error('Error al actualizar:', error)
