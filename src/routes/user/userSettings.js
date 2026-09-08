@@ -2,6 +2,7 @@ import { Router } from 'express'
 import pool from '../../database.js'
 import { protectRoute } from '../../middleware/auth.js'
 import { comparePassword, hashPassword } from '../../lib/crypto.js'
+import { validatePassword } from '../../lib/passwordPolicy.js'
 
 const router = Router()
 
@@ -81,12 +82,10 @@ router.put('/password', protectRoute, async (req, res) => {
       })
     }
 
-    // Validar que la nueva contraseña tenga al menos 6 caracteres
-    if (newPassword.length < 6) {
-      return res.status(400).json({
-        success: false,
-        message: 'La contraseña debe tener al menos 6 caracteres'
-      })
+    // Misma política que registro y reseteo (antes acá alcanzaba con 6).
+    const politica = validatePassword(newPassword)
+    if (!politica.ok) {
+      return res.status(400).json({ success: false, message: politica.message })
     }
 
     // Obtener contraseña actual del usuario
@@ -102,6 +101,14 @@ router.put('/password', protectRoute, async (req, res) => {
       })
     }
 
+    // Una cuenta de solo-Google no tiene contraseña: no se puede "cambiar".
+    if (!users[0].password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Esta cuenta usa inicio de sesión con Google'
+      })
+    }
+
     // Validar contraseña actual
     const isValid = await comparePassword(currentPassword, users[0].password)
     if (!isValid) {
@@ -114,9 +121,9 @@ router.put('/password', protectRoute, async (req, res) => {
     // Hashear nueva contraseña
     const hashedPassword = await hashPassword(newPassword)
 
-    // Actualizar contraseña
+    // Actualizar contraseña y revocar sesiones viejas (token_version++)
     const [result] = await pool.query(
-      'UPDATE users SET password = ? WHERE id = ?',
+      'UPDATE users SET password = ?, token_version = token_version + 1 WHERE id = ?',
       [hashedPassword, userId]
     )
 

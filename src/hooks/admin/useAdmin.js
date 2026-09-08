@@ -80,6 +80,9 @@ export const useAdmin = () => {
   const getContacts = () => request('/contacts')
   const deleteContact = (id) => request(`/contacts/${id}`, 'DELETE')
 
+  // ---- Configuración ----
+  const updateShippingCost = (shippingCost) => request('/settings/shipping', 'PUT', { shippingCost })
+
   return {
     loading,
     error,
@@ -101,6 +104,7 @@ export const useAdmin = () => {
     updateUserRole,
     deleteUser,
     getContacts,
-    deleteContact
+    deleteContact,
+    updateShippingCost
   }
 }

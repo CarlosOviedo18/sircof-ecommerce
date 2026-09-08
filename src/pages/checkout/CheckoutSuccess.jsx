@@ -69,6 +69,9 @@ const CheckoutSuccess = () => {
       const tilopayOrderId = searchParams.get('tilopay-transaction') || searchParams.get('tpt')
       const creditCardBrand = searchParams.get('brand')
       const last4CreditCardNumber = searchParams.get('last-digits')
+      // La firma de Tilopay: sin estos, el servidor no confirma el pago.
+      const auth = searchParams.get('auth')
+      const orderHash = searchParams.get('OrderHash')
 
       setOrderData({
         code,
@@ -82,7 +85,7 @@ const CheckoutSuccess = () => {
 
       if (code === '1') {
         clearCart()
-        confirmPayment(orderNumber, code)
+        confirmPayment(orderNumber, { code, auth, tpt: tilopayOrderId, orderHash })
       }
     }
   }, [searchParams])
