@@ -85,7 +85,13 @@
     },
     "tableCoffee": "Café",
     "noCoffeeBadge": "sin café",
-    "variant": "Presentación"
+    "variant": "Presentación",
+    "shippingLabel": "Costo de envío",
+    "shippingHint": "Se aplica a todos los pedidos nacionales. El pack no lo usa (ya lo incluye).",
+    "shippingSave": "Guardar",
+    "shippingSaving": "Guardando...",
+    "shippingSaved": "Costo de envío actualizado",
+    "shippingInvalid": "Ingresá un número válido"
   },
   "orders": {
     "title": "Órdenes",

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAdmin } from '../../hooks/admin/useAdmin'
+import { useShippingCost } from '../../hooks/settings/useShippingCost'
 import { GRINDS, ROASTS } from '../../shared/variants'
 
 // Un producto es una PRESENTACIÓN de un café: tamaño + molienda + tueste.
@@ -12,7 +13,8 @@ const EMPTY_FORM = {
 
 function AdminProducts() {
   const { t } = useTranslation('admin')
-  const { getProducts, createProduct, updateProduct, deleteProduct, getCoffees, loading } = useAdmin()
+  const { getProducts, createProduct, updateProduct, deleteProduct, getCoffees, updateShippingCost, loading } = useAdmin()
+  const { shippingCost } = useShippingCost()
   const [products, setProducts] = useState([])
   const [coffees, setCoffees] = useState([])
   const [showModal, setShowModal] = useState(false)
@@ -20,6 +22,30 @@ function AdminProducts() {
   const [searchTerm, setSearchTerm] = useState('')
   const [form, setForm] = useState(EMPTY_FORM)
   const [feedback, setFeedback] = useState(null)
+  // Campo editable del costo de envío, sembrado con el valor actual.
+  const [shippingInput, setShippingInput] = useState('')
+  const [savingShipping, setSavingShipping] = useState(false)
+
+  useEffect(() => {
+    if (shippingCost != null) setShippingInput(String(shippingCost))
+  }, [shippingCost])
+
+  const handleSaveShipping = async () => {
+    const valor = Number(shippingInput)
+    if (!Number.isFinite(valor) || valor < 0) {
+      setFeedback({ type: 'error', message: t('products.shippingInvalid') })
+      return
+    }
+    try {
+      setSavingShipping(true)
+      await updateShippingCost(valor)
+      setFeedback({ type: 'success', message: t('products.shippingSaved') })
+    } catch (err) {
+      setFeedback({ type: 'error', message: err.message })
+    } finally {
+      setSavingShipping(false)
+    }
+  }
 
   useEffect(() => {
     loadProducts()
@@ -136,6 +162,33 @@ function AdminProducts() {
           {feedback.message}
         </div>
       )}
+
+      {/* Configuración: costo de envío */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6">
+        <label htmlFor="shipping" className="block text-sm font-semibold text-gray-900">
+          {t('products.shippingLabel')}
+        </label>
+        <p className="text-xs text-gray-500 mt-0.5 mb-3">{t('products.shippingHint')}</p>
+        <div className="flex items-center gap-2">
+          <span className="text-gray-500">₡</span>
+          <input
+            id="shipping"
+            type="number"
+            min="0"
+            step="1"
+            value={shippingInput}
+            onChange={(e) => setShippingInput(e.target.value)}
+            className="w-40 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+          />
+          <button
+            onClick={handleSaveShipping}
+            disabled={savingShipping}
+            className="bg-amber-600 hover:bg-amber-700 disabled:bg-gray-300 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+          >
+            {savingShipping ? t('products.shippingSaving') : t('products.shippingSave')}
+          </button>
+        </div>
+      </div>
 
       {/* Table Card */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200">

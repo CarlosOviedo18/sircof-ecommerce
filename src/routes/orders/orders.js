@@ -1,67 +1,14 @@
 import { Router } from 'express'
 import pool from '../../database.js'
 import { protectRoute } from '../../middleware/auth.js'
-import { sendOrderEmails } from '../../services/emailService.js'
 
 const router = Router()
 
-// Crear nueva orden y enviar emails
-router.post('/create-order', protectRoute, async (req, res) => {
-  try {
-    const userId = req.user.id
-    const { products, total, clientName, clientEmail, clientPhone, address } = req.body
-
-    // Validaciones
-    if (!products || products.length === 0) {
-      return res.status(400).json({ success: false, message: 'No hay productos en la orden' })
-    }
-
-    // Crear orden en BD
-    const [orderResult] = await pool.query(
-      'INSERT INTO orders (user_id, total, status, created_at) VALUES (?, ?, ?, NOW())',
-      [userId, total, 'pending']
-    )
-
-    const orderId = orderResult.insertId
-
-    // Insertar items de la orden
-    for (const item of products) {
-      await pool.query(
-        'INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)',
-        [orderId, item.id, item.quantity, item.price]
-      )
-    }
-
-    // Preparar datos para emails
-    const orderData = {
-      orderId,
-      products,
-      total,
-      clientName,
-      clientEmail,
-      clientPhone,
-      address,
-    }
-
-    // Enviar emails
-    const emailResult = await sendOrderEmails(orderData)
-
-    if (!emailResult.success) {
-      console.warn('⚠ Orden creada pero hubo error al enviar emails')
-    }
-
-    res.status(201).json({
-      success: true,
-      message: 'Pedido creado exitosamente',
-      orderId,
-      emailsSent: emailResult,
-    })
-  } catch (error) {
-    console.error('Error al crear pedido:', error)
-    res.status(500).json({ success: false, message: error.message })
-  }
-})
-
+// NOTA DE SEGURIDAD: acá vivía POST /create-order, que creaba órdenes y mandaba
+// emails con el `total` y los `price` que mandaba el CLIENTE (se podía crear una
+// orden falsa con precio 1). No tenía ningún llamador en el frontend —el checkout
+// real crea la orden en payment.js/paypal.js recalculando en el servidor— así que
+// se eliminó. No reponer sin recalcular precios desde la BD.
 
 router.get('/orders', protectRoute, async (req, res) => {
   try {
@@ -90,8 +37,8 @@ router.get('/orders', protectRoute, async (req, res) => {
 
     res.json({ success: true, orders: ordersWithItems })
   } catch (error) {
-    console.error('Error obteniendo órdenes:', error)
-    res.status(500).json({ success: false, message: error.message })
+    console.error('Error obteniendo órdenes:', error.message)
+    res.status(500).json({ success: false, message: 'Error obteniendo las órdenes' })
   }
 })
 

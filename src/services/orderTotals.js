@@ -50,7 +50,7 @@ const getSelectionsByCartItem = async (userId) => {
  */
 export const getCartTotals = async (userId) => {
   const [rows] = await pool.query(
-    `SELECT ci.id, ci.product_id, ci.quantity, p.name, p.price, p.line
+    `SELECT ci.id, ci.product_id, ci.quantity, p.name, p.price, p.line, p.stock
      FROM cart_items ci
      JOIN carts c ON ci.cart_id = c.id
      JOIN products p ON ci.product_id = p.id
@@ -70,6 +70,27 @@ export const getCartTotals = async (userId) => {
     is_pack: packProductId !== null && Number(row.product_id) === packProductId,
     packSelections: selections.get(row.id) || [],
   }));
+
+  // Defensa en profundidad: ninguna cantidad ni precio puede ser <= 0.
+  // El total con el que se cobra sale de acá, así que un negativo que se
+  // hubiera colado por cualquier vía debe frenar el cobro, no abaratarlo.
+  for (const item of items) {
+    if (!Number.isFinite(item.quantity) || item.quantity < 1 ||
+        !Number.isFinite(item.price) || item.price <= 0) {
+      throw new Error(`Ítem de carrito inválido (producto ${item.product_id})`);
+    }
+  }
+
+  // No dejar iniciar un pago por algo sin stock suficiente. Es la primera
+  // barrera; el descuento atómico al confirmar es la segunda (por si el stock
+  // se agotó entre que se creó la orden y se pagó).
+  const sinStock = items.filter((item) => Number(item.stock) < item.quantity);
+  if (sinStock.length > 0) {
+    const err = new Error('Sin stock suficiente');
+    err.code = 'SIN_STOCK';
+    err.items = sinStock.map((i) => ({ product_id: i.product_id, name: i.name, stock: Number(i.stock) }));
+    throw err;
+  }
 
   const subtotal = round2(
     items.reduce((sum, item) => sum + item.price * item.quantity, 0),
