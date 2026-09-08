@@ -6,8 +6,10 @@ import { generateToken } from '../../lib/jwt.js'
 
 const router = Router()
 
-const isAuthDebugEnabled =
-	process.env.NODE_ENV !== 'production' || process.env.AUTH_DEBUG === 'true'
+// Opt-in explícito: por defecto NO filtra detalles internos al cliente.
+// Antes dependía de NODE_ENV, que no se define nunca, así que el debug
+// quedaba siempre activo y exponía errores de MySQL a cualquiera.
+const isAuthDebugEnabled = process.env.AUTH_DEBUG === 'true'
 
 const getFriendlyGoogleError = (error) => {
 	const rawMessage = error?.message || ''
@@ -110,7 +112,7 @@ router.post('/google', googleAuthLimiter, async (req, res) => {
 		let user
 
 		const [usersByGoogleId] = await pool.query(
-			'SELECT id, name, email, role, google_id FROM users WHERE google_id = ? LIMIT 1',
+			'SELECT id, name, email, role, google_id, token_version FROM users WHERE google_id = ? LIMIT 1',
 			[googleId]
 		)
 
@@ -118,7 +120,7 @@ router.post('/google', googleAuthLimiter, async (req, res) => {
 			user = usersByGoogleId[0]
 		} else {
 			const [usersByEmail] = await pool.query(
-				'SELECT id, name, email, role, google_id FROM users WHERE email = ? LIMIT 1',
+				'SELECT id, name, email, role, google_id, token_version FROM users WHERE email = ? LIMIT 1',
 				[email]
 			)
 
@@ -158,7 +160,7 @@ router.post('/google', googleAuthLimiter, async (req, res) => {
 			}
 		}
 
-		const token = generateToken(user.id, user.email)
+		const token = generateToken(user.id, user.email, user.token_version || 0)
 
 		res.json({
 			success: true,

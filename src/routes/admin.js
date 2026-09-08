@@ -5,6 +5,7 @@ import coffeesRoutes from './admin/adminCoffees.js'
 import ordersRoutes from './admin/adminOrders.js'
 import usersRoutes from './admin/adminUsers.js'
 import contactsRoutes from './admin/adminContacts.js'
+import settingsRoutes from './admin/adminSettings.js'
 
 const router = Router()
 
@@ -15,5 +16,6 @@ router.use('/coffees', coffeesRoutes)
 router.use('/orders', ordersRoutes)
 router.use('/users', usersRoutes)
 router.use('/contacts', contactsRoutes)
+router.use('/settings', settingsRoutes)
 
 export default router

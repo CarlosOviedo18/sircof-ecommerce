@@ -3,6 +3,7 @@ import rateLimit from 'express-rate-limit'
 import pool from '../../database.js'
 import { hashPassword, comparePassword } from '../../lib/crypto.js'
 import { generateToken } from '../../lib/jwt.js'
+import { validatePassword } from '../../lib/passwordPolicy.js'
 
 const router = Router()
 
@@ -14,12 +15,6 @@ const authLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false
 })
-
-// Validación de contraseña segura
-const validatePassword = (password) => {
-  const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/
-  return passwordRegex.test(password)
-}
 
 router.post('/register', authLimiter, async (req, res) => {
   try {
@@ -40,11 +35,9 @@ router.post('/register', authLimiter, async (req, res) => {
       })
     }
 
-    if (!validatePassword(password)) {
-      return res.status(400).json({
-        success: false,
-        message: 'La contraseña debe tener al menos 8 caracteres, una mayúscula y un número'
-      })
+    const politica = validatePassword(password)
+    if (!politica.ok) {
+      return res.status(400).json({ success: false, message: politica.message })
     }
 
     const [existingUser] = await pool.query(
@@ -66,7 +59,7 @@ router.post('/register', authLimiter, async (req, res) => {
       [name, email, hashedPassword]
     )
 
-    const token = generateToken(result.insertId, email)
+    const token = generateToken(result.insertId, email, 0)
 
     res.status(201).json({
       success: true,
@@ -129,7 +122,7 @@ router.post('/login', authLimiter, async (req, res) => {
       })
     }
 
-    const token = generateToken(user.id, user.email)
+    const token = generateToken(user.id, user.email, user.token_version)
 
     res.json({
       success: true,

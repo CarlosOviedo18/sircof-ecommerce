@@ -27,6 +27,11 @@ import { maintenance } from './middleware/maintenanceMode.js';
 
 const app = express();
 
+// Hostinger pone un reverse proxy delante de Node. Sin esto, req.ip es la IP
+// del proxy para TODOS, y los rate limiters cuentan globalmente: un atacante
+// bloquearía a todos. Con 1 salto, express lee el X-Forwarded-For real.
+app.set('trust proxy', 1);
+
 // CORS restringido al origen del frontend
 app.use(cors({
   origin: (origin, callback) => {
@@ -69,18 +74,42 @@ const authLimiter = rateLimit({
 
 const contactLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5, 
+  max: 5,
   message: { success: false, message: 'Demasiados intentos, por favor espera un momento' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Reseteo de contraseña: 10 requests por hora por IP (cubre las 3 rutas).
+// Antes no tenía ninguno, así que un código de 6 dígitos se podía fuerza-
+// brutear a piacere. El corte fino es el contador por código (5 fallos y se
+// quema), este limiter es la barrera de IP.
+const resetLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 10,
+  message: { success: false, message: 'Demasiados intentos, esperá una hora' },
   standardHeaders: true,
   legacyHeaders: false,
 });
 
 app.use('/api', generalLimiter);
 app.use('/api/auth/login', authLimiter);
-app.use('/api/auth/signup', authLimiter);
+// Antes decía '/signup', ruta que no existe: el registro es /register.
+app.use('/api/auth/register', authLimiter);
 
-app.use(express.json({ limit: '10mb', strict: false }));
-app.use(express.urlencoded({ limit: '10mb', extended: true }));
+// strict: true rechaza JSON que no sea objeto/array (antes un body `null`
+// rompía destructuraciones). Límite de 1mb: esta API no recibe archivos, y
+// 10mb dejaba pasar payloads enormes (DoS de CPU al hashear, por ejemplo).
+app.use(express.json({ limit: '1mb', strict: true }));
+app.use(express.urlencoded({ limit: '1mb', extended: true }));
+
+// JSON malformado / body demasiado grande: responder limpio en vez de un stack.
+app.use((err, req, res, next) => {
+  if (err && (err.type === 'entity.parse.failed' || err.type === 'entity.too.large' || err instanceof SyntaxError)) {
+    return res.status(400).json({ success: false, message: 'Cuerpo de la petición inválido' });
+  }
+  next(err);
+});
 
 app.use('/api', productsRoutes);
 app.use('/api/auth', authRoutes);
@@ -89,12 +118,17 @@ app.use('/api/users', usersRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/paypal', paypalRoutes);
-app.use('/api/logout', usersRoutes);
+// (se quitó el montaje accidental de usersRoutes bajo /api/logout: el logout
+//  real es /api/auth/logout; ese alias solo re-exponía /profile y /purchases)
 app.use('/api/orders', ordersRoutes);
 app.use('/api/user-settings', userSettingsRoutes);
 app.use('/api/contact', contactLimiter, contactFormRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/admin', adminRoutes);
+// El limiter va montado en las rutas de reseteo antes del router.
+app.use('/api/auth/forgot-password', resetLimiter);
+app.use('/api/auth/verify-reset-code', resetLimiter);
+app.use('/api/auth/reset-password', resetLimiter);
 app.use('/api/auth', passwordResetRoutes);
 
 
@@ -110,7 +144,8 @@ app.get('/test-db', async (req, res) => {
         connection.release();
         res.json({ message: 'Conexión a BD exitosa' });
     } catch (error) {
-        res.status(500).json({ message: 'Error de conexión', error: error.message });
+        console.error('Error de conexión a BD:', error.message);
+        res.status(500).json({ message: 'Error de conexión' });
     }
 });
 

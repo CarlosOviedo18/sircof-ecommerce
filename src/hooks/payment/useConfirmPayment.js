@@ -5,12 +5,16 @@ export const useConfirmPayment = () => {
   const [emailSent, setEmailSent] = useState(false)
   const [confirming, setConfirming] = useState(false)
 
-  const confirmPayment = async (orderNumber, code) => {
+  // firma = { code, auth, tpt, orderHash } que vienen en la URL de retorno de Tilopay.
+  // Se acepta también un string suelto por compatibilidad con llamadas viejas.
+  const confirmPayment = async (orderNumber, firma) => {
     try {
       const token = localStorage.getItem('token')
       if (!token || !orderNumber) return
 
       setConfirming(true)
+
+      const datos = typeof firma === 'string' ? { code: firma } : (firma || {})
 
       const response = await fetch(buildFullUrl(API_CONFIG.ENDPOINTS.PAYMENT_CONFIRM), {
         method: 'POST',
@@ -18,7 +22,7 @@ export const useConfirmPayment = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ orderNumber, code })
+        body: JSON.stringify({ orderNumber, ...datos })
       })
 
       if (response.ok) {
