@@ -5,7 +5,7 @@ import fetch from "node-fetch";
 import { sendOrderEmails } from "../../services/emailService.js";
 import { getCartTotals } from "../../services/orderTotals.js";
 import { insertOrderItems, getOrderItemsWithSelections, decrementStockForOrder } from "../../services/orderItems.js";
-import { checkPackShipping } from "../../services/packGuards.js";
+import { checkPackShipping, checkCoffeeShipping } from "../../services/packGuards.js";
 
 const router = Router();
 
@@ -149,6 +149,19 @@ router.post("/create-order", protectRoute, async (req, res) => {
       }
 
       countryCode = guard.countryCode;
+    } else {
+      // Cafés individuales: solo dentro de Costa Rica (regla simétrica).
+      const guard = await checkCoffeeShipping({ country, countryCode });
+
+      if (!guard.ok) {
+        return res.status(guard.status).json({
+          success: false,
+          code: guard.code,
+          message: guard.message,
+        });
+      }
+
+      countryCode = guard.countryCode;
     }
 
     // Obtener datos del usuario
@@ -189,6 +202,13 @@ router.post("/create-order", protectRoute, async (req, res) => {
     // Obtener access token de PayPal
     const accessToken = await getPayPalAccessToken();
 
+    // URL de retorno. CALLBACK_URL ya incluye /checkout/success (lo usa Tilopay
+    // tal cual), así que NO hay que volver a concatenar esa ruta o queda
+    // duplicada (.../checkout/success/checkout/success) y la página sale en blanco.
+    const successUrl =
+      process.env.CALLBACK_URL ||
+      `${process.env.PUBLIC_URL || "http://localhost:3000"}/checkout/success`;
+
     // Crear la orden en PayPal
     const orderPayload = {
       intent: "CAPTURE",
@@ -226,7 +246,7 @@ router.post("/create-order", protectRoute, async (req, res) => {
         payment_method: {
           payee_preferred: "IMMEDIATE_PAYMENT_REQUIRED",
         },
-        return_url: `${process.env.CALLBACK_URL || process.env.PUBLIC_URL}/checkout/success?method=paypal`,
+        return_url: `${successUrl}?method=paypal`,
         cancel_url: `${process.env.PUBLIC_URL || "http://localhost:3000"}/checkout?cancelled=true`,
       },
     };

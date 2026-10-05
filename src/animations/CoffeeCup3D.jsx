@@ -278,19 +278,22 @@ function CoffeeCup3D({ modelPath = '/models/sample.glb', sectionSelector = '.abo
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     renderer.outputColorSpace = THREE.SRGBColorSpace
     renderer.toneMapping = THREE.ACESFilmicToneMapping
-    renderer.toneMappingExposure = 1.5
+    // Exposición bajada (antes 1.5) para que el modelo no quede "quemado".
+    renderer.toneMappingExposure = 0.3
     container.appendChild(renderer.domElement)
     rendererRef.current = renderer
 
     // ─── Iluminación ───
-    const ambientLight = new THREE.AmbientLight(0xffffff, 2.5)
+    // La ambiental da luz pareja (no genera reflejos); las direccionales son
+    // las que crean los brillos, así que van más suaves que antes.
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.8)
     scene.add(ambientLight)
 
-    const topLight = new THREE.DirectionalLight(0xffffff, 2)
+    const topLight = new THREE.DirectionalLight(0xffffff, 1.1)
     topLight.position.set(500, 500, 500)
     scene.add(topLight)
 
-    const bottomLight = new THREE.DirectionalLight(0xffffff, 1.5)
+    const bottomLight = new THREE.DirectionalLight(0xffffff, 0.7)
     bottomLight.position.set(-500, -500, 500)
     scene.add(bottomLight)
 
@@ -304,10 +307,41 @@ function CoffeeCup3D({ modelPath = '/models/sample.glb', sectionSelector = '.abo
 
         const model = gltf.scene
 
-        // Centrar el modelo basándose en su bounding box
+        // Domar el material: los exports PBR/"shaded" vienen muy brillosos
+        // (metalness alto + roughness bajo), lo que genera reflejos fuertes.
+        // Subimos la rugosidad y bajamos metalness/reflejo del entorno.
+        model.traverse((obj) => {
+          if (obj.isMesh && obj.material) {
+            const mats = Array.isArray(obj.material) ? obj.material : [obj.material]
+            mats.forEach((m) => {
+              if ('metalness' in m) m.metalness = Math.min(m.metalness ?? 0, 0.1)
+              if ('roughness' in m) m.roughness = Math.max(m.roughness ?? 0.5, 0.85)
+              if ('envMapIntensity' in m) m.envMapIntensity = 0.25
+              m.needsUpdate = true
+            })
+          }
+        })
+
+        // Normalizar el tamaño: cada GLB trae dimensiones internas distintas
+        // (sample.glb medía ~1.0, base_basic_shaded ~1.9). Sin esto, cambiar de
+        // modelo lo hace enorme. Lo escalamos para que su lado mayor sea 1,
+        // así TODAS las escalas de getPositions() se comportan igual que antes.
+        const TARGET_SIZE = 1
+        // Achata la altura para que se vea más corto y "gordito".
+        // 1 = proporción original · menos de 1 = más corto (0.8 ≈ 20% más bajo).
+        const HEIGHT_FACTOR = 0.9
         const box = new THREE.Box3().setFromObject(model)
         const center = box.getCenter(new THREE.Vector3())
-        model.position.sub(center)
+        const size = box.getSize(new THREE.Vector3())
+        const maxDim = Math.max(size.x, size.y, size.z) || 1
+        const norm = TARGET_SIZE / maxDim
+        // Escala por eje: Y aparte para poder achatarlo sin tocar el ancho.
+        const sx = norm
+        const sy = norm * HEIGHT_FACTOR
+        const sz = norm
+        model.scale.set(sx, sy, sz)
+        // Re-centrar ya escalado (cada eje con su escala).
+        model.position.set(-center.x * sx, -center.y * sy, -center.z * sz)
 
         // Wrapper para que las animaciones de posición funcionen
         const wrapper = new THREE.Group()

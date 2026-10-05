@@ -75,9 +75,10 @@ function CheckoutPage() {
       return
     }
 
-    // El pack es solo para envíos internacionales. El servidor lo valida
-    // igual (packGuards.js); esto es solo para no hacer el viaje en vano.
+    // Reglas de envío. El servidor las valida igual (packGuards.js); esto es
+    // solo para no hacer el viaje en vano.
     if (hasPack) {
+      // El pack es solo para envíos internacionales.
       if (!shippingData.country.trim()) {
         setFormError(t('errors.countryRequired'))
         return
@@ -88,6 +89,12 @@ function CheckoutPage() {
       }
       if (shippingData.countryCode === 'US' && !/^[A-Za-z]{2}$/.test(shippingData.state.trim())) {
         setFormError(t('errors.stateRequiredUS'))
+        return
+      }
+    } else {
+      // Cafés individuales: solo dentro de Costa Rica (regla simétrica).
+      if (shippingData.countryCode && shippingData.countryCode !== 'CR') {
+        setFormError(t('errors.cafeOnlyCR'))
         return
       }
     }
@@ -217,6 +224,7 @@ function CheckoutPage() {
               data={shippingData}
               setData={setShippingData}
               formError={formError}
+              hasPack={hasPack}
             />
 
             <PaymentMethodSelector
