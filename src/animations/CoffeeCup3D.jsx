@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js'
 import gsap from 'gsap'
 
 // ===== Responsive helpers =====
@@ -167,6 +168,12 @@ function CoffeeCup3D({ modelPath = '/models/sample.glb', sectionSelector = '.abo
     lastScrollYRef.current = window.scrollY || 0
     forcedTabletHideRef.current = false
 
+    // Render bajo demanda: el modelo no tiene animación propia, así que solo
+    // redibujamos cuando algo cambia (carga, resize) o mientras un tween de
+    // GSAP está moviendo el modelo. En reposo la GPU descansa.
+    let needsRender = true
+    const requestRender = () => { needsRender = true }
+
     // ─── Detectar sección actual y mover modelo ───
     const modelMove = () => {
       if (!modelRef.current || !mountedRef.current) return
@@ -275,7 +282,9 @@ function CoffeeCup3D({ modelPath = '/models/sample.glb', sectionSelector = '.abo
     // ─── Renderer ───
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true })
     renderer.setSize(window.innerWidth, window.innerHeight)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    // En móvil 1x y en desktop máx 1.5x: en pantallas de alta densidad dibujar
+    // a 2x cuadruplica los píxeles y es una causa grande del lag.
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile() ? 1 : 1.5))
     renderer.outputColorSpace = THREE.SRGBColorSpace
     renderer.toneMapping = THREE.ACESFilmicToneMapping
     // Exposición bajada (antes 1.5) para que el modelo no quede "quemado".
@@ -298,7 +307,10 @@ function CoffeeCup3D({ modelPath = '/models/sample.glb', sectionSelector = '.abo
     scene.add(bottomLight)
 
     // ─── Cargar modelo 3D ───
+    // El modelo va comprimido con meshopt (EXT_meshopt_compression); webp y
+    // quantization los soporta GLTFLoader solo.
     const loader = new GLTFLoader()
+    loader.setMeshoptDecoder(MeshoptDecoder)
 
     loader.load(
       modelPath,
@@ -378,6 +390,9 @@ function CoffeeCup3D({ modelPath = '/models/sample.glb', sectionSelector = '.abo
           wrapper.scale.set(coords.scale, coords.scale, coords.scale)
           lastSectionRef.current = currentSection || 'banner'
         }
+
+        // Primer dibujo una vez que el modelo está cargado y posicionado.
+        requestRender()
       },
       undefined,
       (error) => {
@@ -385,11 +400,22 @@ function CoffeeCup3D({ modelPath = '/models/sample.glb', sectionSelector = '.abo
       }
     )
 
-    // ─── Loop de renderizado ───
+    // ─── Loop de renderizado (bajo demanda) ───
+    // Solo dibuja si algo cambió (needsRender) o si hay un tween de GSAP
+    // moviendo el modelo. En reposo el RAF sigue vivo pero no renderiza nada.
     const clock = new THREE.Clock()
     const animate = () => {
       if (!mountedRef.current) return
       animFrameRef.current = requestAnimationFrame(animate)
+
+      const m = modelRef.current
+      const moving =
+        m &&
+        (gsap.isTweening(m.position) || gsap.isTweening(m.rotation) || gsap.isTweening(m.scale))
+
+      if (!needsRender && !moving) return
+
+      needsRender = false
       const delta = clock.getDelta()
       if (mixerRef.current) mixerRef.current.update(delta)
       renderer.render(scene, camera)
@@ -415,6 +441,7 @@ function CoffeeCup3D({ modelPath = '/models/sample.glb', sectionSelector = '.abo
       renderer.setSize(w, h)
       // Forzar re-evaluación de sección al cambiar tamaño
       lastSectionRef.current = ''
+      requestRender()
       modelMove()
     }
     window.addEventListener('resize', handleResize)
