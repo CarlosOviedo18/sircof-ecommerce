@@ -1,3 +1,4 @@
+<img width="1799" height="838" alt="Image" src="https://github.com/user-attachments/assets/32394dd3-daba-45b3-90ce-8d8ab4cd7d57" />
 # SIRCOF E-Commerce — Plataforma de venta de café
 
 Plataforma de comercio electrónico para la venta de café, desarrollada con React (Vite) en el frontend y Express + MySQL en el backend. Incluye catálogo con variantes, carrito, dos pasarelas de pago (Tilopay y PayPal), panel de administración, autenticación con JWT y Google, envío de correos de confirmación e internacionalización (español e inglés).
