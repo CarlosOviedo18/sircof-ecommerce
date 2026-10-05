@@ -20,6 +20,7 @@
   "addToCart": "Add to cart",
   "noProducts": "No products found",
   "loading": "Loading products...",
+  "individualCROnly": "Individual coffees ship within Costa Rica only.",
   "detail": {
     "lineName": "Line",
     "reviews": "reviews",
@@ -46,6 +47,11 @@
     "badgeCount": "9 Premium packages",
     "badgeShipping": "Shipping included",
     "badgeIntl": "Great for international orders",
+    "bannerTitle": "Pack of 9 Premium Coffees",
+    "bannerDesc": "The only option for orders outside Costa Rica: 9 Premium coffees with international shipping already included in the price.",
+    "bannerBadgeIntl": "International customers only",
+    "bannerShipping": "Shipping included",
+    "bannerCta": "Order the pack",
     "cta": "Build my pack",
     "modalTitle": "Build your 9-package pack",
     "modalSubtitle": "Choose how many packages you want of each combination. They must add up to {{size}}.",
@@ -65,6 +71,7 @@
       "MIXED_CART_PRODUCTS": "You have a pack in your cart. Individual products cannot be added.",
       "PACK_ALREADY_IN_CART": "You already have a pack in your cart.",
       "PACK_QTY_FIXED": "The pack quantity cannot be changed.",
+      "CAFE_ONLY_CR": "Individual coffees ship within Costa Rica only.",
       "NETWORK_ERROR": "Could not reach the server."
     }
   },

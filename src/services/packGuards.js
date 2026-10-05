@@ -59,6 +59,47 @@ export const checkPackShipping = async ({ country, countryCode }) => {
 };
 
 /**
+ * Valida que un carrito SIN pack (cafés individuales) se envíe dentro de
+ * Costa Rica. Es la regla simétrica de checkPackShipping.
+ *
+ * Al exterior solo se despacha el pack (envío incluido); cobrar el envío de
+ * una sola bolsa a otro país no tiene sentido logístico.
+ *
+ * Falla ABIERTO (al revés que el pack): si el país es Costa Rica O no se puede
+ * determinar, permite. Así ningún pedido nacional legítimo se rompe. Solo
+ * rechaza cuando el país es EXPLÍCITAMENTE distinto de CR.
+ *
+ * @returns {Promise<{ok: true, countryCode: string} | {ok: false, status: number, code: string, message: string}>}
+ */
+export const checkCoffeeShipping = async ({ country, countryCode }) => {
+  const nombre = String(country ?? '').trim();
+  const codigoCliente = String(countryCode ?? '').trim().toUpperCase();
+
+  // El código se deriva en el servidor: no se confía en el del cliente.
+  const codigoDerivado = nombre ? await getCountryCode(nombre) : '';
+  const codigoFinal = codigoDerivado || codigoCliente;
+
+  const porCodigo = codigoFinal ? isCostaRica({ countryCode: codigoFinal }) : null;
+  const porNombre = nombre ? isCostaRica({ country: nombre }) : null;
+
+  // Solo se rechaza si hay certeza de que NO es Costa Rica.
+  const esExtranjeroSeguro = porCodigo === false || porNombre === false;
+
+  if (esExtranjeroSeguro) {
+    return {
+      ok: false,
+      status: 409,
+      code: PACK_ERRORS.CAFE_ONLY_CR,
+      message:
+        'Los cafés individuales se envían únicamente dentro de Costa Rica. Para pedidos internacionales, revisá nuestro Pack de 9.',
+    };
+  }
+
+  // CR o indeterminado: se permite. Por defecto CR.
+  return { ok: true, countryCode: codigoFinal || 'CR' };
+};
+
+/**
  * Guard de Tilopay: el pack nunca puede pasar por ahi.
  *
  * La ruta tiene currency "CRC", billToCountry "CR", shipToCountry "CR" y

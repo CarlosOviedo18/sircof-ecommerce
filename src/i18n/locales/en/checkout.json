@@ -17,7 +17,10 @@
     "selectCountry": "Select a country",
     "state": "State / Province",
     "statePlaceholder": "State or province",
-    "stateHintUS": "For the United States use the 2-letter code (e.g. FL, NY, CA)"
+    "stateHintUS": "For the United States use the 2-letter code (e.g. FL, NY, CA)",
+    "noticePackIntl": "The Pack of 9 ships outside Costa Rica only. Select your country to continue.",
+    "noticeCafeCR": "Individual coffees ship within Costa Rica only. For international orders, get the Pack of 9.",
+    "noticeCafeCRLink": "View the pack"
   },
   "orderSummary": {
     "title": "Order Summary",
@@ -54,7 +57,8 @@
     "countryRequired": "Select the shipping country",
     "packNotForCR": "This pack is available for international shipping only. For orders within Costa Rica, check our individual packages.",
     "packRequiresPaypal": "This order includes the international pack, which can only be paid with PayPal.",
-    "stateRequiredUS": "Enter the 2-letter state code (e.g. FL)"
+    "stateRequiredUS": "Enter the 2-letter state code (e.g. FL)",
+    "cafeOnlyCR": "Individual coffees ship within Costa Rica only. For international orders, get the Pack of 9."
   },
   "emptyCart": {
     "title": "Your cart is empty",
