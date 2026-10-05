@@ -13,7 +13,7 @@ function AboutUsPage() {
     <div className="about-page">
       {/* Elemento 3D - Taza de café */}
       <CoffeeCup3D
-        modelPath="/models/base_basic_shaded.glb"
+        modelPath="/models/base_basic_opt.glb"
         sectionSelector=".about-section"
       />
 
