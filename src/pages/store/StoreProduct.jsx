@@ -30,7 +30,9 @@ function StoreProduct() {
   // cosa que la búsqueda por nombre exacto no lograba.
   const conBusqueda = useMemo(
     () =>
-      coffees.map((c) => ({
+      // El pack no va en las secciones por categoría: se muestra en el banner
+      // destacado de arriba, así no aparece dos veces.
+      coffees.filter((c) => !c.isPack).map((c) => ({
         ...c,
         _buscar: normalizeText(
           [
@@ -146,9 +148,63 @@ function StoreProduct() {
           </div>
         )}
 
-        <p className="text-center text-gray-600 mb-12">
+        <p className="text-center text-gray-600 mb-3">
           {t('showing')} {total} {total !== 1 ? t('results') : t('result')}
         </p>
+
+        {/* Regla de envío de los cafés individuales. */}
+        <p className="text-center text-gray-500 text-sm mb-8 flex items-center justify-center gap-1.5">
+          <svg className="w-4 h-4 text-coffee" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+          {t('individualCROnly')}
+        </p>
+
+        {/* Banner destacado del Pack: exclusivo para personas extranjeras. */}
+        {packCoffee && (
+          <div className="mb-12 rounded-2xl overflow-hidden bg-gradient-to-r from-dark-coffee to-coffee text-white shadow-lg">
+            <div className="flex flex-col md:flex-row items-stretch">
+              <div className="md:w-72 h-48 md:h-auto flex-shrink-0">
+                <img
+                  src={getProductImage(packCoffee)}
+                  alt={packCoffee.name}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              <div className="flex-1 p-6 md:p-8 flex flex-col justify-center gap-3">
+                <div className="flex flex-wrap gap-2">
+                  <span className="bg-white/20 backdrop-blur text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+                    {t('pack.bannerBadgeIntl')}
+                  </span>
+                  <span className="bg-green-400/90 text-green-950 text-xs font-bold px-3 py-1 rounded-full">
+                    {t('pack.bannerShipping')}
+                  </span>
+                </div>
+
+                <h2 className="text-2xl md:text-3xl font-bold">{t('pack.bannerTitle')}</h2>
+                <p className="text-white/85 text-sm md:text-base max-w-xl">
+                  {t('pack.bannerDesc')}
+                </p>
+
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 mt-2">
+                  <p className="text-2xl font-bold">
+                    ₡{packCoffee.priceMin.toLocaleString('es-CR')}
+                  </p>
+                  <button
+                    onClick={() => handleAdd(packCoffee)}
+                    disabled={agregando.pack}
+                    className="bg-white text-dark-coffee hover:bg-gray-100 disabled:bg-gray-300 font-bold py-3 px-6 rounded-lg transition-colors"
+                  >
+                    {agregando.pack ? t('adding') : t('pack.bannerCta')}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar: anclas a cada sección. Sin estado, solo scroll. */}

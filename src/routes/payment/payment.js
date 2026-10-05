@@ -5,8 +5,8 @@ import fetch from "node-fetch";
 import { sendOrderEmails } from "../../services/emailService.js";
 import { getCartTotals } from "../../services/orderTotals.js";
 import { insertOrderItems, getOrderItemsWithSelections, decrementStockForOrder } from "../../services/orderItems.js";
-import { rejectPackOnTilopay } from "../../services/packGuards.js";
-import { verifyTilopayReturn } from "../../services/tilopayVerify.js";
+import { rejectPackOnTilopay, checkCoffeeShipping } from "../../services/packGuards.js";
+import { consultTilopayPayment } from "../../services/tilopayConsult.js";
 
 const router = Router();
 
@@ -38,7 +38,7 @@ const loginTilopay = async () => {
 router.post("/process", protectRoute, async (req, res) => {
   try {
     const userId = req.user.id;
-    const { amount: clientAmount, phone, address, city, postal_code, country } =
+    const { amount: clientAmount, phone, address, city, postal_code, country, country_code } =
       req.body;
 
     // El monto se calcula en el servidor desde el carrito en BD.
@@ -60,6 +60,17 @@ router.post("/process", protectRoute, async (req, res) => {
         success: false,
         code: packRechazo.code,
         message: packRechazo.message,
+      });
+    }
+
+    // Tilopay solo despacha dentro de Costa Rica (moneda y país hardcodeados).
+    // Los cafés individuales al exterior no se permiten: ese público va al pack.
+    const envioRechazo = await checkCoffeeShipping({ country, countryCode: country_code });
+    if (!envioRechazo.ok) {
+      return res.status(envioRechazo.status).json({
+        success: false,
+        code: envioRechazo.code,
+        message: envioRechazo.message,
       });
     }
 
@@ -213,17 +224,9 @@ router.post("/process", protectRoute, async (req, res) => {
 router.post("/confirm", protectRoute, async (req, res) => {
   try {
     const userId = req.user.id;
-    // orderHash/auth/tpt vienen de la URL de retorno de Tilopay; son la PRUEBA
-    // del pago. Sin ellos, code="1" no significa nada.
-    const { orderNumber, code, auth, tpt, orderHash } = req.body;
-
-    // Solo procesar si el pago fue exitoso (code === '1' en Tilopay)
-    if (code !== '1') {
-      return res.status(400).json({
-        success: false,
-        message: "El pago no fue aprobado",
-      });
-    }
+    // El navegador manda orderNumber (+ code/tpt informativos), pero NADA de
+    // esto se cree: el pago se confirma consultando la API de Tilopay.
+    const { orderNumber, tpt } = req.body;
 
     if (!orderNumber) {
       return res.status(400).json({
@@ -232,7 +235,7 @@ router.post("/confirm", protectRoute, async (req, res) => {
       });
     }
 
-    // Buscar la orden en la BD (incluye el email del dueño para el hash)
+    // Buscar la orden en la BD (incluye el email del dueño para el correo)
     const [orders] = await pool.query(
       `SELECT o.id, o.total, o.subtotal, o.shipping_cost, o.status, o.tilopay_reference, o.phone, o.address, o.city, o.state, o.postal_code, o.country, o.country_code, u.name AS user_name, u.email AS user_email
        FROM orders o JOIN users u ON o.user_id = u.id
@@ -258,17 +261,14 @@ router.post("/confirm", protectRoute, async (req, res) => {
       });
     }
 
-    // === VERIFICACIÓN DE LA FIRMA DE TILOPAY ===
-    // Recalcula el OrderHash con los secretos del servidor y el total GUARDADO
-    // (no el que manda el cliente). Si no coincide, el "pago" es falso.
-    const verificacion = verifyTilopayReturn({
-      orderHash,
-      tpt,
+    // === VERIFICACIÓN SERVIDOR-A-SERVIDOR CON TILOPAY ===
+    // Le preguntamos a Tilopay el estado REAL de la orden (endpoint /consult).
+    // Solo se marca pagada si Tilopay confirma code=1 por el monto correcto.
+    // El code/tpt del navegador no se usan para decidir: podrían ser falsos.
+    const verificacion = await consultTilopayPayment({
       orderNumber,
-      amount: parseFloat(order.total),
-      code,
-      auth,
-      email: order.user_email,
+      expectedAmount: parseFloat(order.total),
+      expectedCurrency: "CRC",
     });
 
     if (!verificacion.ok) {
@@ -281,11 +281,14 @@ router.post("/confirm", protectRoute, async (req, res) => {
       });
     }
 
+    // El auth/tpt reales salen de la consulta, no del navegador.
+    const tptReal = verificacion.tx?.id_tilopay || tpt || order.tilopay_order_number || null;
+
     // Actualización atómica: solo pasa a 'paid' si sigue 'pending'.
     // Dos confirmaciones en paralelo -> solo una gana -> un solo email.
     const [upd] = await pool.query(
       "UPDATE orders SET status = 'paid', tilopay_order_number = ? WHERE id = ? AND status = 'pending'",
-      [tpt || order.tilopay_order_number || null, order.id],
+      [tptReal, order.id],
     );
 
     if (upd.affectedRows === 0) {
