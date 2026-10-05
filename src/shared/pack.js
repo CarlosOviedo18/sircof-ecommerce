@@ -41,6 +41,8 @@ export const PACK_ERRORS = {
   PACK_QTY_FIXED: 'PACK_QTY_FIXED',
   PACK_REQUIRES_PAYPAL: 'PACK_REQUIRES_PAYPAL',
   PACK_NOT_FOR_CR: 'PACK_NOT_FOR_CR',
+  // Regla simétrica: los cafés individuales solo se envían dentro de CR.
+  CAFE_ONLY_CR: 'CAFE_ONLY_CR',
   COUNTRY_REQUIRED: 'COUNTRY_REQUIRED',
   COUNTRY_INVALID: 'COUNTRY_INVALID',
 };

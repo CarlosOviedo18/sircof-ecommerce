@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { API_CONFIG, buildFullUrl } from '../../config/api'
 
-function CheckoutShippingForm({ data, setData, formError }) {
+function CheckoutShippingForm({ data, setData, formError, hasPack = false }) {
   const { t } = useTranslation('checkout')
   const [phoneError, setPhoneError] = useState('')
   const [countries, setCountries] = useState([])
@@ -136,6 +137,21 @@ function CheckoutShippingForm({ data, setData, formError }) {
               <option key={c.code || c.name} value={c.code}>{c.name}</option>
             ))}
           </select>
+
+          {/* Aviso inmediato según la combinación carrito + país elegido. */}
+          {hasPack && data.countryCode === 'CR' && (
+            <div className="mt-2 bg-amber-50 border border-amber-200 text-amber-800 px-3 py-2 rounded-lg text-xs">
+              {t('shippingData.noticePackIntl')}
+            </div>
+          )}
+          {!hasPack && data.countryCode && data.countryCode !== 'CR' && (
+            <div className="mt-2 bg-amber-50 border border-amber-200 text-amber-800 px-3 py-2 rounded-lg text-xs">
+              {t('shippingData.noticeCafeCR')}{' '}
+              <Link to="/tienda" className="font-semibold underline hover:text-amber-900">
+                {t('shippingData.noticeCafeCRLink')}
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Estado / Provincia: PayPal lo exige para direcciones fuera de CR */}
