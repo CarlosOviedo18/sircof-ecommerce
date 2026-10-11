@@ -21,29 +21,29 @@
     "title": "Nuestra Esencia",
     "mission": {
       "title": "Misión",
-      "description": "Producir café artesanal de excelencia que represente la esencia de Costa Rica, combinando tradición familiar con innovación en cada grano."
+      "description": "Somos una empresa familiar,  dedicada a la caficultura, dispuestos a satisfacer el gusto y las necesidades de los amantes del café, con un producto de excelente calidad, superando las expectativas de nuestros clientes."
     },
     "vision": {
       "title": "Visión",
-      "description": "Ser reconocidos como la marca de café artesanal familiar más confiable y de mayor calidad en Centroamérica, despertando pasión por el café en cada taza."
+      "description": "Ofrecer un excelente producto al consumidor final, tanto clientes nacionales como extranjeros,  produciendo, procesando y manufacturando con trasparencia nuestro café  de altura 100%   puro, sin intermediarios y a un precio justo.  "
     },
     "valuesTitle": "Nuestros Valores",
     "values": {
       "tradition": {
-        "title": "Tradición",
-        "description": "Conocimiento y experiencia transmitidos de generación en generación."
+        "title": "Responsabilidad",
+        "description": "Cumplimos lo que prometemos, cuidando cada etapa del proceso, desde el cultivo hasta tu taza."
       },
       "quality": {
-        "title": "Calidad",
-        "description": "Excelencia en cada detalle, desde el grano hasta el producto final."
+        "title": "Puntualidad",
+        "description": "Respetamos tu tiempo: cosechamos, procesamos y entregamos cada pedido en el momento acordado."
       },
       "sustainability": {
-        "title": "Sostenibilidad",
-        "description": "Cuidamos nuestras montañas y comunidades para las próximas generaciones."
+        "title": "Solidaridad",
+        "description": "Crecemos junto a nuestra comunidad, apoyando a las familias y productores que hacen posible nuestro café."
       },
       "passion": {
-        "title": "Pasión",
-        "description": "Amor y entusiasmo reflejados en cada aspecto de Café Sircof."
+        "title": "Unión familiar, trazabilidad y honestidad",
+        "description": "Somos una familia que trabaja unida, con un café de origen conocido y total transparencia en lo que ofrecemos."
       }
     }
   },

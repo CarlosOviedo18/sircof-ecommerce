@@ -1,11 +1,19 @@
-import imagemin from 'imagemin'
-import imageminWebp from 'imagemin-webp'
-import imageminMozjpeg from 'imagemin-mozjpeg'
+import sharp from 'sharp'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+// Lista recursivamente las imágenes png/jpg/jpeg de un directorio
+function findImages(dir) {
+  if (!fs.existsSync(dir)) return []
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
+    const fullPath = path.join(dir, entry.name)
+    if (entry.isDirectory()) return findImages(fullPath)
+    return /\.(png|jpe?g)$/i.test(entry.name) ? [fullPath] : []
+  })
+}
 
 async function convertImages() {
   try {
@@ -19,25 +27,18 @@ async function convertImages() {
     }
 
     // ✅ Busca imágenes en src/assets/img/
-    const files = await imagemin(['src/assets/img/**/*.{png,jpg,jpeg}'], {
-      destination: webpDir,
-      plugins: [
-        imageminWebp({
-          quality: 80,
-          alphaQuality: 100
-        }),
-        imageminMozjpeg({
-          quality: 80
-        })
-      ]
-    })
+    const files = findImages(path.join(__dirname, 'src/assets/img'))
+
+    for (const file of files) {
+      const filename = `${path.parse(file).name}.webp`
+      await sharp(file)
+        .webp({ quality: 80, alphaQuality: 100 })
+        .toFile(path.join(webpDir, filename))
+      console.log(`   ✓ ${filename}`)
+    }
 
     if (files.length > 0) {
       console.log(` ${files.length} imágenes convertidas a WebP`)
-      files.forEach(file => {
-        const filename = typeof file === 'string' ? path.basename(file) : file.path || 'imagen.webp'
-        console.log(`   ✓ ${filename}`)
-      })
     } else {
       console.log(' No se encontraron imágenes para convertir')
     }
@@ -49,4 +50,3 @@ async function convertImages() {
 }
 
 convertImages()
-
