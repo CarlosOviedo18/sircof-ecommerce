@@ -11,7 +11,8 @@ export const securityHeaders = (req, res, next) => {
     "style-src 'self' 'unsafe-inline' https: data:; " +
     "font-src 'self' https: data:; " +
     "img-src 'self' https: data: blob:; " +
-    "connect-src 'self' https: wss:; " +
+    // blob: lo necesita GLTFLoader para las texturas embebidas del modelo 3D
+    "connect-src 'self' https: wss: blob:; " +
     "frame-src https://accounts.google.com; " +
     "frame-ancestors 'none'; " +
     "base-uri 'self'; " +
