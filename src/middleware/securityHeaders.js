@@ -7,7 +7,8 @@ export const securityHeaders = (req, res, next) => {
   res.setHeader(
     'Content-Security-Policy',
     "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline' https://accounts.google.com https://apis.google.com; " +
+    // wasm-unsafe-eval: el decodificador meshopt del modelo 3D usa WebAssembly
+    "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://accounts.google.com https://apis.google.com; " +
     "style-src 'self' 'unsafe-inline' https: data:; " +
     "font-src 'self' https: data:; " +
     "img-src 'self' https: data: blob:; " +
