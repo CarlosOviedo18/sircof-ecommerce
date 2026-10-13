@@ -21,29 +21,29 @@
     "title": "Our Essence",
     "mission": {
       "title": "Mission",
-      "description": "To produce artisanal coffee of excellence that represents the essence of Costa Rica, combining family tradition with innovation in every bean."
+      "description": "We are a family-owned coffee-growing business dedicated to satisfying the tastes and needs of coffee lovers with an excellent quality product that exceeds our customers' expectations."
     },
     "vision": {
       "title": "Vision",
-      "description": "To be recognized as the most reliable and highest quality family artisanal coffee brand in Central America, awakening passion for coffee in every cup."
+      "description": "To offer an excellent product to the end consumer—both domestic and international—by producing, processing, and manufacturing our 100% pure high-altitude coffee with transparency, without intermediaries, and at a fair price."
     },
-    "valuesTitle": "Our Values",
+   "valuesTitle": "Our Values",
     "values": {
       "tradition": {
-        "title": "Tradition",
-        "description": "Knowledge and experience passed down from generation to generation."
+        "title": "Responsibility",
+        "description": "We deliver on our promises, caring for every stage of the process, from the crop to your cup."
       },
       "quality": {
-        "title": "Quality",
-        "description": "Excellence in every detail, from the bean to the final product."
+        "title": "Punctuality",
+        "description": "We respect your time: we harvest, process, and deliver every order right when we said we would."
       },
       "sustainability": {
-        "title": "Sustainability",
-        "description": "We care for our mountains and communities for future generations."
+        "title": "Solidarity",
+        "description": "We grow alongside our community, supporting the families and farmers who make our coffee possible."
       },
       "passion": {
-        "title": "Passion",
-        "description": "Love and enthusiasm reflected in every aspect of Café Sircof."
+        "title": "Family unity, traceability, and honesty",
+        "description": "We are a family working together, offering coffee of known origin and full transparency in everything we do."
       }
     }
   },

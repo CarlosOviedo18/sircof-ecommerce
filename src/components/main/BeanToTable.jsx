@@ -5,11 +5,13 @@ import fotosPatrones from "../../assets/webp/foto patrones.webp";
 import canastoCafe from "../../assets/webp/canasto con cafe.webp";
 import sobreNosotros from "../../assets/webp/SobreNosotros.webp";
 import tour1 from "../../assets/webp/tours1.webp";
+import galeria7 from "../../assets/webp/galeria7.webp";
+import galeria8 from "../../assets/webp/galeria8.webp";
 import Stack from "../ui/Stack";
 
 function BeanToTable() {
   const { t } = useTranslation('home')
-  const images = [fotosPatrones, canastoCafe, tour1];
+  const images = [fotosPatrones, canastoCafe, tour1, galeria7, galeria8];
   return (
     <div
       className="min-h-screen bg-cover bg-center relative"

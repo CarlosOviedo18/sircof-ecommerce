@@ -26,6 +26,11 @@
     "tour": {
       "title": "Tour con extranjeros en la finca",
       "description": "Descubre nuestra finca con nosotros"
+    },
+    "patrones": {
+      "title": "Patrones de Café Sicof",
+      "description": "Los patrones de café Sircof"
     }
+    
   }
 }

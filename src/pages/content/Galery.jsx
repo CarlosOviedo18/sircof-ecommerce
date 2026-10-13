@@ -8,6 +8,13 @@ import galeria3 from "../../assets/webp/galeria3.webp";
 import galeria4 from "../../assets/webp/galeria4.webp";
 import galeria5 from "../../assets/webp/galeria5.webp";
 import galeria6 from "../../assets/webp/galeria6.webp";
+import galeria7 from "../../assets/webp/galeria7.webp";
+import galeria8 from "../../assets/webp/galeria8.webp";
+import galeria9 from "../../assets/webp/galeria9.webp";
+import galeria10 from "../../assets/webp/galeria10.webp";
+import galeria11 from "../../assets/webp/galeria11.webp";
+import galeria13 from "../../assets/webp/galeria13.webp";
+
 
 
 function Galery() {
@@ -46,6 +53,42 @@ function Galery() {
     },
     {
       image: galeria6,
+      link: "",
+      title: t('items.tour.title'),
+      description: t('items.tour.description'),
+    },
+     {
+      image: galeria7,
+      link: "",
+      title: t('items.recoleccion.title'),
+      description: t('items.recoleccion.description'),
+    },
+     {
+      image: galeria8,
+      link: "",
+      title: t('items.naturaleza.title'),
+      description: t('items.naturaleza.description'),
+    },
+     {
+      image: galeria9,
+      link: "",
+      title: t('items.patrones.title'),
+      description: t('items.patrones.description'),
+    },
+    {
+      image: galeria10,
+      link: "",
+      title: t('items.tour.title'),
+      description: t('items.tour.description'),
+    },
+    {
+      image: galeria11,
+      link: "", 
+      title: t('items.recoleccion.title'),
+      description: t('items.recoleccion.description'),
+    },
+    {
+      image: galeria13,
       link: "",
       title: t('items.tour.title'),
       description: t('items.tour.description'),

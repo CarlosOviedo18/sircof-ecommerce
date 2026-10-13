@@ -26,6 +26,10 @@
     "tour": {
       "title": "Farm Tour with Visitors",
       "description": "Discover our farm with us"
+    },
+    "patrones": {
+      "title": "Sircof Coffee Patterns",
+      "description": "The coffee patterns of Sircof"
     }
   }
 }
