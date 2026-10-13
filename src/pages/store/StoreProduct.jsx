@@ -17,7 +17,6 @@ function StoreProduct() {
   const [searchParams] = useSearchParams()
   const searchQuery = searchParams.get('search') || ''
 
-  const [sortOrder, setSortOrder] = useState('latest')
   const [agregando, setAgregando] = useState({})
   const [exito, setExito] = useState({})
   const [packModalAbierto, setPackModalAbierto] = useState(false)
@@ -53,22 +52,14 @@ function StoreProduct() {
     return conBusqueda.filter((c) => c._buscar.includes(q))
   }, [conBusqueda, searchQuery])
 
-  const porCategoria = useMemo(() => {
-    // El orden se aplica DENTRO de cada sección: ordenar entre categorías
-    // no significa nada una vez que la tienda está seccionada.
-    const ordenar = (lista) => {
-      const copia = [...lista]
-      if (sortOrder === 'price-asc') copia.sort((a, b) => a.priceMin - b.priceMin)
-      else if (sortOrder === 'price-desc') copia.sort((a, b) => b.priceMax - a.priceMax)
-      else if (sortOrder === 'name') copia.sort((a, b) => a.name.localeCompare(b.name))
-      return copia
-    }
-
-    return CATEGORIES.map((cat) => ({
-      cat,
-      items: ordenar(filtrados.filter((c) => c.category === cat)),
-    })).filter((s) => s.items.length > 0)
-  }, [filtrados, sortOrder])
+  const porCategoria = useMemo(
+    () =>
+      CATEGORIES.map((cat) => ({
+        cat,
+        items: filtrados.filter((c) => c.category === cat),
+      })).filter((s) => s.items.length > 0),
+    [filtrados],
+  )
 
   const handleAdd = async (coffee) => {
     if (!user) {
@@ -223,23 +214,6 @@ function StoreProduct() {
                   </a>
                 ))}
               </nav>
-
-              <div className="mt-8">
-                <label htmlFor="sort" className="block text-sm font-semibold text-gray-700 mb-2">
-                  {t('sortByLatest')}
-                </label>
-                <select
-                  id="sort"
-                  value={sortOrder}
-                  onChange={(e) => setSortOrder(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-coffee/30"
-                >
-                  <option value="latest">{t('sortLatest')}</option>
-                  <option value="price-asc">{t('sortPriceAsc')}</option>
-                  <option value="price-desc">{t('sortPriceDesc')}</option>
-                  <option value="name">{t('sortName')}</option>
-                </select>
-              </div>
             </div>
           </div>
 
