@@ -52,7 +52,6 @@ if (MAINTENANCE_MODE) {
       </head>
       <body>
         <div class="container">
-          <div class="icon">☕</div>
           <h1>Café Sircof</h1>
           <div class="divider"></div>
           <p>Estamos preparando algo especial para vos.</p>
