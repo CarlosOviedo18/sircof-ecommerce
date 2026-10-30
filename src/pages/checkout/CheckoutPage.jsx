@@ -62,6 +62,10 @@ function CheckoutPage() {
 
   const handleConfirmPayment = async () => {
     // Validar campos requeridos
+     if (!shippingData.phone.trim()) {
+      setFormError(t('errors.phoneRequired'))
+      return
+    }
     if (!shippingData.address.trim()) {
       setFormError(t('errors.addressRequired'))
       return

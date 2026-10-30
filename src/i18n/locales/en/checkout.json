@@ -47,6 +47,7 @@
     "securePayment": "Secure payment processed by"
   },
   "errors": {
+     "phoneRequired": "The Phone number is required",
     "addressRequired": "Address is required",
     "cityRequired": "City is required",
     "postalCodeRequired": "Postal code is required",

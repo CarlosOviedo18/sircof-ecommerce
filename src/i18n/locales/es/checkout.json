@@ -47,6 +47,7 @@
     "securePayment": "Pago seguro procesado por"
   },
   "errors": {
+    "phoneRequired": "El numero celular es requerido",
     "addressRequired": "La dirección es requerida",
     "cityRequired": "La ciudad es requerida",
     "postalCodeRequired": "El código postal es requerido",

@@ -45,6 +45,7 @@ function CheckoutShippingForm({ data, setData, formError, hasPack = false }) {
   }
 
   const handlePhoneChange = (value) => {
+    
     setData({ ...data, phone: value })
     if (value.trim() && !validatePhone(value)) {
       setPhoneError(t('shippingData.phoneError'))
@@ -68,7 +69,7 @@ function CheckoutShippingForm({ data, setData, formError, hasPack = false }) {
       <div className="space-y-4">
         {/* Teléfono */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">{t('shippingData.phone')}</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('shippingData.phone')} <span className="text-red-500">*</span></label> 
           <input
             type="tel"
             placeholder={t('shippingData.phonePlaceholder')}
